@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="5.4">
+    <file name="foo/Bar.java">
+        <error line="1" severity="error" message="File length is 1,664 lines (max allowed is 1,500)." source="com.puppycrawl.tools.checkstyle.checks.sizes.FileLengthCheck"/>
+        <error line="2" column="22" severity="error" message="Line contains a tab character." source="com.puppycrawl.tools.checkstyle.checks.whitespace.FileTabCharacterCheck"/>
+    </file>
+</checkstyle>
