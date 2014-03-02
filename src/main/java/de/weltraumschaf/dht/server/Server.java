@@ -13,7 +13,6 @@ package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -74,14 +73,18 @@ public final class Server {
         worker = new RequestWorker(queue, io);
         workerService.execute(worker);
 
-        socket = new ServerSocket(port, MAX_BACK_LOG, InetAddress.getByName(host));
+//        socket = new ServerSocket(port, MAX_BACK_LOG, InetAddress.getByName(host));
+        socket = new ServerSocket(port);
         listener = new InputListener(queue, socket, io);
         listenerService.execute(listener);
 
         state = State.RUNNING;
     }
 
-    public synchronized void stop() throws IOException {
+    private static final int MAX_WAIT_COUNT = 5;
+    private int waitCount = 0;
+
+    public synchronized void stop() throws IOException, InterruptedException {
         if (state != State.RUNNING) {
             throw new IllegalStateException("Server is not int state RUNNING!");
         }
@@ -96,6 +99,16 @@ public final class Server {
             if (worker.isReady() && listener.isReady()) {
                 break;
             }
+
+            if (waitCount == MAX_WAIT_COUNT) {
+                io.println(String.format("Max. wait %d reached! Aborting ...", MAX_WAIT_COUNT));
+                break;
+            }
+
+            final int wait = 1000 * (2 ^ waitCount);
+            io.println(String.format("Waiting for listener asnd worker task (%ds) ...", wait));
+            Thread.sleep(wait);
+            ++waitCount;
         }
 
         socket.close();

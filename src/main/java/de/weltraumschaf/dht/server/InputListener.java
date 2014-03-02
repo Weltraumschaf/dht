@@ -69,7 +69,7 @@ public class InputListener implements Task {
             listener =
                     AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(9999));
         } catch (final IOException ex) {
-            io.println("Exception " + ex.getMessage());
+            io.println("Exception: " + ex.getMessage());
             return;
         }
 
@@ -79,11 +79,12 @@ public class InputListener implements Task {
                 public void completed(final AsynchronousSocketChannel ch, final Void att) {
                     // accept the next connection
                     listener.accept(null, this);
-//                    queue.put(ch.g);
+//                    queue.put(ch.);
                 }
 
                 @Override
-                public void failed(final Throwable exc, final Void att) {
+                public void failed(final Throwable t, final Void att) {
+                    io.println("Exception: " + t.getMessage());
                 }
             });
 

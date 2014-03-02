@@ -7,6 +7,8 @@ import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.dht.server.Server;
 import de.weltraumschaf.dht.shell.InteractiveShell;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.Validate;
 
 public final class Main extends InvokableAdapter implements Application {
@@ -50,6 +52,24 @@ public final class Main extends InvokableAdapter implements Application {
         server = new Server(getIoStreams());
         server.setHost(options.getHost());
         server.setPort(options.getPort());
+
+        registerShutdownHook(new Runnable() {
+
+            @Override
+            public void run() {
+                if (server.isRunning()) {
+                    try {
+                        server.stop();
+                    } catch (final IOException | InterruptedException ex) {
+                        getIoStreams().println("Error: " + ex);
+
+                        if (options.isDebug()) {
+                            getIoStreams().printStackTrace(ex);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**

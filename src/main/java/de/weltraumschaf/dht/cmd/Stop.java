@@ -15,6 +15,8 @@ import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,7 +45,7 @@ public class Stop extends BaseCommand {
 
         try {
             getApplication().getServer().stop();
-        } catch (final IOException ex) {
+        } catch (final IOException | InterruptedException ex) {
             getApplication().getIoStreams()
                     .println(String.format(
                                     "Exception caught when trying to stop listen on %s.", formatListenedAddress()));
