@@ -13,6 +13,7 @@ package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,11 +26,14 @@ import org.apache.commons.lang3.Validate;
  */
 public final class Server {
 
+    private static final int TIME_FACTOR = 1000;
+    private static final int MAX_WAIT_COUNT = 5;
     private static final int MAX_PORT = 65535;
     private static final int MAX_BACK_LOG = 100;
+    private static final int THREAD_POOL_SIZE = 1;
 
-    private final ExecutorService listenerService = Executors.newFixedThreadPool(1);
-    private final ExecutorService workerService = Executors.newFixedThreadPool(1);
+    private ExecutorService listenerService;
+    private ExecutorService workerService;
     private final IO io;
 
     private String host = null;
@@ -38,6 +42,8 @@ public final class Server {
     private Task worker;
     private Task listener;
 
+    private volatile int waitCount;
+
     private volatile State state = State.NOT_RUNNING;
 
     public Server(final IO io) {
@@ -45,17 +51,17 @@ public final class Server {
         this.io = Validate.notNull(io, "Parameter >io< must not be null!");
     }
 
-    public synchronized void setHost(final String host) {
+    public void setHost(final String host) {
         this.host = Validate.notEmpty(host, "Parameter >host< must not be null or empty!");
     }
 
-    public synchronized void setPort(final int port) {
+    public void setPort(final int port) {
         Validate.isTrue(port > 0, "Parameter >port< must be greater that 0!");
         Validate.isTrue(port < MAX_PORT, "Parameter >port< must be less that " + MAX_PORT + "!");
         this.port = port;
     }
 
-    public synchronized void start() throws IOException {
+    public void start() throws IOException {
         if (null == host) {
             throw new IllegalStateException("Host not set!");
         }
@@ -69,57 +75,62 @@ public final class Server {
         }
 
         state = State.STARTING;
-        final ConnectionQueue queue = new ConnectionQueue();
-        worker = new RequestWorker(queue, io);
-        workerService.execute(worker);
+//        final ConnectionQueue queue = new ConnectionQueue();
+//        worker = new RequestWorker(queue, io);
+//        workerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+//        workerService.execute(worker);
 
-//        socket = new ServerSocket(port, MAX_BACK_LOG, InetAddress.getByName(host));
-        socket = new ServerSocket(port);
-        listener = new InputListener(queue, socket, io);
-        listenerService.execute(listener);
+        socket = new ServerSocket(port, MAX_BACK_LOG, InetAddress.getByName(host));
+//        listener = new InputListener(queue, socket, io);
+//        listenerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+//        listenerService.execute(listener);
 
         state = State.RUNNING;
     }
 
-    private static final int MAX_WAIT_COUNT = 5;
-    private int waitCount = 0;
-
-    public synchronized void stop() throws IOException, InterruptedException {
+    public void stop() throws IOException, InterruptedException {
         if (state != State.RUNNING) {
             throw new IllegalStateException("Server is not int state RUNNING!");
         }
 
         state = State.STOPPING;
-        listenerService.shutdown();
-        listener.stop();
-        workerService.shutdown();
-        worker.stop();
-
-        for (;;) {
-            if (worker.isReady() && listener.isReady()) {
-                break;
-            }
-
-            if (waitCount == MAX_WAIT_COUNT) {
-                io.println(String.format("Max. wait %d reached! Aborting ...", MAX_WAIT_COUNT));
-                break;
-            }
-
-            final int wait = 1000 * (2 ^ waitCount);
-            io.println(String.format("Waiting for listener asnd worker task (%ds) ...", wait));
-            Thread.sleep(wait);
-            ++waitCount;
-        }
+//        listenerService.shutdown();
+//        listener.stop();
+//        workerService.shutdown();
+//        worker.stop();
+//
+//        for (;;) {
+//            if (worker.isReady() && listener.isReady()) {
+//                break;
+//            }
+//
+//            if (waitCount == MAX_WAIT_COUNT) {
+//                io.println(String.format("Max. wait %d reached! Aborting ...", MAX_WAIT_COUNT));
+//                break;
+//            }
+//
+//            final int wait = calculateTimeout(waitCount);
+//            io.println(String.format("Waiting for listener asnd worker task (%ds) ...", wait / TIME_FACTOR));
+//            Thread.sleep(wait);
+//            ++waitCount;
+//        }
 
         socket.close();
         socket = null;
-        worker = null;
-        listener = null;
+//        worker = null;
+//        workerService = null;
+//        listener = null;
+//        listenerService = null;
         state = State.NOT_RUNNING;
     }
 
     public boolean isRunning() {
         return state == State.RUNNING;
+    }
+
+    static int calculateTimeout(final int round) {
+        Validate.isTrue(round > -1, "Parameter >round< must be greater than -1!");
+        return TIME_FACTOR * (int) Math.pow(2, round);
     }
 
     private enum State {
