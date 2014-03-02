@@ -35,7 +35,7 @@ final class RequestHandler  {
         ) {
             final String inputLine = input.readLine();
             Thread.sleep(1000);
-            output.println(inputLine);
+            output.println("re: " + inputLine);
         }
     }
 
