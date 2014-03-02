@@ -25,28 +25,13 @@ class Help extends BaseCommand {
     /**
      * Help message for shell users.
      */
-    private static final String HELP =
-          "This is the Neuron Interactive shell version %s.%n%n"
-        + "Available commands:%n%n"
-        + "  help                             Show all available commands.%n"
-        + "  reset                            Reset the whole environment.%n"
-        + "  exit                             Exit the interactive shell.%n%n"
+    private static final String HELP
+            = "This is the %s interactive shell version %s.%n%n"
 
-        + "  node add [AMOUNT]                Creates one new node or AMOUNT nodes.%n"
-        + "  node del ID                      Disconnect and deletes the node with ID.%n"
-        + "  node connect ID NEIGHBOR_ID      Connect two nodes.%n"
-        + "  node disconnect ID NEIGHBOR_ID   Connect two nodes.%n"
-        + "  node list                        List all nodes.%n"
-        + "  node info ID                     Print info of a node.%n"
-        + "  node listen ID|all               Listening for events of specified node.%n"
-        + "  node unlisten ID|all             Stop listening for events of specified node.%n%n"
+            + "Available commands:%n%n"
 
-        + "  message FROM_ID TO_ID 'MESSAGE'  Send a message from one node to other.%n%n"
-
-        + "  dump dot FILE                    Dump the nodes into a graphviz file.%n%n"
-
-        + "  sample tree [DEPTH] [CHILDREN]   Generates a tree of nodes. If CHILDREN is omitted a binary tree is%n"
-        + "                                   generated. If DEPTH is omitted a random number (1..7) is used.%n%n";
+            + "  help   Show all available commands.%n"
+            + "  exit   Exit the interactive shell.%n%n";
 
     /**
      * Dedicated constructor.
@@ -60,7 +45,11 @@ class Help extends BaseCommand {
 
     @Override
     public void execute() {
-        getApplication().getIoStreams().println(HELP);
+        getApplication().getIoStreams().println(formatHelp());
+    }
+
+    private String formatHelp() {
+        return String.format(HELP, Application.NAME, getApplication().getVersion());
     }
 
 }
