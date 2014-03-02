@@ -35,7 +35,9 @@ final class Help extends BaseCommand {
             + "  start                          Starts the server.%n"
             + "  stop                           Stops the server.%n%n"
 
-            + "  send <host> <port> <message>   Sends <message> to <host:port>.%n%n";
+            + "  send <host> <port> <message>   Sends <message> to <host:port>.%n"
+            + "                                 The message must be encapsulated in quotes if it%n"
+            + "                                 has more than one word.%n%n";
 
     @Override
     public void execute() {

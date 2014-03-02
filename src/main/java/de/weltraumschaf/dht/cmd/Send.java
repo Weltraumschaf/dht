@@ -13,6 +13,8 @@
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
+import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import java.util.List;
 
 /**
@@ -24,9 +26,33 @@ final class Send extends BaseCommand {
 
     @Override
     public void execute() {
-        List<Token> args = getArguments();
-        println("  host:    " + args.get(0).toString());
-        println("  port:    " + args.get(1).toString());
-        println("  message: " + args.get(2).toString());
+        final List<Token> args = getArguments();
+
+        final Token<String> hostToken = args.get(0);
+
+        if (hostToken.getType() != TokenType.LITERAL) {
+            throw new CommandArgumentExcpetion("Host must be a literal!");
+        }
+
+        final String host = hostToken.getValue();
+        println("  host:    " + host);
+
+        final Token<Integer> portToken = args.get(1);
+
+        if (portToken.getType() != TokenType.NUMBER) {
+            throw new CommandArgumentExcpetion("Port must be a number!");
+        }
+
+        final Integer port = portToken.getValue();
+        println("  port:    " + port.toString());
+
+        final Token<String> messageToken = args.get(2);
+
+        if (messageToken.getType() != TokenType.STRING && messageToken.getType() != TokenType.LITERAL) {
+            throw new CommandArgumentExcpetion("Message must be a string or literal!");
+        }
+
+        final String message = messageToken.getValue();
+        println("  message: " + message);
     }
 }

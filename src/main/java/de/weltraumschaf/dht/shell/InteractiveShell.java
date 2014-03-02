@@ -95,7 +95,7 @@ public class InteractiveShell {
 
                 final ShellCommand cmd = parser.parse(inputLine);
                 execute(cmd);
-            } catch (final SyntaxException | InstantiationException | IllegalAccessException ex) {
+            } catch (final SyntaxException | InstantiationException | IllegalAccessException | CommandArgumentExcpetion ex) {
                 app.getIoStreams().println("Error: " + ex.getMessage());
 
                 if (app.getOptions().isDebug()) {
