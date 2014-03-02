@@ -23,6 +23,8 @@ public interface Application {
     public static final String NAME = "dht";
     public static final String NL = "\n";
     public static final String ENCODING = "utf-8";
+    public static final String DEFAULT_HOST = "127.0.0.1";
+    public static final int DEFAULT_PORT = 8888;
 
     IOStreams getIoStreams();
 

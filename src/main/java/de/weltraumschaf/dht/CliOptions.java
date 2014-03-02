@@ -14,19 +14,39 @@ package de.weltraumschaf.dht;
 import com.beust.jcommander.Parameter;
 
 /**
+ * Immutable container to hold the command line options.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public class CliOptions {
 
+    /**
+     * Port to listen on.
+     */
     @Parameter(names = "-p", description = "Port to listen on.")
-    private int port;
+    private int port = Application.DEFAULT_PORT;
+
+    /**
+     * Host name to listen on.
+     */
     @Parameter(names = "-h", description = "Host address to bind socket on.")
-    private String host;
+    private String host = Application.DEFAULT_HOST;
+
+    /**
+     * If version information is requested by user.
+     */
     @Parameter(names = "-v", description = "Show version info.")
     private boolean version;
+
+    /**
+     * If debug information is requested by user.
+     */
     @Parameter(names = "-d", description = "Shows debug information.")
     private boolean debug;
+
+    /**
+     * If help is requested by user.
+     */
     @Parameter(names = "--help", description = "Show this help message.", help = true)
     private boolean help;
 
