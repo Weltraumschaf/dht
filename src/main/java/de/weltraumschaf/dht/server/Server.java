@@ -14,7 +14,9 @@ package de.weltraumschaf.dht.server;
 import de.weltraumschaf.commons.IO;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.lang3.Validate;
@@ -29,18 +31,17 @@ public final class Server {
     private static final int TIME_FACTOR = 1000;
     private static final int MAX_WAIT_COUNT = 3;
     private static final int MAX_PORT = 65535;
-
+    private static final int MAX_BACK_LOG = 100;
     private static final int THREAD_POOL_SIZE = 1;
 
     private final IO io;
     private final ConnectionQueue<AsynchronousSocketChannel> queue = new ConnectionQueue<AsynchronousSocketChannel>();
 
-    private ExecutorService listenerService;
     private ExecutorService workerService;
     private String host = null;
     private int port = -1;
     private Task worker;
-    private Task listener;
+    private AsynchronousServerSocketChannel server;
 
     private volatile int waitCount;
 
@@ -75,22 +76,28 @@ public final class Server {
         }
 
         state = State.STARTING;
-        initListener(initWorker());
-        state = State.RUNNING;
-    }
 
-    private ConnectionQueue initWorker() {
         queue.clear();
         worker = new RequestWorker(queue, io);
         workerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
         workerService.execute(worker);
-        return queue;
-    }
 
-    private void initListener(final ConnectionQueue queue) throws IOException {
-        listener = new InputListener(queue, new InetSocketAddress(host, port), io);
-        listenerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-        listenerService.execute(listener);
+        server = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(host, port), MAX_BACK_LOG);
+        server.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
+            @Override
+            public void completed(final AsynchronousSocketChannel ch, final Void att) {
+                // accept the next connection
+                server.accept(null, this);
+                queue.put(ch);
+            }
+
+            @Override
+            public void failed(final Throwable t, final Void att) {
+                io.println("Connection failed:  " + t.getMessage());
+            }
+        });
+
+        state = State.RUNNING;
     }
 
     public void stop() throws IOException, InterruptedException {
@@ -99,21 +106,13 @@ public final class Server {
         }
 
         state = State.STOPPING;
-        listenerService.shutdown();
-        listener.stop();
+        server.close();
         workerService.shutdown();
         worker.stop();
 
-        for (;;) {
-            if (worker.isReady() && listener.isReady()) {
+        while (true) {
+            if (worker.isReady()) {
                 break;
-            }
-
-            if (!worker.isReady()) {
-                io.println("Worker not ready!");
-            }
-            if (!listener.isReady()) {
-                io.println("Listener not ready!");
             }
 
             if (waitCount == MAX_WAIT_COUNT) {
@@ -122,26 +121,15 @@ public final class Server {
             }
 
             final int wait = calculateTimeout(waitCount);
-            io.println(String.format("Waiting for listener and worker task to be ready (%ds) ...", wait / TIME_FACTOR));
+            io.println(String.format("Waiting for worker task to be ready (%ds) ...", wait / TIME_FACTOR));
             Thread.sleep(wait);
             ++waitCount;
         }
 
-        derefListener();
-        derefWorker();
-
-        state = State.NOT_RUNNING;
-    }
-
-    private void derefWorker() {
         worker = null;
         workerService = null;
-    }
 
-    private void derefListener() throws IOException {
-        listener = null;
-        listenerService = null;
-        queue.clear();
+        state = State.NOT_RUNNING;
     }
 
     public boolean isRunning() {
