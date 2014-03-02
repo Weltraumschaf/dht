@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public class ConnectionQueue {
+public final class ConnectionQueue {
 
     /**
      * Holds the connections.
@@ -53,6 +53,10 @@ public class ConnectionQueue {
      */
     public boolean isEmpty() {
         return sockets.isEmpty();
+    }
+
+    public int size() {
+        return sockets.size();
     }
 
 }

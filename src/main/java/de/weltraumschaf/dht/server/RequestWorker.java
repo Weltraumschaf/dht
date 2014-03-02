@@ -39,10 +39,14 @@ public class RequestWorker implements Task {
                 handleRequset(queue.get());
             }
 
-            if (stop && queue.isEmpty()) {
-                io.println("Stop request worker task " + hashCode() + ".");
-                ready = true;
-                break;
+            if (stop) {
+                if (queue.isEmpty()) {
+                    io.println("Request worker task " + hashCode() + " stopped.");
+                    ready = true;
+                    break;
+                } else {
+                    io.println(String.format("Queue not empty yet (%d) ... ", queue.size()));
+                }
             }
         }
     }

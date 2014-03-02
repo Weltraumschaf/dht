@@ -34,7 +34,7 @@ public class InputListener implements Task {
     /**
      * Socket to get client connections from.
      */
-    private final ServerSocket socket;
+    private final AsynchronousServerSocketChannel socket;
     private final IO io;
     /**
      * True if {@link #exit()} was invoked.
@@ -49,7 +49,7 @@ public class InputListener implements Task {
      */
     private volatile boolean ready;
 
-    public InputListener(final ConnectionQueue queue, final ServerSocket socket, final IO io) {
+    public InputListener(final ConnectionQueue queue, final AsynchronousServerSocketChannel socket, final IO io) {
         super();
         this.queue = Validate.notNull(queue, "Parameter >queue< must not be null!");
         this.socket = Validate.notNull(socket, "Parameter >socket< must not be null!");
@@ -64,21 +64,12 @@ public class InputListener implements Task {
      */
     @Override
     public void run() {
-        final AsynchronousServerSocketChannel listener;
-        try {
-            listener =
-                    AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(9999));
-        } catch (final IOException ex) {
-            io.println("Exception: " + ex.getMessage());
-            return;
-        }
-
         while (true) {
-            listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
+            socket.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
                 @Override
                 public void completed(final AsynchronousSocketChannel ch, final Void att) {
                     // accept the next connection
-                    listener.accept(null, this);
+//                    listener.accept(null, this);
 //                    queue.put(ch.);
                 }
 
@@ -89,8 +80,8 @@ public class InputListener implements Task {
             });
 
             if (stop) {
-                io.println("Stop input listener task " + hashCode() + ".");
                 ready = true;
+                io.println("Input listener task " + hashCode() + " stopped.");
                 break;
             }
         }

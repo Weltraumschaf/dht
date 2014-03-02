@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public class Stop extends BaseCommand {
+final class Stop extends BaseCommand {
 
     /**
      * Dedicated constructor.

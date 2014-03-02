@@ -13,8 +13,9 @@ package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.channels.AsynchronousServerSocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.lang3.Validate;
@@ -38,7 +39,7 @@ public final class Server {
 
     private String host = null;
     private int port = -1;
-    private ServerSocket socket;
+    private AsynchronousServerSocketChannel socket;
     private Task worker;
     private Task listener;
 
@@ -75,17 +76,24 @@ public final class Server {
         }
 
         state = State.STARTING;
-//        final ConnectionQueue queue = new ConnectionQueue();
-//        worker = new RequestWorker(queue, io);
-//        workerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-//        workerService.execute(worker);
-
-        socket = new ServerSocket(port, MAX_BACK_LOG, InetAddress.getByName(host));
-//        listener = new InputListener(queue, socket, io);
-//        listenerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-//        listenerService.execute(listener);
-
+        initListener(initWorker());
         state = State.RUNNING;
+    }
+
+    private ConnectionQueue initWorker() {
+        final ConnectionQueue queue = new ConnectionQueue();
+        worker = new RequestWorker(queue, io);
+        workerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+        workerService.execute(worker);
+        return queue;
+    }
+
+    private void initListener(final ConnectionQueue queue) throws IOException {
+        socket = AsynchronousServerSocketChannel.open()
+                .bind(new InetSocketAddress(host, port), MAX_BACK_LOG);
+        listener = new InputListener(queue, socket, io);
+        listenerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+        listenerService.execute(listener);
     }
 
     public void stop() throws IOException, InterruptedException {
@@ -94,34 +102,43 @@ public final class Server {
         }
 
         state = State.STOPPING;
-//        listenerService.shutdown();
-//        listener.stop();
-//        workerService.shutdown();
-//        worker.stop();
-//
-//        for (;;) {
-//            if (worker.isReady() && listener.isReady()) {
-//                break;
-//            }
-//
-//            if (waitCount == MAX_WAIT_COUNT) {
-//                io.println(String.format("Max. wait %d reached! Aborting ...", MAX_WAIT_COUNT));
-//                break;
-//            }
-//
-//            final int wait = calculateTimeout(waitCount);
-//            io.println(String.format("Waiting for listener asnd worker task (%ds) ...", wait / TIME_FACTOR));
-//            Thread.sleep(wait);
-//            ++waitCount;
-//        }
+        listenerService.shutdown();
+        listener.stop();
+        workerService.shutdown();
+        worker.stop();
 
+        for (;;) {
+            if (worker.isReady() && listener.isReady()) {
+                break;
+            }
+
+            if (waitCount == MAX_WAIT_COUNT) {
+                io.println(String.format("Max. wait %d reached! Aborting ...", MAX_WAIT_COUNT));
+                break;
+            }
+
+            final int wait = calculateTimeout(waitCount);
+            io.println(String.format("Waiting for listener and worker task to be ready (%ds) ...", wait / TIME_FACTOR));
+            Thread.sleep(wait);
+            ++waitCount;
+        }
+
+        derefListener();
+        derefWorker();
+
+        state = State.NOT_RUNNING;
+    }
+
+    private void derefWorker() {
+        worker = null;
+        workerService = null;
+    }
+
+    private void derefListener() throws IOException {
         socket.close();
         socket = null;
-//        worker = null;
-//        workerService = null;
-//        listener = null;
-//        listenerService = null;
-        state = State.NOT_RUNNING;
+        listener = null;
+        listenerService = null;
     }
 
     public boolean isRunning() {
@@ -137,7 +154,7 @@ public final class Server {
         return TIME_FACTOR * (int) Math.pow(2, round);
     }
 
-    private enum State {
+    public static enum State {
 
         NOT_RUNNING, RUNNING, STARTING, STOPPING;
     }

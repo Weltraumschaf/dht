@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-class Help extends BaseCommand {
+final class Help extends BaseCommand {
 
     /**
      * Help message for shell users.

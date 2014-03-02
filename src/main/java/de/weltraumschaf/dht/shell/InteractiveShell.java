@@ -79,7 +79,7 @@ public class InteractiveShell {
      * @throws IOException if I/O error occurs
      */
     public void start() throws IOException {
-        app.getIoStreams().println(String.format("Welcome to " + Application.NAME + " Interactive Shell!%n"));
+        app.getIoStreams().println(String.format("Welcome to " + Application.NAME + " interactive shell!%n"));
         final ConsoleReader reader = new ConsoleReader(app.getIoStreams().getStdin(), app.getIoStreams().getStdout());
         reader.addCompleter(createCompletionHints());
         reader.setPrompt(PROMPT);
