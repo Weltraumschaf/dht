@@ -9,11 +9,11 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,17 +36,26 @@ public class Start extends BaseCommand {
     public void execute() {
         if (getApplication().getServer().isRunning()) {
             getApplication().getIoStreams()
-                .println(String.format("Server already listening on %s:%d.",
-                        getApplication().getOptions().getHost(),
-                        getApplication().getOptions().getPort()));
+                    .println(String.format("Server already listening on %s.", formatListenedAddress()));
             return;
         }
 
         getApplication().getIoStreams().println("Starting server ...");
-        getApplication().getServer().start();
+
+        try {
+            getApplication().getServer().start();
+        } catch (final IOException ex) {
+            getApplication().getIoStreams()
+                .println(String.format(
+                    "Exception caught when trying to listen on %s or listening for a connection", formatListenedAddress()));
+
+            if (getApplication().getOptions().isDebug()) {
+                getApplication().getIoStreams().printStackTrace(ex);
+            }
+        }
+
         getApplication().getIoStreams()
-                .println(String.format("Server listening on %s:%d.",
-                        getApplication().getOptions().getHost(),
-                        getApplication().getOptions().getPort()));
+                .println(String.format("Server listening on %s.", formatListenedAddress()));
     }
+
 }

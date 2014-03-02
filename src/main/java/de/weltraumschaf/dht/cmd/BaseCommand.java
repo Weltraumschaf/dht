@@ -11,7 +11,6 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
 import java.util.List;
@@ -64,4 +63,9 @@ abstract class BaseCommand implements Command {
         return arguments;
     }
 
+    String formatListenedAddress() {
+        return String.format("%s:%d",
+                getApplication().getOptions().getHost(),
+                getApplication().getOptions().getPort());
+    }
 }

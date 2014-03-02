@@ -11,36 +11,52 @@
  */
 package de.weltraumschaf.dht.server;
 
-import java.io.BufferedReader;
+import de.weltraumschaf.commons.IO;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.apache.commons.lang3.Validate;
 
 /**
+ * Consider using https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/echo
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public class Server {
+public final class Server {
 
     private static final int MAX_PORT = 65535;
+    private static final int MAX_BACK_LOG = 100;
+
+    private final ExecutorService listenerService = Executors.newFixedThreadPool(1);
+    private final ExecutorService workerService = Executors.newFixedThreadPool(1);
+    private final IO io;
+
     private String host = null;
     private int port = -1;
-    private boolean running;
+    private ServerSocket socket;
+    private Task worker;
+    private Task listener;
 
-    public void setHost(final String host) {
+    private volatile State state = State.NOT_RUNNING;
+
+    public Server(final IO io) {
+        super();
+        this.io = Validate.notNull(io, "Parameter >io< must not be null!");
+    }
+
+    public synchronized void setHost(final String host) {
         this.host = Validate.notEmpty(host, "Parameter >host< must not be null or empty!");
     }
 
-    public void setPort(final int port) {
+    public synchronized void setPort(final int port) {
         Validate.isTrue(port > 0, "Parameter >port< must be greater that 0!");
         Validate.isTrue(port < MAX_PORT, "Parameter >port< must be less that " + MAX_PORT + "!");
         this.port = port;
     }
 
-    public void start() {
+    public synchronized void start() throws IOException {
         if (null == host) {
             throw new IllegalStateException("Host not set!");
         }
@@ -49,104 +65,52 @@ public class Server {
             throw new IllegalStateException("Port not set!");
         }
 
-        try (
-                ServerSocket serverSocket = new ServerSocket(port);
-                Socket clientSocket = serverSocket.accept();
-                PrintWriter out
-                = new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(clientSocket.getInputStream()));) {
-
-            String inputLine, outputLine;
-
-            // Initiate conversation with client
-            KnockKnockProtocol kkp = new KnockKnockProtocol();
-            outputLine = kkp.processInput(null);
-            out.println(outputLine);
-
-            while ((inputLine = in.readLine()) != null) {
-                outputLine = kkp.processInput(inputLine);
-                out.println(outputLine);
-                if (outputLine.equals("Bye.")) {
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Exception caught when trying to listen on port "
-                    + port + " or listening for a connection");
-            System.out.println(e.getMessage());
+        if (state != State.NOT_RUNNING) {
+            throw new IllegalStateException("Server not in state NOT_RUNNING!");
         }
 
-        running = true;
+        state = State.STARTING;
+        final ConnectionQueue queue = new ConnectionQueue();
+        worker = new RequestWorker(queue, io);
+        workerService.execute(worker);
+
+        socket = new ServerSocket(port, MAX_BACK_LOG, InetAddress.getByName(host));
+        listener = new InputListener(queue, socket, io);
+        listenerService.execute(listener);
+
+        state = State.RUNNING;
     }
 
-    public void stop() {
-        running = false;
+    public synchronized void stop() throws IOException {
+        if (state != State.RUNNING) {
+            throw new IllegalStateException("Server is not int state RUNNING!");
+        }
+
+        state = State.STOPPING;
+        listenerService.shutdown();
+        listener.stop();
+        workerService.shutdown();
+        worker.stop();
+
+        for (;;) {
+            if (worker.isReady() && listener.isReady()) {
+                break;
+            }
+        }
+
+        socket.close();
+        socket = null;
+        worker = null;
+        listener = null;
+        state = State.NOT_RUNNING;
     }
 
     public boolean isRunning() {
-        return running;
+        return state == State.RUNNING;
     }
 
-    private static class KnockKnockProtocol {
+    private enum State {
 
-        private static final int WAITING = 0;
-        private static final int SENTKNOCKKNOCK = 1;
-        private static final int SENTCLUE = 2;
-        private static final int ANOTHER = 3;
-
-        private static final int NUMJOKES = 5;
-
-        private int state = WAITING;
-        private int currentJoke = 0;
-
-        private String[] clues = {"Turnip", "Little Old Lady", "Atch", "Who", "Who"};
-        private String[] answers = {"Turnip the heat, it's cold in here!",
-            "I didn't know you could yodel!",
-            "Bless you!",
-            "Is there an owl in here?",
-            "Is there an echo in here?"};
-
-        public String processInput(String theInput) {
-            String theOutput = null;
-
-            if (state == WAITING) {
-                theOutput = "Knock! Knock!";
-                state = SENTKNOCKKNOCK;
-            } else if (state == SENTKNOCKKNOCK) {
-                if (theInput.equalsIgnoreCase("Who's there?")) {
-                    theOutput = clues[currentJoke];
-                    state = SENTCLUE;
-                } else {
-                    theOutput = "You're supposed to say \"Who's there?\"! "
-                            + "Try again. Knock! Knock!";
-                }
-            } else if (state == SENTCLUE) {
-                if (theInput.equalsIgnoreCase(clues[currentJoke] + " who?")) {
-                    theOutput = answers[currentJoke] + " Want another? (y/n)";
-                    state = ANOTHER;
-                } else {
-                    theOutput = "You're supposed to say \""
-                            + clues[currentJoke]
-                            + " who?\""
-                            + "! Try again. Knock! Knock!";
-                    state = SENTKNOCKKNOCK;
-                }
-            } else if (state == ANOTHER) {
-                if (theInput.equalsIgnoreCase("y")) {
-                    theOutput = "Knock! Knock!";
-                    if (currentJoke == (NUMJOKES - 1)) {
-                        currentJoke = 0;
-                    } else {
-                        currentJoke++;
-                    }
-                    state = SENTKNOCKKNOCK;
-                } else {
-                    theOutput = "Bye.";
-                    state = WAITING;
-                }
-            }
-            return theOutput;
-        }
+        NOT_RUNNING, RUNNING, STARTING, STOPPING;
     }
 }

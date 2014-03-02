@@ -9,11 +9,11 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -40,10 +40,22 @@ public class Stop extends BaseCommand {
         }
 
         getApplication().getIoStreams().println("Stopping server ...");
-        getApplication().getServer().start();
+
+        try {
+            getApplication().getServer().stop();
+        } catch (final IOException ex) {
+            getApplication().getIoStreams()
+                    .println(String.format(
+                                    "Exception caught when trying to stop listen on %s.", formatListenedAddress()));
+
+            if (getApplication().getOptions().isDebug()) {
+                getApplication().getIoStreams().printStackTrace(ex);
+            }
+        }
+
         getApplication().getIoStreams()
                 .println(String.format("Stopped listening on %s:%d.",
-                        getApplication().getOptions().getHost(),
-                        getApplication().getOptions().getPort()));
+                                getApplication().getOptions().getHost(),
+                                getApplication().getOptions().getPort()));
     }
 }

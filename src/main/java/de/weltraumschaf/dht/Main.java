@@ -24,7 +24,7 @@ public final class Main extends InvokableAdapter implements Application {
     private final CliOptions options = new CliOptions();
     private final JCommander cliOptionsParser = new JCommander();
     private final InteractiveShell shell = new InteractiveShell(this);
-    private final Server server = new Server();
+    private Server server;
 
     /**
      * Dedicated constructor.
@@ -47,6 +47,7 @@ public final class Main extends InvokableAdapter implements Application {
             throw new ApplicationException(ExitCodeImpl.FATAL, "Can't load version file!", ex);
         }
 
+        server = new Server(getIoStreams());
         server.setHost(options.getHost());
         server.setPort(options.getPort());
     }
