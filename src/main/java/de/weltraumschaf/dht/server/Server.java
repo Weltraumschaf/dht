@@ -90,7 +90,7 @@ public final class Server {
 
     public void stop() throws IOException, InterruptedException {
         if (state != State.RUNNING) {
-            throw new IllegalStateException("Server is not int state RUNNING!");
+            throw new IllegalStateException("Server is not in state RUNNING!");
         }
 
         state = State.STOPPING;
@@ -126,6 +126,10 @@ public final class Server {
 
     public boolean isRunning() {
         return state == State.RUNNING;
+    }
+
+    public State getState() {
+        return state;
     }
 
     static int calculateTimeout(final int round) {

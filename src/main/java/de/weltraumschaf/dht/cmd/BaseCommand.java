@@ -68,4 +68,24 @@ abstract class BaseCommand implements Command {
                 getApplication().getOptions().getHost(),
                 getApplication().getOptions().getPort());
     }
+
+    void println(final String msg) {
+        getApplication().getIoStreams().println(msg);
+    }
+
+    void errorln(final String msg) {
+        println("Error: " + msg);
+    }
+
+    void printStackTrace(final Throwable ex) {
+        getApplication().getIoStreams().printStackTrace(ex);
+    }
+
+    boolean isDebug() {
+        return getApplication().getOptions().isDebug();
+    }
+
+    String nl() {
+        return Application.NL;
+    }
 }

@@ -31,6 +31,7 @@ class Help extends BaseCommand {
             + "Available commands:%n%n"
 
             + "  help       Show all available commands.%n"
+            + "  status     Show application status information.%n"
             + "  exit       Exit the interactive shell.%n%n"
 
             + "  start      Starts the server.%n"
@@ -48,7 +49,7 @@ class Help extends BaseCommand {
 
     @Override
     public void execute() {
-        getApplication().getIoStreams().println(formatHelp());
+        println(formatHelp());
     }
 
     private String formatHelp() {

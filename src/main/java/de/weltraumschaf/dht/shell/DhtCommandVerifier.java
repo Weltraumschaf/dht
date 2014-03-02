@@ -35,6 +35,7 @@ public class DhtCommandVerifier implements CommandVerifier {
         switch ((CommandMainType) cmd.getCommand()) {
             case EXIT:
             case HELP:
+            case STATUS:
             case START:
             case STOP:
                 if (cmd.getSubCommand() != CommandSubType.NONE) {

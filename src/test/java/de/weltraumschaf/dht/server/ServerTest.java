@@ -17,13 +17,11 @@ import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 /**
+ * Tests for {@link Server}.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public class ServerTest {
-
-    public ServerTest() {
-    }
 
     @Test
     public void calculateTimeout() {

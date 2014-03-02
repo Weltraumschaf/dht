@@ -15,8 +15,6 @@ import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -37,27 +35,25 @@ public class Stop extends BaseCommand {
     @Override
     public void execute() {
         if (!getApplication().getServer().isRunning()) {
-            getApplication().getIoStreams().println("Server not running.");
+            println("Server not running.");
             return;
         }
 
-        getApplication().getIoStreams().println("Stopping server ...");
+        println("Stopping server ...");
 
         try {
             getApplication().getServer().stop();
         } catch (final IOException | InterruptedException ex) {
-            getApplication().getIoStreams()
-                    .println(String.format(
-                                    "Exception caught when trying to stop listen on %s.", formatListenedAddress()));
+            println(String.format(
+                    "Exception caught when trying to stop listen on %s.", formatListenedAddress()));
 
-            if (getApplication().getOptions().isDebug()) {
-                getApplication().getIoStreams().printStackTrace(ex);
+            if (isDebug()) {
+                printStackTrace(ex);
             }
         }
 
-        getApplication().getIoStreams()
-                .println(String.format("Stopped listening on %s:%d.",
-                                getApplication().getOptions().getHost(),
-                                getApplication().getOptions().getPort()));
+        println(String.format("Stopped listening on %s:%d.",
+                getApplication().getOptions().getHost(),
+                getApplication().getOptions().getPort()));
     }
 }

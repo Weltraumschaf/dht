@@ -9,18 +9,18 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
+
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
-import java.io.IOException;
 import java.util.List;
 
 /**
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public class Start extends BaseCommand {
+final class Status extends BaseCommand {
 
     /**
      * Dedicated constructor.
@@ -28,31 +28,19 @@ public class Start extends BaseCommand {
      * @param app invoking application
      * @param arguments command arguments
      */
-    public Start(final Application app, final List<Token> arguments) {
+    public Status(final Application app, final List<Token> arguments) {
         super(app, arguments);
     }
 
     @Override
     public void execute() {
-        if (getApplication().getServer().isRunning()) {
-            println(String.format("Server already listening on %s.", formatListenedAddress()));
-            return;
-        }
+        final StringBuilder buffer = new StringBuilder();
 
-        println("Starting server ...");
+        buffer.append("Server:").append(nl());
+        buffer.append("  State:   ").append(getApplication().getServer().getState()).append(nl());
+        buffer.append("  Address: ").append(formatListenedAddress()).append(nl());
 
-        try {
-            getApplication().getServer().start();
-        } catch (final IOException ex) {
-            println(String.format(
-                    "Exception caught when trying to listen on %s or listening for a connection", formatListenedAddress()));
-
-            if (isDebug()) {
-                printStackTrace(ex);
-            }
-        }
-
-        println(String.format("Server listening on %s.", formatListenedAddress()));
+        println(buffer.toString());
     }
 
 }

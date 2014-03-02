@@ -11,9 +11,9 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-class Exit extends BaseCommand {
+final class Exit extends BaseCommand {
 
     /**
      * Dedicated constructor.
@@ -35,7 +35,19 @@ class Exit extends BaseCommand {
 
     @Override
     public void execute() {
-        getApplication().getIoStreams().println("Bye bye & HAND!");
+        try {
+            if (getApplication().getServer().isRunning()) {
+                getApplication().getServer().stop();
+            }
+        } catch (final IOException | InterruptedException ex) {
+            errorln("Error: " + ex.getMessage());
+
+            if (isDebug()) {
+                printStackTrace(ex);
+            }
+        }
+
+        println("Bye bye & HAND!");
     }
 
 }

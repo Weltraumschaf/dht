@@ -57,6 +57,9 @@ public final class CommandFactory {
             case HELP:
                 cmd = new Help(app, shellCmd.getArguments());
                 break;
+            case STATUS:
+                cmd = new Status(app, shellCmd.getArguments());
+                break;
             case START:
                 cmd = new Start(app, shellCmd.getArguments());
                 break;
