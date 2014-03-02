@@ -23,11 +23,6 @@ import de.weltraumschaf.commons.shell.SyntaxException;
 public class DhtCommandVerifier implements CommandVerifier {
 
     /**
-     * Required number of arguments for message command.
-     */
-    private static final int MESSAGE_ARGS_COUNT = 3;
-
-    /**
      * Verifies parsed command of consistency.
      *
      * Consistency checks are: - correct sub command type - correct number of arguments
@@ -40,6 +35,8 @@ public class DhtCommandVerifier implements CommandVerifier {
         switch ((CommandMainType) cmd.getCommand()) {
             case EXIT:
             case HELP:
+            case START:
+            case STOP:
                 if (cmd.getSubCommand() != CommandSubType.NONE) {
                     throw new SyntaxException(String.format("Command '%s' does not support subcommand '%s'!",
                             cmd.getCommand(), cmd.getSubCommand()));

@@ -22,6 +22,7 @@ import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.Main;
 import de.weltraumschaf.dht.cmd.Command;
 import de.weltraumschaf.dht.cmd.CommandFactory;
+import java.io.IOError;
 import java.io.IOException;
 import java.util.List;
 import jline.console.ConsoleReader;
@@ -67,9 +68,8 @@ public class InteractiveShell {
      * Default constructor.
      *
      * @param app the invoking application
-     * @throws IOException if, version properties could not be loaded for {@link Version}
      */
-    public InteractiveShell(final Application app) throws IOException {
+    public InteractiveShell(final Application app) {
         super();
         this.app = Validate.notNull(app, "Parameter >app< must not be null!");
         factory = new CommandFactory(this.app);

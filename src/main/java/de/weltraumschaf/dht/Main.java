@@ -4,6 +4,7 @@ import com.beust.jcommander.JCommander;
 import de.weltraumschaf.commons.ApplicationException;
 import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
+import de.weltraumschaf.dht.server.Server;
 import de.weltraumschaf.dht.shell.InteractiveShell;
 import java.io.IOException;
 import org.apache.commons.lang3.Validate;
@@ -22,6 +23,8 @@ public final class Main extends InvokableAdapter implements Application {
 
     private final CliOptions options = new CliOptions();
     private final JCommander cliOptionsParser = new JCommander();
+    private final InteractiveShell shell = new InteractiveShell(this);
+    private final Server server = new Server();
 
     /**
      * Dedicated constructor.
@@ -31,15 +34,21 @@ public final class Main extends InvokableAdapter implements Application {
      */
     public Main(final String[] args) throws ApplicationException {
         super(args);
+    }
+
+    public void initEnvironment() throws ApplicationException {
         cliOptionsParser.setProgramName(NAME);
         cliOptionsParser.addObject(options);
-        cliOptionsParser.parse(args);
+        cliOptionsParser.parse(getArgs());
 
         try {
             version.load();
         } catch (final IOException ex) {
             throw new ApplicationException(ExitCodeImpl.FATAL, "Can't load version file!", ex);
         }
+
+        server.setHost(options.getHost());
+        server.setPort(options.getPort());
     }
 
     /**
@@ -75,6 +84,8 @@ public final class Main extends InvokableAdapter implements Application {
 
     @Override
     public void execute() throws Exception {
+        initEnvironment();
+
         if (options.isHelp()) {
             showHelpMessage();
             return;
@@ -85,15 +96,7 @@ public final class Main extends InvokableAdapter implements Application {
             return;
         }
 
-        try {
-            run();
-        } catch (final Exception ex) {
-            getIoStreams().errorln(ex.getMessage());
-
-            if (options.isDebug()) {
-                getIoStreams().printStackTrace(ex);
-            }
-        }
+        run();
     }
 
     /**
@@ -109,9 +112,21 @@ public final class Main extends InvokableAdapter implements Application {
         getIoStreams().print(buffer.toString());
     }
 
-    private void run() throws IOException {
-        final InteractiveShell shell = new InteractiveShell(this);
-        shell.start();
+    private void run() {
+        try {
+            shell.start();
+        } catch (final Exception ex) {
+            getIoStreams().errorln(ex.getMessage());
+
+            if (options.isDebug()) {
+                getIoStreams().printStackTrace(ex);
+            }
+        }
+    }
+
+    @Override
+    public Server getServer() {
+        return server;
     }
 
 }

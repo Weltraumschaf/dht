@@ -13,22 +13,56 @@ package de.weltraumschaf.dht;
 
 import de.weltraumschaf.commons.IOStreams;
 import de.weltraumschaf.commons.Version;
+import de.weltraumschaf.dht.server.Server;
 
 /**
+ * Interface of the application.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public interface Application {
 
+    /**
+     * Name of application.
+     */
     public static final String NAME = "dht";
+    /**
+     * Used new line character.
+     */
     public static final String NL = "\n";
+    /**
+     * The encoding used by this application for any I/O.
+     */
     public static final String ENCODING = "utf-8";
+    /**
+     * Default host to listen on, if not given as CLI option.
+     */
     public static final String DEFAULT_HOST = "127.0.0.1";
+    /**
+     * Default port to listen on, if not given as CLI option.
+     */
     public static final int DEFAULT_PORT = 8888;
 
+    /**
+     * Get the applications I/O streams.
+     *
+     * @return never {@code null}
+     */
     IOStreams getIoStreams();
 
+    /**
+     * Get the applications version.
+     *
+     * @return never {@code null}
+     */
     Version getVersion();
 
+    /**
+     * Get the applications command line options.
+     *
+     * @return never {@code null}
+     */
     CliOptions getOptions();
+
+    Server getServer();
 }

@@ -30,8 +30,11 @@ class Help extends BaseCommand {
 
             + "Available commands:%n%n"
 
-            + "  help   Show all available commands.%n"
-            + "  exit   Exit the interactive shell.%n%n";
+            + "  help       Show all available commands.%n"
+            + "  exit       Exit the interactive shell.%n%n"
+
+            + "  start      Starts the server.%n"
+            + "  stop       Stops the server.%n%n";
 
     /**
      * Dedicated constructor.

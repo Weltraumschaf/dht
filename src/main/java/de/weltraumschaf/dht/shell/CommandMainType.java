@@ -29,7 +29,9 @@ public enum CommandMainType implements MainCommandType {
     /**
      * Exit command.
      */
-    EXIT("exit");
+    EXIT("exit"),
+    START("start"),
+    STOP("stop");
 
     /**
      * Literal command string used in shell.
