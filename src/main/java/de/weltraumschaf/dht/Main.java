@@ -109,6 +109,9 @@ public final class Main extends InvokableAdapter implements Application {
     private void showHelpMessage() {
         final StringBuilder buffer = new StringBuilder();
         cliOptionsParser.usage(buffer);
+        buffer.append(NL);
+        buffer.append("Developed by Sven Strittmatter <ich@weltraumschaf.de>").append(NL);
+        buffer.append("https://github.com/Weltraumschaf/dht").append(NL).append(NL);
         getIoStreams().print(buffer.toString());
     }
 
