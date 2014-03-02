@@ -40,7 +40,7 @@ public class RequestWorker implements Task {
             }
 
             if (stop && queue.isEmpty()) {
-                io.println("Stop request worker command " + hashCode() + ".");
+                io.println("Stop request worker task " + hashCode() + ".");
                 ready = true;
                 break;
             }
@@ -49,7 +49,7 @@ public class RequestWorker implements Task {
 
     @Override
     public void stop() {
-        io.println("Got stop signal for request worker command " + hashCode() + ".");
+        io.println("Got stop signal for request worker task " + hashCode() + ".");
         stop = true;
     }
 

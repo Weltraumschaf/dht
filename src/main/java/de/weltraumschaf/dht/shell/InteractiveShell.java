@@ -12,7 +12,6 @@
 package de.weltraumschaf.dht.shell;
 
 import com.google.common.collect.Lists;
-import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.commons.shell.Parser;
 import de.weltraumschaf.commons.shell.Parsers;
 import de.weltraumschaf.commons.shell.ShellCommand;
@@ -22,7 +21,6 @@ import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.Main;
 import de.weltraumschaf.dht.cmd.Command;
 import de.weltraumschaf.dht.cmd.CommandFactory;
-import java.io.IOError;
 import java.io.IOException;
 import java.util.List;
 import jline.console.ConsoleReader;
@@ -89,6 +87,11 @@ public class InteractiveShell {
         String inputLine;
         while ((inputLine = reader.readLine()) != null) {
             try {
+                if (inputLine.trim().isEmpty()) {
+                    // Prevent index out of bound exception in parser.
+                    continue;
+                }
+
                 final ShellCommand cmd = parser.parse(inputLine);
                 execute(cmd);
             } catch (final SyntaxException ex) {

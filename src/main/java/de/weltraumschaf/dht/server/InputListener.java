@@ -88,7 +88,7 @@ public class InputListener implements Task {
             });
 
             if (stop) {
-                io.println("Stop input listener command " + hashCode() + ".");
+                io.println("Stop input listener task " + hashCode() + ".");
                 ready = true;
                 break;
             }
@@ -100,7 +100,7 @@ public class InputListener implements Task {
      */
     @Override
     public void stop() {
-        io.println("Got stop signal for input listener command " + hashCode() + ".");
+        io.println("Got stop signal for input listener task " + hashCode() + ".");
         stop = true;
     }
 
