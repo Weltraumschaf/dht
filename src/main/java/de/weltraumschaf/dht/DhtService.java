@@ -39,12 +39,13 @@ public class DhtService {
     /**
      * From the start node, find the node responsible for the target key.
      *
+     * @param <T>
      * @param start
      * @param key
      * @return
      */
-    public static Node findNode(final Node start, final DataKey key) {
-        Node current = start;
+    public static <T> Node<T> findNode(final Node<T> start, final DataKey key) {
+        Node<T> current = start;
 
         while (Bits.CompareResult.GREATER == Bits.compare(distance(current.getId(), key),
                                                            distance(current.getNext().getId(), key))) {
@@ -75,8 +76,8 @@ public class DhtService {
      * @param key
      * @param value
      */
-    public static <T> void store(final Node start, final DataKey key, final T value) {
-        final Node node = findNode(start, key);
+    public static <T> void store(final Node<T> start, final DataKey key, final T value) {
+        final Node<T> node = findNode(start, key);
         node.put(key, value);
     }
 }

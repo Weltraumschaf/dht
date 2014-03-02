@@ -25,10 +25,10 @@ import org.apache.commons.lang3.Validate;
 public class Node<T> {
 
     private final NodeId id;
-    private final Node next;
+    private final Node<T> next;
     private final Map<DataKey, T> data = Maps.newHashMap();
 
-    public Node(final NodeId id, final Node next) {
+    public Node(final NodeId id, final Node<T> next) {
         super();
         this.id = Validate.notNull(id);
         this.next = Validate.notNull(next);
@@ -38,7 +38,7 @@ public class Node<T> {
         return id;
     }
 
-    public Node getNext() {
+    public Node<T> getNext() {
         return next;
     }
 
