@@ -129,6 +129,8 @@ public final class Main extends InvokableAdapter implements Application {
 
     private void showHelpMessage() {
         final StringBuilder buffer = new StringBuilder();
+        buffer.append("DHT is an interactive shell to play around with distributed hash table technology.")
+              .append(NL).append(NL);
         cliOptionsParser.usage(buffer);
         buffer.append(NL);
         buffer.append("Developed by Sven Strittmatter <ich@weltraumschaf.de>").append(NL);
