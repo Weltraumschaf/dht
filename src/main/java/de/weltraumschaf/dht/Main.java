@@ -8,7 +8,7 @@ import de.weltraumschaf.dht.shell.InteractiveShell;
 import java.io.IOException;
 import org.apache.commons.lang3.Validate;
 
-public final class Main extends InvokableAdapter {
+public final class Main extends InvokableAdapter implements Application {
 
     public static final String NAME = "dht";
     /**
@@ -65,6 +65,16 @@ public final class Main extends InvokableAdapter {
     }
 
     @Override
+    public Version getVersion() {
+        return version;
+    }
+
+    @Override
+    public CliOptions getOptions() {
+        return options;
+    }
+
+    @Override
     public void execute() throws Exception {
         if (options.isHelp()) {
             showHelpMessage();
@@ -93,7 +103,7 @@ public final class Main extends InvokableAdapter {
     }
 
     private void run() throws IOException {
-        final InteractiveShell shell = new InteractiveShell(getIoStreams());
+        final InteractiveShell shell = new InteractiveShell(this);
         shell.start();
     }
 

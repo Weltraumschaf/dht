@@ -11,9 +11,9 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.IO;
-import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.commons.shell.ShellCommand;
+import de.weltraumschaf.dht.Application;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Factory to create command objects depending on the parsed {@link ShellCommand}.
@@ -25,16 +25,16 @@ public final class CommandFactory {
     /**
      * Shell I/O.
      */
-    private final IO io;
+    private final Application app;
 
     /**
      * Dedicated constructor.
      *
-     * @param io shell I/O used by commands
+     * @param app the invoking application
      */
-    public CommandFactory(final IO io) {
+    public CommandFactory(final Application app) {
         super();
-        this.io = io;
+        this.app = Validate.notNull(app, "Parameter >app< must not be null!");
     }
 
     /**

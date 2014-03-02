@@ -19,6 +19,7 @@ import de.weltraumschaf.commons.shell.Parsers;
 import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.SyntaxException;
+import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.Main;
 import de.weltraumschaf.dht.cmd.Command;
 import de.weltraumschaf.dht.cmd.CommandFactory;
@@ -29,6 +30,7 @@ import jline.console.completer.AggregateCompleter;
 import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.Completer;
 import jline.console.completer.StringsCompleter;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Implements a simple REPL shell.
@@ -45,7 +47,7 @@ public class InteractiveShell {
     /**
      * ShellCommand line I/O.
      */
-    private final IO io;
+    private final Application app;
 
     /**
      * Shell user input parser.
@@ -65,13 +67,13 @@ public class InteractiveShell {
     /**
      * Default constructor.
      *
-     * @param io injection point for I/O
+     * @param app the invoking application
      * @throws IOException if, version properties could not be loaded for {@link Version}
      */
-    public InteractiveShell(final IO io) throws IOException {
+    public InteractiveShell(final Application app) throws IOException {
         super();
-        this.io = io;
-        factory = new CommandFactory(this.io);
+        this.app = Validate.notNull(app, "Parameter >app< must not be null!");
+        factory = new CommandFactory(this.app);
     }
 
     /**
@@ -80,8 +82,8 @@ public class InteractiveShell {
      * @throws IOException if I/O error occurs
      */
     public void start() throws IOException {
-        io.println(String.format("Welcome to Neuro Interactive Shell!%n"));
-        final ConsoleReader reader = new ConsoleReader(io.getStdin(), io.getStdout());
+        app.getIoStreams().println(String.format("Welcome to Neuro Interactive Shell!%n"));
+        final ConsoleReader reader = new ConsoleReader(app.getIoStreams().getStdin(), app.getIoStreams().getStdout());
         reader.addCompleter(createCompletionHints());
         reader.setPrompt(PROMPT);
 
@@ -91,7 +93,7 @@ public class InteractiveShell {
                 final ShellCommand cmd = parser.parse(inputLine);
                 execute(cmd);
             } catch (SyntaxException ex) {
-                io.println("Error: " + ex.getMessage());
+                app.getIoStreams().println("Error: " + ex.getMessage());
             }
 
             if (stop) {
