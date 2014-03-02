@@ -34,6 +34,11 @@ public class Stop extends BaseCommand {
 
     @Override
     public void execute() {
+        if (!getApplication().getServer().isRunning()) {
+            getApplication().getIoStreams().println("Server not running.");
+            return;
+        }
+
         getApplication().getIoStreams().println("Stopping server ...");
         getApplication().getServer().start();
         getApplication().getIoStreams()

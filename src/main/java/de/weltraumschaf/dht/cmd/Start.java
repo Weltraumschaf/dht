@@ -34,6 +34,14 @@ public class Start extends BaseCommand {
 
     @Override
     public void execute() {
+        if (getApplication().getServer().isRunning()) {
+            getApplication().getIoStreams()
+                .println(String.format("Server already listening on %s:%d.",
+                        getApplication().getOptions().getHost(),
+                        getApplication().getOptions().getPort()));
+            return;
+        }
+
         getApplication().getIoStreams().println("Starting server ...");
         getApplication().getServer().start();
         getApplication().getIoStreams()

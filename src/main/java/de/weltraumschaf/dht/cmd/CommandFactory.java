@@ -57,6 +57,12 @@ public final class CommandFactory {
             case HELP:
                 cmd = new Help(app, shellCmd.getArguments());
                 break;
+            case START:
+                cmd = new Start(app, shellCmd.getArguments());
+                break;
+            case STOP:
+                cmd = new Stop(app, shellCmd.getArguments());
+                break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported main command type '%s'!",
                         shellCmd.getCommand()));
