@@ -14,6 +14,7 @@ package de.weltraumschaf.dht.server;
 import de.weltraumschaf.commons.IO;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.lang3.Validate;
@@ -32,7 +33,7 @@ public final class Server {
     private static final int THREAD_POOL_SIZE = 1;
 
     private final IO io;
-    private final ConnectionQueue queue = new ConnectionQueue();
+    private final ConnectionQueue<AsynchronousSocketChannel> queue = new ConnectionQueue<AsynchronousSocketChannel>();
 
     private ExecutorService listenerService;
     private ExecutorService workerService;

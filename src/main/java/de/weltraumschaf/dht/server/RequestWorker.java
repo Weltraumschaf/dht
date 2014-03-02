@@ -15,6 +15,8 @@ import de.weltraumschaf.commons.IO;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -24,7 +26,7 @@ import org.apache.commons.lang3.Validate;
 final class RequestWorker implements Task {
 
     private final RequestHandler requestHandler = new RequestHandler();
-    private final ConnectionQueue queue;
+    private final ConnectionQueue<AsynchronousSocketChannel> queue;
     private final IO io;
     private volatile boolean stop = false;
     private volatile boolean ready = false;
@@ -71,7 +73,7 @@ final class RequestWorker implements Task {
         try {
             requestHandler.execute(client);
         } catch (final Exception ex) {
-            io.println("Error while talking with " + formatAddress(client) + ": " + ex.getMessage());
+            io.println("Error while talking with client" + formatAddress(client) + ": " + ex.getMessage());
         }
     }
 

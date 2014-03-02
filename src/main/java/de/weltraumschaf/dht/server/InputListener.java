@@ -16,15 +16,9 @@ import java.io.IOError;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.nio.channels.AcceptPendingException;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.nio.channels.CompletionHandler;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -38,7 +32,7 @@ final class InputListener implements Task {
     /**
      * Queue shared w/ consumer thread.
      */
-    private final ConnectionQueue queue;
+    private final ConnectionQueue<AsynchronousSocketChannel> queue;
 
     private final InetSocketAddress address;
     private final IO io;
@@ -55,7 +49,7 @@ final class InputListener implements Task {
      */
     private volatile boolean ready;
 
-    public InputListener(final ConnectionQueue queue, final InetSocketAddress address, final IO io) {
+    public InputListener(final ConnectionQueue<AsynchronousSocketChannel> queue, final InetSocketAddress address, final IO io) {
         super();
         this.queue = Validate.notNull(queue, "Parameter >queue< must not be null!");
         this.address = Validate.notNull(address, "Parameter >address< must not be null!");
@@ -79,41 +73,30 @@ final class InputListener implements Task {
         }
 
         while (true) {
-            Future<AsynchronousSocketChannel> future = null;
-
-            try {
-                future = server.accept();
-            } catch (final AcceptPendingException ex) {
-                io.println("Error (AcceptPendingException): " + ex.getMessage());
-                continue;
-            }
-
-            try {
-                final AsynchronousSocketChannel client = future.get(5, TimeUnit.SECONDS);
-
-                if (client != null) {
-                    queue.put(client);
+            server.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
+                @Override
+                public void completed(final AsynchronousSocketChannel ch, final Void att) {
+                    // accept the next connection
+                    server.accept(null, this);
+                    queue.put(ch);
                 }
-            } catch (final InterruptedException | ExecutionException | TimeoutException ex) {
-                io.println("Error: " + ex.getMessage());
-                continue;
-            }
+
+                @Override
+                public void failed(final Throwable t, final Void att) {
+                    io.println("Connection failed:  " + t.getMessage());
+                }
+            });
 
             if (stop) {
-                io.println("STOP 1");
                 break;
             }
         }
 
         try {
-            io.println("STOP 2");
             server.close();
-            io.println("STOP 3");
         } catch (final IOException ex) {
-            io.println("STOP 4");
             throw new IOError(ex);
         } finally {
-            io.println("STOP 5");
             ready = true;
         }
 
