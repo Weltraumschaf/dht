@@ -66,8 +66,9 @@ public class InteractiveShell {
      * Default constructor.
      *
      * @param app the invoking application
+     * @throws ClassNotFoundException if command classes can't be found
      */
-    public InteractiveShell(final Application app) {
+    public InteractiveShell(final Application app) throws ClassNotFoundException {
         super();
         this.app = Validate.notNull(app, "Parameter >app< must not be null!");
         factory = new CommandFactory(this.app);
@@ -94,7 +95,7 @@ public class InteractiveShell {
 
                 final ShellCommand cmd = parser.parse(inputLine);
                 execute(cmd);
-            } catch (final SyntaxException ex) {
+            } catch (final SyntaxException | InstantiationException | IllegalAccessException ex) {
                 app.getIoStreams().println("Error: " + ex.getMessage());
 
                 if (app.getOptions().isDebug()) {
@@ -120,7 +121,7 @@ public class InteractiveShell {
      *
      * @param shellCmd command to execute
      */
-    private void execute(final ShellCommand shellCmd) {
+    private void execute(final ShellCommand shellCmd) throws InstantiationException, IllegalAccessException {
         final Command cmd = factory.newCommand(shellCmd);
         cmd.execute();
 

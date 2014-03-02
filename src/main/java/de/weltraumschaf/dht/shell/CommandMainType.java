@@ -30,8 +30,21 @@ public enum CommandMainType implements MainCommandType {
      * Exit command.
      */
     EXIT("exit"),
+    /**
+     * Send message command.
+     */
+    SEND("send"),
+    /**
+     * Start server command.
+     */
     START("start"),
+    /**
+     * Stop server command.
+     */
     STOP("stop"),
+    /**
+     * Current status command.
+     */
     STATUS("status");
 
     /**

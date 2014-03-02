@@ -11,11 +11,15 @@
  */
 package de.weltraumschaf.dht.cmd;
 
+import com.beust.jcommander.internal.Maps;
+import de.weltraumschaf.commons.shell.MainCommandType;
 import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.EXIT;
 import static de.weltraumschaf.dht.shell.CommandMainType.HELP;
+import java.util.Collections;
+import java.util.Map;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -30,14 +34,29 @@ public final class CommandFactory {
      */
     private final Application app;
 
+    private final Map<MainCommandType, Class<?>> classLookup;
+
     /**
      * Dedicated constructor.
      *
      * @param app the invoking application
      */
-    public CommandFactory(final Application app) {
+    public CommandFactory(final Application app) throws ClassNotFoundException {
         super();
         this.app = Validate.notNull(app, "Parameter >app< must not be null!");
+
+        final Map<MainCommandType, Class<?>> temp = Maps.newHashMap();
+
+        for (final CommandMainType type : CommandMainType.values()) {
+            temp.put(type, Class.forName(generateClassName(type)));
+        }
+
+        classLookup = Collections.unmodifiableMap(temp);
+    }
+
+    private static String generateClassName(final CommandMainType type) {
+        final String name = type.name().toLowerCase();
+        return "de.weltraumschaf.dht.cmd." + Character.toUpperCase(name.charAt(0)) + name.substring(1);
     }
 
     /**
@@ -47,31 +66,18 @@ public final class CommandFactory {
      * @return command object // CHECKSTYLE:OFF
      * @throws IllegalArgumentException if, can't create command of bad main or sub command type // CHECKSTYLE:ON
      */
-    public Command newCommand(final ShellCommand shellCmd) {
-        Command cmd;
-
-        switch ((CommandMainType) shellCmd.getCommand()) {
-            case EXIT:
-                cmd = new Exit(app, shellCmd.getArguments());
-                break;
-            case HELP:
-                cmd = new Help(app, shellCmd.getArguments());
-                break;
-            case STATUS:
-                cmd = new Status(app, shellCmd.getArguments());
-                break;
-            case START:
-                cmd = new Start(app, shellCmd.getArguments());
-                break;
-            case STOP:
-                cmd = new Stop(app, shellCmd.getArguments());
-                break;
-            default:
-                throw new IllegalArgumentException(String.format("Unsupported main command type '%s'!",
-                        shellCmd.getCommand()));
+    public Command newCommand(final ShellCommand shellCmd) throws InstantiationException, IllegalAccessException {
+        if (classLookup.containsKey(shellCmd.getCommand())) {
+            final Class<?> comamndClass = classLookup.get(shellCmd.getCommand());
+            final Command cmd = (Command) comamndClass.newInstance();
+            cmd.setApp(app);
+            cmd.setArguments(shellCmd.getArguments());
+            return cmd;
         }
 
-        return cmd;
+        throw new IllegalArgumentException(String.format("Unsupported main command type '%s'!", shellCmd.getCommand()));
     }
+
+
 
 }

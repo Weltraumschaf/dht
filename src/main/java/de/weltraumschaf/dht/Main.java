@@ -7,8 +7,6 @@ import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.dht.server.Server;
 import de.weltraumschaf.dht.shell.InteractiveShell;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang3.Validate;
 
 public final class Main extends InvokableAdapter implements Application {
@@ -33,8 +31,9 @@ public final class Main extends InvokableAdapter implements Application {
      *
      * @param args command line arguments provided by JVM
      * @throws ApplicationException if {@link #processor} can't be instantiated
+     * @throws ClassNotFoundException if command classes can't be found
      */
-    public Main(final String[] args) throws ApplicationException {
+    public Main(final String[] args) throws ApplicationException, ClassNotFoundException {
         super(args);
     }
 
@@ -78,7 +77,7 @@ public final class Main extends InvokableAdapter implements Application {
      * @param args command line arguments provided by JVM
      * @throws ApplicationException if errors occurs while creating report processor
      */
-    public static void main(final String[] args) throws ApplicationException {
+    public static void main(final String[] args) throws ApplicationException, ClassNotFoundException {
         main(new Main(args));
     }
 

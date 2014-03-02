@@ -11,9 +11,7 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
-import java.util.List;
 
 /**
  * Prints {@link #HELP} into the shell.
@@ -30,22 +28,14 @@ final class Help extends BaseCommand {
 
             + "Available commands:%n%n"
 
-            + "  help       Show all available commands.%n"
-            + "  status     Show application status information.%n"
-            + "  exit       Exit the interactive shell.%n%n"
+            + "  help                           Show all available commands.%n"
+            + "  status                         Show application status information.%n"
+            + "  exit                           Exit the interactive shell.%n%n"
 
-            + "  start      Starts the server.%n"
-            + "  stop       Stops the server.%n%n";
+            + "  start                          Starts the server.%n"
+            + "  stop                           Stops the server.%n%n"
 
-    /**
-     * Dedicated constructor.
-     *
-     * @param app invoking application
-     * @param arguments command arguments
-     */
-    public Help(final Application app, final List<Token> arguments) {
-        super(app, arguments);
-    }
+            + "  send <host> <port> <message>   Sends <message> to <host:port>.%n%n";
 
     @Override
     public void execute() {

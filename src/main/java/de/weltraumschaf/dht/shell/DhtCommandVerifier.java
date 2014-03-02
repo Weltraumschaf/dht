@@ -22,6 +22,10 @@ import de.weltraumschaf.commons.shell.SyntaxException;
  */
 public class DhtCommandVerifier implements CommandVerifier {
 
+    private static final int ARGS_1 = 1;
+    private static final int ARGS_2 = 2;
+    private static final int ARGS_3 = 3;
+
     /**
      * Verifies parsed command of consistency.
      *
@@ -38,18 +42,36 @@ public class DhtCommandVerifier implements CommandVerifier {
             case STATUS:
             case START:
             case STOP:
-                if (cmd.getSubCommand() != CommandSubType.NONE) {
-                    throw new SyntaxException(String.format("Command '%s' does not support subcommand '%s'!",
-                            cmd.getCommand(), cmd.getSubCommand()));
-                }
-
-                if (!cmd.getArguments().isEmpty()) {
-                    throw new SyntaxException(String.format("Command '%s' does not support arguments!",
-                            cmd.getCommand()));
-                }
+                assertNoSubCommand(cmd);
+                assertNoArguments(cmd);
+                break;
+            case SEND:
+                assertNoSubCommand(cmd);
+                assertArgumentsCount(cmd, ARGS_3);
                 break;
             default:
             // Nothing to do here.
+        }
+    }
+
+    private void assertNoArguments(final ShellCommand cmd) throws SyntaxException {
+        if (!cmd.getArguments().isEmpty()) {
+            throw new SyntaxException(String.format("Command '%s' does not support arguments!",
+                    cmd.getCommand()));
+        }
+    }
+
+    private void assertArgumentsCount(final ShellCommand cmd, final int expectedCount) throws SyntaxException {
+        if (cmd.getArguments().size() != expectedCount) {
+            throw new SyntaxException(String.format("Command '%s' expects %d arguments!",
+                    cmd.getCommand(), expectedCount));
+        }
+    }
+
+    private void assertNoSubCommand(final ShellCommand cmd) throws SyntaxException {
+        if (cmd.getSubCommand() != CommandSubType.NONE) {
+            throw new SyntaxException(String.format("Command '%s' does not support subcommand '%s'!",
+                    cmd.getCommand(), cmd.getSubCommand()));
         }
     }
 

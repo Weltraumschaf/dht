@@ -9,32 +9,24 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
+
 package de.weltraumschaf.dht.cmd;
 
-import java.io.IOException;
+import de.weltraumschaf.commons.shell.Token;
+import java.util.List;
 
 /**
- * Executes `exit` command.
+ * Executes `send` command.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-final class Exit extends BaseCommand {
+final class Send extends BaseCommand {
 
     @Override
     public void execute() {
-        try {
-            if (getApplication().getServer().isRunning()) {
-                getApplication().getServer().stop();
-            }
-        } catch (final IOException | InterruptedException ex) {
-            errorln("Error: " + ex.getMessage());
-
-            if (isDebug()) {
-                printStackTrace(ex);
-            }
-        }
-
-        println("Bye bye & HAND!");
+        List<Token> args = getArguments();
+        println("  host:    " + args.get(0).toString());
+        println("  port:    " + args.get(1).toString());
+        println("  message: " + args.get(2).toString());
     }
-
 }

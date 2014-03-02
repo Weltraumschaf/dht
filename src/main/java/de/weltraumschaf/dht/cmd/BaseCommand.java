@@ -13,6 +13,7 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
+import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
 
@@ -26,24 +27,12 @@ abstract class BaseCommand implements Command {
     /**
      * Arguments for the command.
      */
-    private final List<Token> arguments;
+    private List<Token> arguments;
 
     /**
      * Invoking application.
      */
-    private final Application app;
-
-    /**
-     * Dedicated constructor.
-     *
-     * @param app invoking application
-     * @param arguments parsed shell arguments
-     */
-    public BaseCommand(final Application app, final List<Token> arguments) {
-        super();
-        this.app = Validate.notNull(app, "Parameter >app< must not be null!");
-        this.arguments = Validate.notNull(arguments, "Parameter >arguments< must not be null!");
-    }
+    private Application app;
 
     /**
      * Getter for sub classes.
@@ -61,6 +50,16 @@ abstract class BaseCommand implements Command {
      */
     List<Token> getArguments() {
         return arguments;
+    }
+
+    @Override
+    public void setArguments(final List<Token> arguments) {
+        this.arguments = Collections.unmodifiableList(Validate.notNull(arguments, "Parameter >arguments< must not be null!"));
+    }
+
+    @Override
+    public void setApp(final Application app) {
+        this.app = Validate.notNull(app, "Parameter >app< must not be null!");
     }
 
     String formatListenedAddress() {

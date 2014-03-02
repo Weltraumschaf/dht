@@ -36,7 +36,7 @@ final class RequestWorker implements Task {
     private volatile boolean stop = false;
     private volatile boolean ready = false;
 
-    public RequestWorker(final ConnectionQueue queue, final IO io) {
+    public RequestWorker(final ConnectionQueue<AsynchronousSocketChannel> queue, final IO io) {
         super();
         this.queue = Validate.notNull(queue, "Parameter >queue< must not be null!");
         this.io = Validate.notNull(io, "Parameter >io< must not be null!");

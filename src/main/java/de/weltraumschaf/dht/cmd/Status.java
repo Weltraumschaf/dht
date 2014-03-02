@@ -12,26 +12,12 @@
 
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.shell.Token;
-import de.weltraumschaf.dht.Application;
-import java.util.List;
-
 /**
  * Executes `status` command.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 final class Status extends BaseCommand {
-
-    /**
-     * Dedicated constructor.
-     *
-     * @param app invoking application
-     * @param arguments command arguments
-     */
-    public Status(final Application app, final List<Token> arguments) {
-        super(app, arguments);
-    }
 
     @Override
     public void execute() {

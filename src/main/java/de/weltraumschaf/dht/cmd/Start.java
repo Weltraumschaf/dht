@@ -11,10 +11,7 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.shell.Token;
-import de.weltraumschaf.dht.Application;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Executes `start` command.
@@ -22,16 +19,6 @@ import java.util.List;
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 final class Start extends BaseCommand {
-
-    /**
-     * Dedicated constructor.
-     *
-     * @param app invoking application
-     * @param arguments command arguments
-     */
-    public Start(final Application app, final List<Token> arguments) {
-        super(app, arguments);
-    }
 
     @Override
     public void execute() {

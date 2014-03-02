@@ -11,6 +11,10 @@
  */
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.commons.shell.Token;
+import de.weltraumschaf.dht.Application;
+import java.util.List;
+
 /**
  * Interface for shell commands.
  *
@@ -22,5 +26,6 @@ public interface Command {
      * Executes the command.
      */
     void execute();
-
+    void setArguments(List<Token> arguments);
+    void setApp(final Application app);
 }
