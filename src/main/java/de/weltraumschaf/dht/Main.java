@@ -1,14 +1,13 @@
 package de.weltraumschaf.dht;
 
+import com.beust.jcommander.JCommander;
 import de.weltraumschaf.commons.ApplicationException;
 import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang3.Validate;
 
-public class Main extends InvokableAdapter {
+public final class Main extends InvokableAdapter {
 
     /**
      * JAR relative path to version property file.
@@ -20,6 +19,9 @@ public class Main extends InvokableAdapter {
      */
     private final Version version = new Version(VERSION_FILE);
 
+    private final CliOptions options = new CliOptions();
+    private final JCommander cliOptionsParser = new JCommander();
+
     /**
      * Dedicated constructor.
      *
@@ -28,6 +30,9 @@ public class Main extends InvokableAdapter {
      */
     public Main(final String[] args) throws ApplicationException {
         super(args);
+        cliOptionsParser.setProgramName("dht");
+        cliOptionsParser.addObject(options);
+        cliOptionsParser.parse(args);
 
         try {
             version.load();
@@ -59,7 +64,17 @@ public class Main extends InvokableAdapter {
 
     @Override
     public void execute() throws Exception {
-        getIoStreams().println("hello " + version.getVersion());
+        if (options.isHelp()) {
+            showHelpMessage();
+            return;
+        }
+
+        if (options.isVersion()) {
+            showVersionMessage();
+            return;
+        }
+
+        run();
     }
 
     /**
@@ -68,4 +83,15 @@ public class Main extends InvokableAdapter {
     void showVersionMessage() {
         getIoStreams().println(String.format("Version: %s", version.getVersion()));
     }
+
+    private void showHelpMessage() {
+        final StringBuilder buffer = new StringBuilder();
+        cliOptionsParser.usage(buffer);
+        getIoStreams().print(buffer.toString());
+    }
+
+    private void run() {
+        getIoStreams().println("hello " + version.getVersion());
+    }
+
 }
