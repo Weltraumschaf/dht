@@ -12,6 +12,8 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
+import de.weltraumschaf.dht.log.Log;
+import de.weltraumschaf.dht.log.Logger;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -29,7 +31,7 @@ import org.apache.commons.lang3.Validate;
 public final class Server {
 
     private static final int TIME_FACTOR = 1000;
-    private static final int MAX_WAIT_COUNT = 3;
+    private static final int MAX_WAIT_COUNT = 5;
     private static final int MAX_PORT = 65535;
     private static final int MAX_BACK_LOG = 100;
     private static final int THREAD_POOL_SIZE = 1;

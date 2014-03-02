@@ -34,7 +34,7 @@ final class RequestHandler  {
             final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
         ) {
             final String inputLine = input.readLine();
-            Thread.sleep(1000);
+            Thread.sleep(10);
             output.println("re: " + inputLine);
         }
     }

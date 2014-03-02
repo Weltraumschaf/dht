@@ -12,6 +12,8 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
+import de.weltraumschaf.dht.log.Log;
+import de.weltraumschaf.dht.log.Logger;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -23,6 +25,11 @@ import org.apache.commons.lang3.Validate;
  */
 final class RequestWorker implements Task {
 
+
+    /**
+     * Logging facility.
+     */
+    private static final Logger LOG = Log.getLogger(RequestWorker.class);
     private final RequestHandler requestHandler = new RequestHandler();
     private final ConnectionQueue<AsynchronousSocketChannel> queue;
     private final IO io;
@@ -66,12 +73,12 @@ final class RequestWorker implements Task {
     }
 
     private void handleRequset(final AsynchronousSocketChannel client) {
-        io.println("Opened connection from " + formatAddress(client));
+        LOG.debug("Opened connection from " + formatAddress(client));
 
         try {
             requestHandler.execute(client);
         } catch (final Exception ex) {
-            io.println("Error while talking with client" + formatAddress(client) + ": " + ex.getMessage());
+            LOG.debug("Error while talking with client" + formatAddress(client) + ": " + ex.getMessage());
         }
     }
 
