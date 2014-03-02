@@ -108,6 +108,13 @@ public final class Server {
                 break;
             }
 
+            if (!worker.isReady()) {
+                io.println("Worker not ready!");
+            }
+            if (!listener.isReady()) {
+                io.println("Listener not ready!");
+            }
+
             if (waitCount == MAX_WAIT_COUNT) {
                 io.println(String.format("Max. wait %d reached! Aborting ...", MAX_WAIT_COUNT));
                 break;

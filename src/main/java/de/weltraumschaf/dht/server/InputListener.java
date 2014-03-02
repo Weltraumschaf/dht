@@ -21,6 +21,10 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -75,7 +79,7 @@ final class InputListener implements Task {
         }
 
         while (true) {
-            final Future<AsynchronousSocketChannel> future;
+            Future<AsynchronousSocketChannel> future = null;
 
             try {
                 future = server.accept();
@@ -85,28 +89,35 @@ final class InputListener implements Task {
             }
 
             try {
-                final AsynchronousSocketChannel client = future.get();
+                final AsynchronousSocketChannel client = future.get(5, TimeUnit.SECONDS);
 
                 if (client != null) {
                     queue.put(client);
                 }
-            } catch (final InterruptedException | ExecutionException ex) {
+            } catch (final InterruptedException | ExecutionException | TimeoutException ex) {
                 io.println("Error: " + ex.getMessage());
                 continue;
             }
 
             if (stop) {
-                try {
-                    server.close();
-                } catch (IOException ex) {
-                    throw new IOError(ex);
-                }
-
-                ready = true;
-                io.println("Input listener task " + hashCode() + " stopped.");
+                io.println("STOP 1");
                 break;
             }
         }
+
+        try {
+            io.println("STOP 2");
+            server.close();
+            io.println("STOP 3");
+        } catch (final IOException ex) {
+            io.println("STOP 4");
+            throw new IOError(ex);
+        } finally {
+            io.println("STOP 5");
+            ready = true;
+        }
+
+        io.println("Input listener task " + hashCode() + " stopped.");
     }
 
     /**
