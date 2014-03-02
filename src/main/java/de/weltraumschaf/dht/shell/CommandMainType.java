@@ -11,7 +11,6 @@
  */
 package de.weltraumschaf.dht.shell;
 
-import com.google.common.collect.Lists;
 import de.weltraumschaf.commons.shell.MainCommandType;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +20,7 @@ import java.util.List;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public enum NeuronMainType implements MainCommandType {
+public enum CommandMainType implements MainCommandType {
 
     /**
      * Help command.
@@ -42,7 +41,7 @@ public enum NeuronMainType implements MainCommandType {
      *
      * @param name literal shell command string
      */
-    private NeuronMainType(final String name) {
+    private CommandMainType(final String name) {
         this.literal = name;
     }
 
@@ -58,8 +57,8 @@ public enum NeuronMainType implements MainCommandType {
      *
      * @return list of subtypes
      */
-    List<NeuronSubType> subCommands() {
-        List<NeuronSubType> subCommands;
+    List<CommandSubType> subCommands() {
+        List<CommandSubType> subCommands;
 
         switch (this) {
             default:

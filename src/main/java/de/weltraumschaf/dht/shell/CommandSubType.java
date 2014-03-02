@@ -18,7 +18,7 @@ import de.weltraumschaf.commons.shell.SubCommandType;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public enum NeuronSubType implements SubCommandType {
+public enum CommandSubType implements SubCommandType {
 
     /**
      * No sub command.
@@ -78,7 +78,7 @@ public enum NeuronSubType implements SubCommandType {
      *
      * @param name literal shell command string
      */
-    private NeuronSubType(final String name) {
+    private CommandSubType(final String name) {
         this.name = name;
     }
 

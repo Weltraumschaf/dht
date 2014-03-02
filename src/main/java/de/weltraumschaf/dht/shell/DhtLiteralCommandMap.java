@@ -22,25 +22,25 @@ import java.util.Map;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public class NeuronLiteralCommandMap extends LiteralCommandMap {
+public class DhtLiteralCommandMap extends LiteralCommandMap {
 
     /**
      * Default constructor.
      */
-    public NeuronLiteralCommandMap() {
-        super(NeuronSubType.NONE);
+    public DhtLiteralCommandMap() {
+        super(CommandSubType.NONE);
     }
 
     @Override
     protected void initCommandMap(Map<String, MainCommandType> map) {
-        for (final NeuronMainType t : NeuronMainType.values()) {
+        for (final CommandMainType t : CommandMainType.values()) {
             map.put(t.toString(), t);
         }
     }
 
     @Override
     protected void initSubCommandMap(Map<String, SubCommandType> map) {
-        for (final NeuronSubType t : NeuronSubType.values()) {
+        for (final CommandSubType t : CommandSubType.values()) {
             if (t.toString().isEmpty()) {
                 continue; // Ignore to do not recognize empty strings as sub command.
             }

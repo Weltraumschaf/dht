@@ -14,16 +14,13 @@ package de.weltraumschaf.dht.shell;
 import de.weltraumschaf.commons.shell.CommandVerifier;
 import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.commons.shell.SyntaxException;
-import de.weltraumschaf.commons.shell.Token;
-import de.weltraumschaf.commons.shell.TokenType;
-import java.util.List;
 
 /**
  * Verifies the commands.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public class NeuronCommandVerifier implements CommandVerifier {
+public class DhtCommandVerifier implements CommandVerifier {
 
     /**
      * Required number of arguments for message command.
@@ -40,10 +37,10 @@ public class NeuronCommandVerifier implements CommandVerifier {
      */
     @Override
     public void verifyCommand(final ShellCommand cmd) throws SyntaxException {
-        switch ((NeuronMainType) cmd.getCommand()) {
+        switch ((CommandMainType) cmd.getCommand()) {
             case EXIT:
             case HELP:
-                if (cmd.getSubCommand() != NeuronSubType.NONE) {
+                if (cmd.getSubCommand() != CommandSubType.NONE) {
                     throw new SyntaxException(String.format("Command '%s' does not support subcommand '%s'!",
                             cmd.getCommand(), cmd.getSubCommand()));
                 }

@@ -50,7 +50,7 @@ public class InteractiveShell {
     /**
      * Shell user input parser.
      */
-    private final Parser parser = Parsers.newParser(new NeuronCommandVerifier(), new NeuronLiteralCommandMap());
+    private final Parser parser = Parsers.newParser(new DhtCommandVerifier(), new DhtLiteralCommandMap());
 
     /**
      * Factory to create commands.
@@ -116,7 +116,7 @@ public class InteractiveShell {
         final Command cmd = factory.newCommand(shellCmd);
         cmd.execute();
 
-        if (shellCmd.getCommand() == NeuronMainType.EXIT) {
+        if (shellCmd.getCommand() == CommandMainType.EXIT) {
             exit();
         }
     }
@@ -130,8 +130,8 @@ public class InteractiveShell {
         final List<Completer> completers = Lists.newArrayList();
         final List<String> commandsWithoutSubCommand = Lists.newArrayList();
 
-        for (final NeuronMainType t : NeuronMainType.values()) {
-            final List<NeuronSubType> subCommandTypes = t.subCommands();
+        for (final CommandMainType t : CommandMainType.values()) {
+            final List<CommandSubType> subCommandTypes = t.subCommands();
 
             if (subCommandTypes.isEmpty()) {
                 commandsWithoutSubCommand.add(t.toString());
