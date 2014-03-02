@@ -4,11 +4,13 @@ import com.beust.jcommander.JCommander;
 import de.weltraumschaf.commons.ApplicationException;
 import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
+import de.weltraumschaf.dht.shell.InteractiveShell;
 import java.io.IOException;
 import org.apache.commons.lang3.Validate;
 
 public final class Main extends InvokableAdapter {
 
+    public static final String NAME = "dht";
     /**
      * JAR relative path to version property file.
      */
@@ -30,7 +32,7 @@ public final class Main extends InvokableAdapter {
      */
     public Main(final String[] args) throws ApplicationException {
         super(args);
-        cliOptionsParser.setProgramName("dht");
+        cliOptionsParser.setProgramName(NAME);
         cliOptionsParser.addObject(options);
         cliOptionsParser.parse(args);
 
@@ -90,8 +92,9 @@ public final class Main extends InvokableAdapter {
         getIoStreams().print(buffer.toString());
     }
 
-    private void run() {
-        getIoStreams().println("hello " + version.getVersion());
+    private void run() throws IOException {
+        final InteractiveShell shell = new InteractiveShell(getIoStreams());
+        shell.start();
     }
 
 }
