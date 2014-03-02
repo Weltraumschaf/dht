@@ -12,15 +12,18 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
-import java.net.Socket;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.AsynchronousSocketChannel;
 import org.apache.commons.lang3.Validate;
 
 /**
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public class RequestWorker implements Task {
+final class RequestWorker implements Task {
 
+    private final RequestHandler requestHandler = new RequestHandler();
     private final ConnectionQueue queue;
     private final IO io;
     private volatile boolean stop = false;
@@ -62,17 +65,22 @@ public class RequestWorker implements Task {
         return ready;
     }
 
-    private void handleRequset(final Socket socket) {
-        io.println("Opened connection from " + formatAddress(socket));
+    private void handleRequset(final AsynchronousSocketChannel client) {
+        io.println("Opened connection from " + formatAddress(client));
 
         try {
-            new HandleRequestCommand(socket).execute();
+            requestHandler.execute(client);
         } catch (final Exception ex) {
-            io.println("Error while talking with " + formatAddress(socket) + ": " + ex.getMessage());
+            io.println("Error while talking with " + formatAddress(client) + ": " + ex.getMessage());
         }
     }
 
-    private static String formatAddress(final Socket socket) {
-        return String.format("%s:%d", socket.getInetAddress(), socket.getPort());
+    private static String formatAddress(final AsynchronousSocketChannel client) {
+        try {
+            final InetSocketAddress address = (InetSocketAddress) client.getRemoteAddress();
+            return String.format("%s:%d", address.getHostString(), address.getPort());
+        } catch (final IOException ex) {
+            return "unknown";
+        }
     }
 }

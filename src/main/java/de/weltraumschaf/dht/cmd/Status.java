@@ -17,6 +17,7 @@ import de.weltraumschaf.dht.Application;
 import java.util.List;
 
 /**
+ * Executes `status` command.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
@@ -39,6 +40,7 @@ final class Status extends BaseCommand {
         buffer.append("Server:").append(nl());
         buffer.append("  State:   ").append(getApplication().getServer().getState()).append(nl());
         buffer.append("  Address: ").append(formatListenedAddress()).append(nl());
+        buffer.append("  Queue:   ").append(getApplication().getServer().countQueue()).append(nl());
 
         println(buffer.toString());
     }

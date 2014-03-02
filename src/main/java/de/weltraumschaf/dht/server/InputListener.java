@@ -12,12 +12,15 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
+import java.io.IOError;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.nio.channels.AcceptPendingException;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.CompletionHandler;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -25,16 +28,15 @@ import org.apache.commons.lang3.Validate;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public class InputListener implements Task {
+final class InputListener implements Task {
 
+    private static final int MAX_BACK_LOG = 100;
     /**
      * Queue shared w/ consumer thread.
      */
     private final ConnectionQueue queue;
-    /**
-     * Socket to get client connections from.
-     */
-    private final AsynchronousServerSocketChannel socket;
+
+    private final InetSocketAddress address;
     private final IO io;
     /**
      * True if {@link #exit()} was invoked.
@@ -49,10 +51,10 @@ public class InputListener implements Task {
      */
     private volatile boolean ready;
 
-    public InputListener(final ConnectionQueue queue, final AsynchronousServerSocketChannel socket, final IO io) {
+    public InputListener(final ConnectionQueue queue, final InetSocketAddress address, final IO io) {
         super();
         this.queue = Validate.notNull(queue, "Parameter >queue< must not be null!");
-        this.socket = Validate.notNull(socket, "Parameter >socket< must not be null!");
+        this.address = Validate.notNull(address, "Parameter >address< must not be null!");
         this.io = Validate.notNull(io, "Parameter >io< must not be null!");
     }
 
@@ -64,22 +66,42 @@ public class InputListener implements Task {
      */
     @Override
     public void run() {
-        while (true) {
-            socket.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
-                @Override
-                public void completed(final AsynchronousSocketChannel ch, final Void att) {
-                    // accept the next connection
-//                    listener.accept(null, this);
-//                    queue.put(ch.);
-                }
+        final AsynchronousServerSocketChannel server;
 
-                @Override
-                public void failed(final Throwable t, final Void att) {
-                    io.println("Exception: " + t.getMessage());
+        try {
+            server = AsynchronousServerSocketChannel.open().bind(address, MAX_BACK_LOG);
+        } catch (final IOException ex) {
+            throw new IOError(ex);
+        }
+
+        while (true) {
+            final Future<AsynchronousSocketChannel> future;
+
+            try {
+                future = server.accept();
+            } catch (final AcceptPendingException ex) {
+                io.println("Error (AcceptPendingException): " + ex.getMessage());
+                continue;
+            }
+
+            try {
+                final AsynchronousSocketChannel client = future.get();
+
+                if (client != null) {
+                    queue.put(client);
                 }
-            });
+            } catch (final InterruptedException | ExecutionException ex) {
+                io.println("Error: " + ex.getMessage());
+                continue;
+            }
 
             if (stop) {
+                try {
+                    server.close();
+                } catch (IOException ex) {
+                    throw new IOError(ex);
+                }
+
                 ready = true;
                 io.println("Input listener task " + hashCode() + " stopped.");
                 break;

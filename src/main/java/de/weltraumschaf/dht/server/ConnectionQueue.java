@@ -12,7 +12,7 @@
 
 package de.weltraumschaf.dht.server;
 
-import java.net.Socket;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -21,19 +21,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public final class ConnectionQueue {
+final class ConnectionQueue {
 
     /**
      * Holds the connections.
      */
-    private final Queue<Socket> sockets = new ConcurrentLinkedQueue<Socket>();
+    private final Queue<AsynchronousSocketChannel> sockets = new ConcurrentLinkedQueue<AsynchronousSocketChannel>();
 
     /**
      * Put a connection at the tail of the queue.
      *
      * @param socket saved connection
      */
-    public void put(final Socket socket) {
+    public void put(final AsynchronousSocketChannel socket) {
         sockets.offer(socket);
     }
 
@@ -42,7 +42,7 @@ public final class ConnectionQueue {
      *
      * @return head connection
      */
-    public Socket get() {
+    public AsynchronousSocketChannel get() {
         return sockets.poll();
     }
 
@@ -55,8 +55,20 @@ public final class ConnectionQueue {
         return sockets.isEmpty();
     }
 
+    /**
+     * Size of connections.
+     *
+     * @return
+     */
     public int size() {
         return sockets.size();
+    }
+
+    /**
+     * Removes all queued connections.
+     */
+    public void clear() {
+        sockets.clear();
     }
 
 }

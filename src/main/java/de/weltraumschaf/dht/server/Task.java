@@ -13,12 +13,24 @@
 package de.weltraumschaf.dht.server;
 
 /**
+ * Task executable by {@link java.util.concurrent.ExecutorService}.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 interface Task extends Runnable {
 
+    /**
+     * Tells task to stop.
+     */
     void stop();
+    /**
+     * Returns whether the task is ready after {@link #stop()} was called.
+     * <p>
+     * If {@link #stop()} never was called the task will never be ready.
+     * </p>
+     *
+     * @return {@code true} if task has finished work, else {@code false}
+     */
     boolean isReady();
 
 }

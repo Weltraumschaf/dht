@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * Executes `stop` command.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
