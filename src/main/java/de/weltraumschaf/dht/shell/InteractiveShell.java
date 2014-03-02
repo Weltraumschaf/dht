@@ -12,7 +12,6 @@
 package de.weltraumschaf.dht.shell;
 
 import com.google.common.collect.Lists;
-import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.commons.shell.Parser;
 import de.weltraumschaf.commons.shell.Parsers;
@@ -82,7 +81,7 @@ public class InteractiveShell {
      * @throws IOException if I/O error occurs
      */
     public void start() throws IOException {
-        app.getIoStreams().println(String.format("Welcome to Neuro Interactive Shell!%n"));
+        app.getIoStreams().println(String.format("Welcome to " + Application.NAME + " Interactive Shell!%n"));
         final ConsoleReader reader = new ConsoleReader(app.getIoStreams().getStdin(), app.getIoStreams().getStdout());
         reader.addCompleter(createCompletionHints());
         reader.setPrompt(PROMPT);
@@ -92,8 +91,12 @@ public class InteractiveShell {
             try {
                 final ShellCommand cmd = parser.parse(inputLine);
                 execute(cmd);
-            } catch (SyntaxException ex) {
+            } catch (final SyntaxException ex) {
                 app.getIoStreams().println("Error: " + ex.getMessage());
+
+                if (app.getOptions().isDebug()) {
+                    app.getIoStreams().printStackTrace(ex);
+                }
             }
 
             if (stop) {

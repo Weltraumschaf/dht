@@ -10,7 +10,6 @@ import org.apache.commons.lang3.Validate;
 
 public final class Main extends InvokableAdapter implements Application {
 
-    public static final String NAME = "dht";
     /**
      * JAR relative path to version property file.
      */
@@ -86,7 +85,15 @@ public final class Main extends InvokableAdapter implements Application {
             return;
         }
 
-        run();
+        try {
+            run();
+        } catch (final Exception ex) {
+            getIoStreams().errorln(ex.getMessage());
+
+            if (options.isDebug()) {
+                getIoStreams().printStackTrace(ex);
+            }
+        }
     }
 
     /**

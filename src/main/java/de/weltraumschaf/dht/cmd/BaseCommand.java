@@ -13,7 +13,9 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.commons.shell.Token;
+import de.weltraumschaf.dht.Application;
 import java.util.List;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Base implementation for commands.
@@ -28,20 +30,20 @@ abstract class BaseCommand implements Command {
     private final List<Token> arguments;
 
     /**
-     * Shell I/O.
+     * Invoking application.
      */
-    private final IO io;
+    private final Application app;
 
     /**
      * Dedicated constructor.
      *
-     * @param io shell I/O
+     * @param app invoking application
      * @param arguments parsed shell arguments
      */
-    public BaseCommand(final IO io, final List<Token> arguments) {
+    public BaseCommand(final Application app, final List<Token> arguments) {
         super();
-        this.io = io;
-        this.arguments = arguments;
+        this.app = Validate.notNull(app, "Parameter >app< must not be null!");
+        this.arguments = Validate.notNull(arguments, "Parameter >arguments< must not be null!");
     }
 
     /**
@@ -49,8 +51,8 @@ abstract class BaseCommand implements Command {
      *
      * @return shellI/O
      */
-    IO getIo() {
-        return io;
+    Application getApplication() {
+        return app;
     }
 
     /**

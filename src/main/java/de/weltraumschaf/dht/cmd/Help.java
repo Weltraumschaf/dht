@@ -11,8 +11,8 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.commons.shell.Token;
+import de.weltraumschaf.dht.Application;
 import java.util.List;
 
 /**
@@ -51,17 +51,16 @@ class Help extends BaseCommand {
     /**
      * Dedicated constructor.
      *
-     * @param env shell environment
-     * @param io shell I/O
+     * @param app invoking application
      * @param arguments command arguments
      */
-    public Help(final IO io, final List<Token> arguments) {
-        super(io, arguments);
+    public Help(final Application app, final List<Token> arguments) {
+        super(app, arguments);
     }
 
     @Override
     public void execute() {
-        getIo().println(HELP);
+        getApplication().getIoStreams().println(HELP);
     }
 
 }

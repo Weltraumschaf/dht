@@ -25,6 +25,8 @@ public class CliOptions {
     private String host;
     @Parameter(names = "-v", description = "Show version info.")
     private boolean version;
+    @Parameter(names = "-d", description = "Shows debug information.")
+    private boolean debug;
     @Parameter(names = "--help", description = "Show this help message.", help = true)
     private boolean help;
 
@@ -42,6 +44,10 @@ public class CliOptions {
 
     public boolean isVersion() {
         return version;
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
 }

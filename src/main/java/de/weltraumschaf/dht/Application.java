@@ -20,6 +20,10 @@ import de.weltraumschaf.commons.Version;
  */
 public interface Application {
 
+    public static final String NAME = "dht";
+    public static final String NL = "\n";
+    public static final String ENCODING = "utf-8";
+
     IOStreams getIoStreams();
 
     Version getVersion();

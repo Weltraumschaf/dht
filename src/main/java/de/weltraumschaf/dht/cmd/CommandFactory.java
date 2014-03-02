@@ -13,6 +13,9 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.EXIT;
+import static de.weltraumschaf.dht.shell.CommandMainType.HELP;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -23,7 +26,7 @@ import org.apache.commons.lang3.Validate;
 public final class CommandFactory {
 
     /**
-     * Shell I/O.
+     * Invoking application.
      */
     private final Application app;
 
@@ -45,7 +48,19 @@ public final class CommandFactory {
      * @throws IllegalArgumentException if, can't create command of bad main or sub command type // CHECKSTYLE:ON
      */
     public Command newCommand(final ShellCommand shellCmd) {
-        Command cmd = null;
+        Command cmd;
+
+        switch ((CommandMainType) shellCmd.getCommand()) {
+            case EXIT:
+                cmd = new Exit(app, shellCmd.getArguments());
+                break;
+            case HELP:
+                cmd = new Help(app, shellCmd.getArguments());
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Unsupported main command type '%s'!",
+                        shellCmd.getCommand()));
+        }
 
         return cmd;
     }
