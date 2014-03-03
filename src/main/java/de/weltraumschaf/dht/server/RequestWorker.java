@@ -25,7 +25,6 @@ import org.apache.commons.lang3.Validate;
  */
 final class RequestWorker implements Task {
 
-
     /**
      * Logging facility.
      */

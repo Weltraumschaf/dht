@@ -4,6 +4,8 @@ import com.beust.jcommander.JCommander;
 import de.weltraumschaf.commons.ApplicationException;
 import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
+import de.weltraumschaf.dht.log.Log;
+import de.weltraumschaf.dht.log.Logger;
 import de.weltraumschaf.dht.server.Server;
 import de.weltraumschaf.dht.shell.InteractiveShell;
 import java.io.IOException;
@@ -11,6 +13,10 @@ import org.apache.commons.lang3.Validate;
 
 public final class Main extends InvokableAdapter implements Application {
 
+    /**
+     * Logging facility.
+     */
+    private static final Logger LOG = Log.getLogger(Main.class);
     /**
      * JAR relative path to version property file.
      */
@@ -65,6 +71,8 @@ public final class Main extends InvokableAdapter implements Application {
                         if (options.isDebug()) {
                             getIoStreams().printStackTrace(ex);
                         }
+
+                        LOG.error(ex.getMessage(), ex);
                     }
                 }
             }
@@ -146,6 +154,8 @@ public final class Main extends InvokableAdapter implements Application {
             if (options.isDebug()) {
                 getIoStreams().printStackTrace(ex);
             }
+
+            LOG.error(ex.getMessage(), ex);
         }
     }
 

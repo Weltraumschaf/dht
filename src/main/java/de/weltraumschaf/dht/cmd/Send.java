@@ -27,6 +27,8 @@ import org.apache.commons.lang3.Validate;
 /**
  * Executes `send` command.
  *
+ * See http://www.javaworld.com/article/2077322/core-java/sockets-programming-in-java-a-tutorial.html
+ *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 final class Send extends BaseCommand {
@@ -34,9 +36,6 @@ final class Send extends BaseCommand {
     @Override
     public void execute() {
         final Arguments args = validateArguments();
-        println("  host:    " + args.getHost());
-        println("  port:    " + args.getPort());
-        println("  message: " + args.getMessage());
 
         try (
             final Socket client = new Socket(args.getHost(), args.getPort());
@@ -44,9 +43,10 @@ final class Send extends BaseCommand {
         ) {
             output.println(args.getMessage());
             output.flush();
+            println(String.format("Sent to %s:%d:%n%s", args.getHost(), args.getPort(), args.getMessage()));
         } catch (final IOException ex) {
             throw new ComamndRuntimeException(
-                    String.format("Can't open client conection to %s!", formatListenedAddress()), ex);
+                    String.format("Can't open client conection to %s:%s!", args.getHost(), args.getPort()), ex);
         }
     }
 

@@ -21,6 +21,8 @@ import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.Main;
 import de.weltraumschaf.dht.cmd.Command;
 import de.weltraumschaf.dht.cmd.CommandFactory;
+import de.weltraumschaf.dht.log.Log;
+import de.weltraumschaf.dht.log.Logger;
 import java.io.IOException;
 import java.util.List;
 import jline.console.ConsoleReader;
@@ -37,6 +39,10 @@ import org.apache.commons.lang3.Validate;
  */
 public class InteractiveShell {
 
+    /**
+     * Logging facility.
+     */
+    private static final Logger LOG = Log.getLogger(InteractiveShell.class);
     /**
      * String used as shell prompt.
      */
@@ -95,11 +101,14 @@ public class InteractiveShell {
 
                 final ShellCommand cmd = parser.parse(inputLine);
                 execute(cmd);
+            } catch (final SyntaxException ex) {
+                app.getIoStreams().println(ex.getMessage());
+                app.getIoStreams().println("Try the command `help` to get description for all commands.");
             } catch (final CommandArgumentExcpetion ex) {
                 app.getIoStreams().println(ex.getMessage());
             } catch (final ComamndRuntimeException ex) {
                 handleException("Error: ", ex);
-            } catch (final SyntaxException | InstantiationException | IllegalAccessException ex) {
+            } catch (final  InstantiationException | IllegalAccessException ex) {
                 handleException("Fatal: ", ex);
             }
 
@@ -115,6 +124,8 @@ public class InteractiveShell {
         if (app.getOptions().isDebug()) {
             app.getIoStreams().printStackTrace(ex);
         }
+
+        LOG.error(ex.getMessage(), ex);
     }
 
     /**
