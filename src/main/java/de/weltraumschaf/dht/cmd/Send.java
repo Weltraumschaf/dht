@@ -9,13 +9,15 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.server.PortValidator;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import java.util.List;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Executes `send` command.
@@ -26,6 +28,13 @@ final class Send extends BaseCommand {
 
     @Override
     public void execute() {
+        final Arguments args = validateArguments();
+        println("  host:    " + args.getHost());
+        println("  port:    " + args.getPort());
+        println("  message: " + args.getMessage());
+    }
+
+    private Arguments validateArguments() throws CommandArgumentExcpetion {
         final List<Token> args = getArguments();
 
         final Token<String> hostToken = args.get(0);
@@ -34,9 +43,6 @@ final class Send extends BaseCommand {
             throw new CommandArgumentExcpetion("Host must be a literal!");
         }
 
-        final String host = hostToken.getValue();
-        println("  host:    " + host);
-
         final Token<Integer> portToken = args.get(1);
 
         if (portToken.getType() != TokenType.NUMBER) {
@@ -44,7 +50,11 @@ final class Send extends BaseCommand {
         }
 
         final Integer port = portToken.getValue();
-        println("  port:    " + port.toString());
+
+        if (!PortValidator.isValid(port)) {
+            throw new CommandArgumentExcpetion(
+                String.format("Parameter >port< must be in range %s!", PortValidator.range()));
+        }
 
         final Token<String> messageToken = args.get(2);
 
@@ -52,7 +62,68 @@ final class Send extends BaseCommand {
             throw new CommandArgumentExcpetion("Message must be a string or literal!");
         }
 
-        final String message = messageToken.getValue();
-        println("  message: " + message);
+        return new Arguments(hostToken.getValue(), port, messageToken.getValue());
+    }
+
+    /**
+     * Container for the command arguments.
+     */
+    private static final class Arguments {
+        /**
+         * Host to send the message.
+         */
+        private final String host;
+        /**
+         * Port to send the message.
+         */
+        private final int port;
+        /**
+         * Message to send.
+         */
+        private final String message;
+
+        /**
+         * Dedicated constructor.
+         *
+         * @param host must not be {@code null} or empty
+         * @param port must be in {@link PortValidator#range() specified range}
+         * @param message must not be {@code null} or empty
+         */
+        public Arguments(final String host, final int port, final String message) {
+            super();
+            this.host = Validate.notEmpty(host, "Parameter >host< must not be null or empty!");
+            Validate.isTrue(PortValidator.isValid(port),
+                String.format("Parameter >port< must be in range %s! Given >%d<.", PortValidator.range(), port));
+            this.port = port;
+            this.message = Validate.notEmpty(message, "Parameter >message< must not be null or empty!");
+        }
+
+        /**
+         * Get the host.
+         *
+         * @return never {@code null} or empty
+         */
+        public String getHost() {
+            return host;
+        }
+
+        /**
+         * Get the port.
+         *
+         * @return {@link PortValidator#range() range}
+         */
+        public int getPort() {
+            return port;
+        }
+
+        /**
+         * Get the message.
+         *
+         * @return never {@code null} or empty
+         */
+        public String getMessage() {
+            return message;
+        }
+
     }
 }
