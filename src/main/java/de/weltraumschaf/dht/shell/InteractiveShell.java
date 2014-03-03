@@ -104,11 +104,15 @@ public class InteractiveShell {
             } catch (final SyntaxException ex) {
                 app.getIoStreams().println(ex.getMessage());
                 app.getIoStreams().println("Try the command `help` to get description for all commands.");
+
+                if (app.getOptions().isDebug()) {
+                    app.getIoStreams().printStackTrace(ex);
+                }
             } catch (final CommandArgumentExcpetion ex) {
                 app.getIoStreams().println(ex.getMessage());
-            } catch (final ComamndRuntimeException ex) {
+            } catch (final CommandRuntimeException ex) {
                 handleException("Error: ", ex);
-            } catch (final  InstantiationException | IllegalAccessException ex) {
+            } catch (final InstantiationException | IllegalAccessException ex) {
                 handleException("Fatal: ", ex);
             }
 
@@ -169,8 +173,8 @@ public class InteractiveShell {
                     subCommands.add(s.toString());
                 }
                 completers.add(new ArgumentCompleter(
-                    new StringsCompleter(t.toString()),
-                    new StringsCompleter(subCommands)
+                        new StringsCompleter(t.toString()),
+                        new StringsCompleter(subCommands)
                 ));
             }
         }

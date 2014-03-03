@@ -37,12 +37,15 @@ public class DhtCommandVerifier implements CommandVerifier {
     @Override
     public void verifyCommand(final ShellCommand cmd) throws SyntaxException {
         switch ((CommandMainType) cmd.getCommand()) {
+            // No argument commands.
             case EXIT:
-            case HELP:
             case STATUS:
             case START:
             case STOP:
                 assertNoSubCommand(cmd);
+                assertNoArguments(cmd);
+                break;
+            case HELP:
                 assertNoArguments(cmd);
                 break;
             case SEND:

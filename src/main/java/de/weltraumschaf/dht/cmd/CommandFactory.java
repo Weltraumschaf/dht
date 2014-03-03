@@ -12,14 +12,12 @@
 package de.weltraumschaf.dht.cmd;
 
 import com.beust.jcommander.internal.Maps;
-import com.google.common.collect.Lists;
 import de.weltraumschaf.commons.shell.MainCommandType;
 import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.Validate;
 
@@ -39,7 +37,7 @@ public final class CommandFactory {
      *
      * Lazy computed once speed up subsequent requests.
      */
-    private static Collection<Descriptor> DESCRIPTORS = null;
+    private static Map<String, Descriptor> DESCRIPTORS = null;
     /**
      * Invoking application.
      */
@@ -101,22 +99,38 @@ public final class CommandFactory {
      * @throws IllegalAccessException if default constructor is not accessible
      */
     static Collection<Descriptor> getDescriptors() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        initDescriptors();
+        return DESCRIPTORS.values();
+    }
+
+    private static void initDescriptors() throws IllegalAccessException, ClassNotFoundException, InstantiationException {
         if (null == DESCRIPTORS) {
-            final List<Descriptor> descriptors = Lists.newArrayList();
+            final Map<String, Descriptor> descriptors = Maps.newHashMap();
 
             for (final Class<?> comamndClass : createClassLookup().values()) {
-                descriptors.add(((Command) comamndClass.newInstance()).getDescriptor());
+                final Descriptor descriptor = ((Command) comamndClass.newInstance()).getDescriptor();
+                descriptors.put(descriptor.getCommand().toString(), descriptor);
             }
 
-            Collections.sort(descriptors);
-            DESCRIPTORS = Collections.unmodifiableList(descriptors);
+            DESCRIPTORS = Collections.unmodifiableMap(descriptors);
+        }
+    }
+
+    static Descriptor getDescriptor(final String command) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+        Validate.notEmpty(command, "Parameter >command< must not be null or empty!");
+        initDescriptors();
+
+        if (DESCRIPTORS.containsKey(command)) {
+            return DESCRIPTORS.get(command);
         }
 
-        return DESCRIPTORS;
+        throw new IllegalArgumentException("Doesnot knwo command >" + command + "<!");
     }
 
     /**
      * Create command instances according to the parsed shell command.
+     *
+     * This method also injects {@link Application} and list of arguments.
      *
      * @param shellCmd used to determine appropriate command
      * @return command object
@@ -130,12 +144,15 @@ public final class CommandFactory {
         if (classLookup.containsKey(shellCmd.getCommand())) {
             final Class<?> comamndClass = classLookup.get(shellCmd.getCommand());
             final Command cmd = (Command) comamndClass.newInstance();
-            cmd.setApp(app);
+            cmd.setSubCommandType(shellCmd.getSubCommand());
+            cmd.setApplication(app);
             cmd.setArguments(shellCmd.getArguments());
             return cmd;
         }
 
         throw new IllegalArgumentException(String.format("Unsupported main command type '%s'!", shellCmd.getCommand()));
     }
+
+
 
 }

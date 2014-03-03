@@ -11,6 +11,7 @@
  */
 package de.weltraumschaf.dht.shell;
 
+import com.google.common.collect.Lists;
 import de.weltraumschaf.commons.shell.MainCommandType;
 import java.util.Collections;
 import java.util.List;
@@ -71,17 +72,26 @@ public enum CommandMainType implements MainCommandType {
      *
      * If a command does not support sub commands an empty list is returned.
      *
-     * @return list of subtypes
+     * @return unmodifiable list of subtypes
      */
     List<CommandSubType> subCommands() {
-        List<CommandSubType> subCommands;
+        final List<CommandSubType> subCommands;
 
         switch (this) {
+            case HELP:
+                subCommands = Lists.newArrayList(
+                    CommandSubType.EXIT,
+                    CommandSubType.SEND,
+                    CommandSubType.START,
+                    CommandSubType.STOP,
+                    CommandSubType.STATUS
+                );
+                break;
             default:
                 subCommands = Collections.emptyList();
         }
 
-        return subCommands;
+        return Collections.unmodifiableList(subCommands);
     }
 
 }

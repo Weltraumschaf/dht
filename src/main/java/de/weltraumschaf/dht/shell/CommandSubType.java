@@ -24,50 +24,13 @@ public enum CommandSubType implements SubCommandType {
      * No sub command.
      */
     NONE(""),
-    /**
-     * Add sub command for node command.
-     */
-    ADD("add"),
-    /**
-     * Del sub command for node command.
-     */
-    DEL("del"),
-    /**
-     * Connect sub command for node command.
-     */
-    CONNECT("connect"),
-    /**
-     * Disconnect sub command for node command.
-     */
-    DISCONNECT("disconnect"),
-    /**
-     * List sub command for node command.
-     */
-    LIST("list"),
-    /**
-     * Info sub command for node command.
-     */
-    INFO("info"),
-    /**
-     * Listen sub command for node command.
-     */
-    LISTEN("listen"),
-    /**
-     * Unlisten sub command for node command.
-     */
-    UNLISTEN("unlisten"),
-    /**
-     * Dot subcommand for dump command.
-     */
-    DOT("dot"),
-    /**
-     * Tree subcommand for dump command.
-     */
-    TREE("tree"),
-    /**
-     * Bidirectional tree subcommand for dump command.
-     */
-    BITREE("bitree");
+    
+    EXIT(CommandMainType.EXIT.toString()),
+    SEND(CommandMainType.SEND.toString()),
+    START(CommandMainType.START.toString()),
+    STOP(CommandMainType.STOP.toString()),
+    STATUS(CommandMainType.STATUS.toString());
+
     /**
      * Literal sub command string used in shell.
      */

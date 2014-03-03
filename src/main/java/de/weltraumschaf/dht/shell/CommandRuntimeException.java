@@ -19,18 +19,18 @@ import org.apache.commons.lang3.Validate;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public final class ComamndRuntimeException extends RuntimeException {
+public final class CommandRuntimeException extends RuntimeException {
 
     /**
      * Creates a runtime exception only with a message.
      *
      * @param message must not be {@code null} or empty
      */
-    public ComamndRuntimeException(final String message) {
+    public CommandRuntimeException(final String message) {
         super(Validate.notEmpty(message, "Parameter >message< must not be null or empty!"));
     }
 
-    public ComamndRuntimeException(final String message, final Throwable cause) {
+    public CommandRuntimeException(final String message, final Throwable cause) {
         super(
             Validate.notEmpty(message, "Parameter >message< must not be null or empty!"),
             Validate.notNull(cause, "Parameter >cause< must not be null!")

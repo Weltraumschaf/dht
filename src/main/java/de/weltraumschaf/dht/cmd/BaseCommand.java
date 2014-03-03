@@ -11,6 +11,7 @@
  */
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
 import java.util.Collections;
@@ -30,9 +31,10 @@ abstract class BaseCommand implements Command {
     private List<Token> arguments;
 
     /**
-     * Invoking application.
+     * Invoking applicationlication.
      */
-    private Application app;
+    private Application application;
+    private SubCommandType subCommand;
 
     /**
      * Getter for sub classes.
@@ -40,7 +42,7 @@ abstract class BaseCommand implements Command {
      * @return shellI/O
      */
     Application getApplication() {
-        return app;
+        return application;
     }
 
     /**
@@ -52,18 +54,27 @@ abstract class BaseCommand implements Command {
         return arguments;
     }
 
+    SubCommandType getSubCommand() {
+        return subCommand;
+    }
+
     @Override
     public void setArguments(final List<Token> arguments) {
         this.arguments = Collections.unmodifiableList(Validate.notNull(arguments, "Parameter >arguments< must not be null!"));
     }
 
     @Override
-    public void setApp(final Application app) {
-        this.app = Validate.notNull(app, "Parameter >app< must not be null!");
+    public void setApplication(final Application applocation) {
+        this.application = Validate.notNull(applocation, "Parameter >applocation< must not be null!");
+    }
+
+    @Override
+    public void setSubCommandType(final SubCommandType subCommand) {
+        this.subCommand = Validate.notNull(subCommand, "Parameter >subCommand< must not be null!");
     }
 
     /**
-     * Returns formatted host address the application is configured by CLI options.
+     * Returns formatted host address the applicationlication is configured by CLI options.
      *
      * @return never {@code null} or empty
      */
@@ -74,7 +85,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Delegates to the STDOUT of the application.
+     * Delegates to the STDOUT of the applicationlication.
      *
      * @param msg may be {@code null} or empty
      */
@@ -83,7 +94,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Delegates to the STDOUT of the application.
+     * Delegates to the STDOUT of the applicationlication.
      *
      * @param msg may be {@code null} or empty
      */
@@ -92,7 +103,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Delegates to the STDERR of the application.
+     * Delegates to the STDERR of the applicationlication.
      *
      * @param msg may be {@code null} or empty
      */
@@ -101,7 +112,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Prints stacktrace to the STDOUT of the application.
+     * Prints stacktrace to the STDOUT of the applicationlication.
      *
      * @param msg may be {@code null} or empty
      */
@@ -110,7 +121,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Whether debug option is enabled by the applications CLI options.
+     * Whether debug option is enabled by the applicationlications CLI options.
      *
      * @return {@code true} if debug is enabled, else {@code false}
      */
@@ -119,7 +130,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Get the application wide new line string.
+     * Get the applicationlication wide new line string.
      *
      * @return never {@code null} or empty
      */

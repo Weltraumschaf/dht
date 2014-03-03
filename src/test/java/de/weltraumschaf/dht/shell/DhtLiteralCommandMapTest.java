@@ -83,17 +83,11 @@ public class DhtLiteralCommandMapTest {
 
     @Test
     public void isSubCommand() {
-        assertThat(sut.isSubCommand(CommandSubType.ADD.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.BITREE.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.CONNECT.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.DEL.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.DISCONNECT.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.DOT.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.INFO.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.LIST.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.LISTEN.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.TREE.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.UNLISTEN.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.EXIT.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.SEND.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.START.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.STATUS.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.STOP.toString()), is(true));
         assertThat(sut.isSubCommand(CommandSubType.NONE.toString()), is(false));
         assertThat(sut.isSubCommand(BadSubType.FOO.toString()), is(false));
         assertThat(sut.isSubCommand(BadSubType.BAR.toString()), is(false));

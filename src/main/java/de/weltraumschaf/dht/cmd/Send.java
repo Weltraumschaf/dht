@@ -14,7 +14,7 @@ package de.weltraumschaf.dht.cmd;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
 import de.weltraumschaf.dht.server.PortValidator;
-import de.weltraumschaf.dht.shell.ComamndRuntimeException;
+import de.weltraumschaf.dht.shell.CommandRuntimeException;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.SEND;
@@ -45,7 +45,7 @@ final class Send extends BaseCommand {
             output.flush();
             println(String.format("Sent to %s:%d:%n%s", args.getHost(), args.getPort(), args.getMessage()));
         } catch (final IOException ex) {
-            throw new ComamndRuntimeException(
+            throw new CommandRuntimeException(
                     String.format("Can't open client conection to %s:%s!", args.getHost(), args.getPort()), ex);
         }
     }
@@ -100,7 +100,7 @@ final class Send extends BaseCommand {
 
             @Override
             public String getHelpDescription() {
-                return String.format("Sends <message> to <host:port>. The message must be encapsulated in quotes if it"
+                return String.format("Sends <message> to <host:port>. The message must be encapsulated in quotes if it "
                         + "has more than one word. Port must be in range of %s.", PortValidator.range());
             }
         };
