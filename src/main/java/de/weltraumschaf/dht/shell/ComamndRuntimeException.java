@@ -15,19 +15,26 @@ package de.weltraumschaf.dht.shell;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Signals bad command argument.
+ * Signals runtime error in executed shell command.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public final class CommandArgumentExcpetion extends IllegalArgumentException {
+public final class ComamndRuntimeException extends RuntimeException {
 
     /**
-     * Dedicated constructor.
+     * Creates a runtime exception only with a message.
      *
      * @param message must not be {@code null} or empty
      */
-    public CommandArgumentExcpetion(final String message) {
-        super(Validate.notEmpty(message, "Parameter >s< must not be null or empty!"));
+    public ComamndRuntimeException(final String message) {
+        super(Validate.notEmpty(message, "Parameter >message< must not be null or empty!"));
+    }
+
+    public ComamndRuntimeException(final String message, final Throwable cause) {
+        super(
+            Validate.notEmpty(message, "Parameter >message< must not be null or empty!"),
+            Validate.notNull(cause, "Parameter >cause< must not be null!")
+        );
     }
 
 }

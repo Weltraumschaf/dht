@@ -12,7 +12,6 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
-import de.weltraumschaf.dht.Application;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;

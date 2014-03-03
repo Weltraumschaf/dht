@@ -89,23 +89,31 @@ public class InteractiveShell {
         while ((inputLine = reader.readLine()) != null) {
             try {
                 if (inputLine.trim().isEmpty()) {
-                    // Prevent index out of bound exception in parser.
+                    // Ignore empty input.
                     continue;
                 }
 
                 final ShellCommand cmd = parser.parse(inputLine);
                 execute(cmd);
-            } catch (final SyntaxException | InstantiationException | IllegalAccessException | CommandArgumentExcpetion ex) {
-                app.getIoStreams().println("Error: " + ex.getMessage());
-
-                if (app.getOptions().isDebug()) {
-                    app.getIoStreams().printStackTrace(ex);
-                }
+            } catch (final CommandArgumentExcpetion ex) {
+                app.getIoStreams().println(ex.getMessage());
+            } catch (final ComamndRuntimeException ex) {
+                handleException("Error: ", ex);
+            } catch (final SyntaxException | InstantiationException | IllegalAccessException ex) {
+                handleException("Fatal: ", ex);
             }
 
             if (stop) {
                 break;
             }
+        }
+    }
+
+    private void handleException(final String prefix, final Exception ex) {
+        app.getIoStreams().println(prefix + ex.getMessage());
+
+        if (app.getOptions().isDebug()) {
+            app.getIoStreams().printStackTrace(ex);
         }
     }
 

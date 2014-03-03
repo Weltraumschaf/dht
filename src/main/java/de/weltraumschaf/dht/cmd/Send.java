@@ -14,9 +14,13 @@ package de.weltraumschaf.dht.cmd;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
 import de.weltraumschaf.dht.server.PortValidator;
+import de.weltraumschaf.dht.shell.ComamndRuntimeException;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.SEND;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
 
@@ -33,6 +37,17 @@ final class Send extends BaseCommand {
         println("  host:    " + args.getHost());
         println("  port:    " + args.getPort());
         println("  message: " + args.getMessage());
+
+        try (
+            final Socket client = new Socket(args.getHost(), args.getPort());
+            final PrintStream output = new PrintStream(client.getOutputStream());
+        ) {
+            output.println(args.getMessage());
+            output.flush();
+        } catch (final IOException ex) {
+            throw new ComamndRuntimeException(
+                    String.format("Can't open client conection to %s!", formatListenedAddress()), ex);
+        }
     }
 
     private Arguments validateArguments() throws CommandArgumentExcpetion {
@@ -86,7 +101,7 @@ final class Send extends BaseCommand {
             @Override
             public String getHelpDescription() {
                 return String.format("Sends <message> to <host:port>. The message must be encapsulated in quotes if it"
-                    + "has more than one word. Port must be in range of %s.", PortValidator.range());
+                        + "has more than one word. Port must be in range of %s.", PortValidator.range());
             }
         };
     }
