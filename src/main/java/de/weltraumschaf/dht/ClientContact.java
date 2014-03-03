@@ -14,6 +14,7 @@ package de.weltraumschaf.dht;
 
 import com.google.common.base.Objects;
 import de.weltraumschaf.dht.id.DataKey;
+import de.weltraumschaf.dht.server.PortValidator;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -47,14 +48,14 @@ public final class ClientContact {
      *
      * @param userId must not be {@code null} or empty
      * @param host must not be {@code null} or empty
-     * @param port must be in range 0 .. 65535
+     * @param port must be in range 0 .. {@link Application#MAX_PORT}
      */
     public ClientContact(final String userId, final String host, final int port) {
         super();
         this.userId = Validate.notEmpty(userId, "Parameter >userId< must not be null or empty!");
         this.host = Validate.notEmpty(host, "Parameter >host< must not be null or empty!");
-        Validate.isTrue(port > 0, "Parameter >port< must be greater than 0!");
-        Validate.isTrue(port < 65535, "Parameter >port< must be less than 65535!");
+        Validate.isTrue(PortValidator.isValid(port),
+            String.format("Parameter >port< must be in range %s! Given >%d<.", PortValidator.range(), port));
         this.port = port;
     }
 

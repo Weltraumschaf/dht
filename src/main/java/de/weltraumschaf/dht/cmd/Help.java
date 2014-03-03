@@ -12,6 +12,7 @@
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.server.PortValidator;
 
 /**
  * Prints {@link #HELP} into the shell.
@@ -37,7 +38,8 @@ final class Help extends BaseCommand {
 
             + "  send <host> <port> <message>   Sends <message> to <host:port>.%n"
             + "                                 The message must be encapsulated in quotes if it%n"
-            + "                                 has more than one word.%n%n";
+            + "                                 has more than one word. Port must be in range of%n"
+            + "                                 %s.%n%n";
 
     @Override
     public void execute() {
@@ -45,7 +47,10 @@ final class Help extends BaseCommand {
     }
 
     private String formatHelp() {
-        return String.format(HELP, Application.NAME, getApplication().getVersion());
+        return String.format(HELP,
+            Application.NAME,
+            getApplication().getVersion(),
+            PortValidator.range());
     }
 
 }

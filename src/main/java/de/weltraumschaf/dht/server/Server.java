@@ -12,8 +12,7 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
-import de.weltraumschaf.dht.log.Log;
-import de.weltraumschaf.dht.log.Logger;
+import de.weltraumschaf.dht.Application;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -32,7 +31,6 @@ public final class Server {
 
     private static final int TIME_FACTOR = 1000;
     private static final int MAX_WAIT_COUNT = 5;
-    private static final int MAX_PORT = 65535;
     private static final int MAX_BACK_LOG = 100;
     private static final int THREAD_POOL_SIZE = 1;
 
@@ -59,8 +57,8 @@ public final class Server {
     }
 
     public void setPort(final int port) {
-        Validate.isTrue(port > 0, "Parameter >port< must be greater that 0!");
-        Validate.isTrue(port < MAX_PORT, "Parameter >port< must be less that " + MAX_PORT + "!");
+        Validate.isTrue(PortValidator.isValid(port),
+            String.format("Parameter >port< must be in range %s! Given >%d<.", PortValidator.range(), port));
         this.port = port;
     }
 
