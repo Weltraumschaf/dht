@@ -11,6 +11,8 @@
  */
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.EXIT;
 import java.io.IOException;
 
 /**
@@ -35,6 +37,27 @@ final class Exit extends BaseCommand {
         }
 
         println("Bye bye & HAND!");
+    }
+
+    @Override
+    public Descriptor getDescriptor() {
+        return new BaseDescriptor() {
+
+            @Override
+            public CommandMainType getCommand() {
+                return EXIT;
+            }
+
+            @Override
+            public String getUsage() {
+                return "exit";
+            }
+
+            @Override
+            public String getHelpDescription() {
+                return "Exit the interactive shell.";
+            }
+        };
     }
 
 }

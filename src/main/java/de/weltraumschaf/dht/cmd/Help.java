@@ -12,45 +12,121 @@
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.dht.Application;
-import de.weltraumschaf.dht.server.PortValidator;
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.HELP;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
- * Prints {@link #HELP} into the shell.
+ * Executes `help` command.
  *
  * @author @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 final class Help extends BaseCommand {
 
     /**
-     * Help message for shell users.
+     * Usage strings (left column) width.
      */
-    private static final String HELP
-            = "This is the %s interactive shell version %s.%n%n"
-
-            + "Available commands:%n%n"
-
-            + "  help                           Show all available commands.%n"
-            + "  status                         Show application status information.%n"
-            + "  exit                           Exit the interactive shell.%n%n"
-
-            + "  start                          Starts the server.%n"
-            + "  stop                           Stops the server.%n%n"
-
-            + "  send <host> <port> <message>   Sends <message> to <host:port>.%n"
-            + "                                 The message must be encapsulated in quotes if it%n"
-            + "                                 has more than one word. Port must be in range of%n"
-            + "                                 %s.%n%n";
+    private static final int USAGE_WIDTH = 34;
+    /**
+     * Max width of help output.
+     */
+    private static final int MAX_WIDTH = 80;
+    /**
+     * Description strings (right column) width.
+     */
+    private static final int DESCRIPTION_WIDTH = MAX_WIDTH - USAGE_WIDTH;
+    /**
+     * Used new line character.
+     */
+    private static final String NL = Application.NL;
+    /**
+     * First line of help.
+     */
+    private static final String HEADLINE_FORMAT = "This is the %s interactive shell version %s.";
 
     @Override
     public void execute() {
-        println(formatHelp());
+        final StringBuilder buffer = new StringBuilder();
+        buffer.append(String.format(HEADLINE_FORMAT, Application.NAME, getApplication().getVersion()))
+              .append(NL).append(NL);
+        buffer.append("Available commands:").append(NL).append(NL);
+
+        try {
+            for (final Descriptor descriptor : CommandFactory.getDescriptors()) {
+                buffer.append(format(descriptor)).append(NL);
+            }
+        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        print(buffer.toString());
     }
 
-    private String formatHelp() {
-        return String.format(HELP,
-            Application.NAME,
-            getApplication().getVersion(),
-            PortValidator.range());
+    @Override
+    public Descriptor getDescriptor() {
+        return new BaseDescriptor() {
+
+            @Override
+            public CommandMainType getCommand() {
+                return HELP;
+            }
+
+            @Override
+            public String getUsage() {
+                return "help";
+            }
+
+            @Override
+            public String getHelpDescription() {
+                return "Show all available commands.";
+            }
+        };
     }
 
+    /**
+     * Prefix usage with two spaces and pad right side up to {@link #USAGE_WIDTH}.
+     *
+     * @param usage must not be {@code null} or empty
+     * @return never {@code nul} or empty
+     */
+    static String padUsage(final String usage) {
+        return StringUtils.rightPad("  " + Validate.notEmpty(usage), USAGE_WIDTH);
+    }
+
+    /**
+     * Wraps given description so it fits in a "column" with {@link #DESCRIPTION_WIDTH width}.
+     *
+     * @param usage must not be {@code null} or empty
+     * @return never {@code nul} or empty
+     */
+    static String wrap(final String description) {
+        return WordUtils.wrap(Validate.notEmpty(description), DESCRIPTION_WIDTH, NL, true);
+    }
+
+    /**
+     * Formats whole descriptor.
+     *
+     * @param descriptor must not be {@code null}
+     * @return never {@code null}
+     */
+    static String format(final Descriptor descriptor) {
+        Validate.notNull(descriptor, "Parameter >descriptor< must not be null!");
+        final StringBuilder buffer = new StringBuilder(padUsage(descriptor.getUsage()));
+        boolean isFirstLine = true;
+
+        for (final String line : StringUtils.split(wrap(descriptor.getHelpDescription()), NL)) {
+            if (isFirstLine) {
+                buffer.append(line);
+                isFirstLine = false;
+            } else {
+                buffer.append(StringUtils.repeat(" ", USAGE_WIDTH)).append(line);
+            }
+
+            buffer.append(NL);
+        }
+
+        return buffer.toString();
+    }
 }

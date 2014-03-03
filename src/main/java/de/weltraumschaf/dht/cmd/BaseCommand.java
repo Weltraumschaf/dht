@@ -62,28 +62,67 @@ abstract class BaseCommand implements Command {
         this.app = Validate.notNull(app, "Parameter >app< must not be null!");
     }
 
+    /**
+     * Returns formatted host address the application is configured by CLI options.
+     *
+     * @return never {@code null} or empty
+     */
     String formatListenedAddress() {
         return String.format("%s:%d",
                 getApplication().getOptions().getHost(),
                 getApplication().getOptions().getPort());
     }
 
+    /**
+     * Delegates to the STDOUT of the application.
+     *
+     * @param msg may be {@code null} or empty
+     */
     void println(final String msg) {
         getApplication().getIoStreams().println(msg);
     }
 
+    /**
+     * Delegates to the STDOUT of the application.
+     *
+     * @param msg may be {@code null} or empty
+     */
+    void print(final String msg) {
+        getApplication().getIoStreams().print(msg);
+    }
+
+    /**
+     * Delegates to the STDERR of the application.
+     *
+     * @param msg may be {@code null} or empty
+     */
     void errorln(final String msg) {
         println("Error: " + msg);
     }
 
+    /**
+     * Prints stacktrace to the STDOUT of the application.
+     *
+     * @param msg may be {@code null} or empty
+     */
     void printStackTrace(final Throwable ex) {
         getApplication().getIoStreams().printStackTrace(ex);
     }
 
+    /**
+     * Whether debug option is enabled by the applications CLI options.
+     *
+     * @return {@code true} if debug is enabled, else {@code false}
+     */
     boolean isDebug() {
         return getApplication().getOptions().isDebug();
     }
 
+    /**
+     * Get the application wide new line string.
+     *
+     * @return never {@code null} or empty
+     */
     String nl() {
         return Application.NL;
     }

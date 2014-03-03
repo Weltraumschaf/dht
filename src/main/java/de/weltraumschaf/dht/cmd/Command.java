@@ -18,14 +18,30 @@ import java.util.List;
 /**
  * Interface for shell commands.
  *
+ * Based on command pattern.
+ *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public interface Command {
+public interface Command extends Describable {
 
     /**
      * Executes the command.
      */
     void execute();
+
+    /**
+     * Injection point for arguments.
+     *
+     * Implementations must make a unmodifiable copy.
+     *
+     * @param arguments must not be {@code null}
+     */
     void setArguments(List<Token> arguments);
+
+    /**
+     * Injection point for invoking application.
+     *
+     * @param app must not be {@code null}
+     */
     void setApp(final Application app);
 }

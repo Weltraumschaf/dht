@@ -13,9 +13,10 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
-import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.server.PortValidator;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.SEND;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
 
@@ -37,12 +38,14 @@ final class Send extends BaseCommand {
     private Arguments validateArguments() throws CommandArgumentExcpetion {
         final List<Token> args = getArguments();
 
+        @SuppressWarnings("unchecked")
         final Token<String> hostToken = args.get(0);
 
         if (hostToken.getType() != TokenType.LITERAL) {
             throw new CommandArgumentExcpetion("Host must be a literal!");
         }
 
+        @SuppressWarnings("unchecked")
         final Token<Integer> portToken = args.get(1);
 
         if (portToken.getType() != TokenType.NUMBER) {
@@ -53,9 +56,10 @@ final class Send extends BaseCommand {
 
         if (!PortValidator.isValid(port)) {
             throw new CommandArgumentExcpetion(
-                String.format("Parameter >port< must be in range %s!", PortValidator.range()));
+                    String.format("Parameter >port< must be in range %s!", PortValidator.range()));
         }
 
+        @SuppressWarnings("unchecked")
         final Token<String> messageToken = args.get(2);
 
         if (messageToken.getType() != TokenType.STRING && messageToken.getType() != TokenType.LITERAL) {
@@ -65,10 +69,33 @@ final class Send extends BaseCommand {
         return new Arguments(hostToken.getValue(), port, messageToken.getValue());
     }
 
+    @Override
+    public Descriptor getDescriptor() {
+        return new BaseDescriptor() {
+
+            @Override
+            public CommandMainType getCommand() {
+                return SEND;
+            }
+
+            @Override
+            public String getUsage() {
+                return "send <host> <port> <message>";
+            }
+
+            @Override
+            public String getHelpDescription() {
+                return String.format("Sends <message> to <host:port>. The message must be encapsulated in quotes if it"
+                    + "has more than one word. Port must be in range of %s.", PortValidator.range());
+            }
+        };
+    }
+
     /**
      * Container for the command arguments.
      */
     private static final class Arguments {
+
         /**
          * Host to send the message.
          */
@@ -93,7 +120,7 @@ final class Send extends BaseCommand {
             super();
             this.host = Validate.notEmpty(host, "Parameter >host< must not be null or empty!");
             Validate.isTrue(PortValidator.isValid(port),
-                String.format("Parameter >port< must be in range %s! Given >%d<.", PortValidator.range(), port));
+                    String.format("Parameter >port< must be in range %s! Given >%d<.", PortValidator.range(), port));
             this.port = port;
             this.message = Validate.notEmpty(message, "Parameter >message< must not be null or empty!");
         }

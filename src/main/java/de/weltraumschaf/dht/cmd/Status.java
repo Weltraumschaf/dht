@@ -12,6 +12,9 @@
 
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.STATUS;
+
 /**
  * Executes `status` command.
  *
@@ -29,6 +32,27 @@ final class Status extends BaseCommand {
         buffer.append("  Queue:   ").append(getApplication().getServer().countQueue()).append(nl());
 
         println(buffer.toString());
+    }
+
+    @Override
+    public Descriptor getDescriptor() {
+        return new BaseDescriptor() {
+
+            @Override
+            public CommandMainType getCommand() {
+                return STATUS;
+            }
+
+            @Override
+            public String getUsage() {
+                return "status";
+            }
+
+            @Override
+            public String getHelpDescription() {
+                return "Show application status information.";
+            }
+        };
     }
 
 }

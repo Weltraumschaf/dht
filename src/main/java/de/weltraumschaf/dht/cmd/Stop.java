@@ -11,6 +11,8 @@
  */
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.STOP;
 import java.io.IOException;
 
 /**
@@ -33,7 +35,7 @@ final class Stop extends BaseCommand {
             getApplication().getServer().stop();
         } catch (final IOException | InterruptedException ex) {
             println(String.format(
-                    "Exception caught when trying to stop listen on %s.", formatListenedAddress()));
+                "Exception caught when trying to stop listen on %s.", formatListenedAddress()));
 
             if (isDebug()) {
                 printStackTrace(ex);
@@ -41,7 +43,28 @@ final class Stop extends BaseCommand {
         }
 
         println(String.format("Stopped listening on %s:%d.",
-                getApplication().getOptions().getHost(),
-                getApplication().getOptions().getPort()));
+            getApplication().getOptions().getHost(),
+            getApplication().getOptions().getPort()));
+    }
+
+    @Override
+    public Descriptor getDescriptor() {
+        return new BaseDescriptor() {
+
+            @Override
+            public CommandMainType getCommand() {
+                return STOP;
+            }
+
+            @Override
+            public String getUsage() {
+                return "stop";
+            }
+
+            @Override
+            public String getHelpDescription() {
+                return "Stops the server.";
+            }
+        };
     }
 }

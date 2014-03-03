@@ -11,6 +11,8 @@
  */
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.START;
 import java.io.IOException;
 
 /**
@@ -43,4 +45,24 @@ final class Start extends BaseCommand {
         println(String.format("Server listening on %s.", formatListenedAddress()));
     }
 
+    @Override
+    public Descriptor getDescriptor() {
+        return new BaseDescriptor() {
+
+            @Override
+            public CommandMainType getCommand() {
+                return START;
+            }
+
+            @Override
+            public String getUsage() {
+                return "start";
+            }
+
+            @Override
+            public String getHelpDescription() {
+                return "Starts the server.";
+            }
+        };
+    }
 }
