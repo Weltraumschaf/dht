@@ -16,21 +16,32 @@ import com.beust.jcommander.Parameter;
 /**
  * Immutable container to hold the command line options.
  *
+ * TODO Add validation for port and host.
+ *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public class CliOptions {
 
     /**
+     * Default host to listen on, if not given as CLI option.
+     */
+    private static final String DEFAULT_HOST = "127.0.0.1";
+    /**
+     * Default port to listen on, if not given as CLI option.
+     */
+    private static final int DEFAULT_PORT = 8888;
+
+    /**
      * Port to listen on.
      */
     @Parameter(names = "-p", description = "Port to listen on.")
-    private int port = Application.DEFAULT_PORT;
+    private int port = DEFAULT_PORT;
 
     /**
      * Host name to listen on.
      */
     @Parameter(names = "-h", description = "Host address to bind socket on.")
-    private String host = Application.DEFAULT_HOST;
+    private String host = DEFAULT_HOST;
 
     /**
      * If version information is requested by user.

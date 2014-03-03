@@ -34,15 +34,7 @@ public interface Application {
      * The encoding used by this application for any I/O.
      */
     public static final String ENCODING = "utf-8";
-    /**
-     * Default host to listen on, if not given as CLI option.
-     */
-    public static final String DEFAULT_HOST = "127.0.0.1";
-    /**
-     * Default port to listen on, if not given as CLI option.
-     */
-    public static final int DEFAULT_PORT = 8888;
-
+    
     /**
      * Get the applications I/O streams.
      *
