@@ -84,7 +84,7 @@ final class RequestWorker implements Task {
 
         try {
             requestHandler.execute(client);
-        } catch (final Exception ex) {
+        } catch (final IOException | InterruptedException ex) {
             LOG.debug("Error while talking with client" + formatAddress(client) + ": " + ex.getMessage());
         }
     }

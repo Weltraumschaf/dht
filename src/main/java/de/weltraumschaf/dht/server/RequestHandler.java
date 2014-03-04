@@ -43,7 +43,8 @@ final class RequestHandler  {
             final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
         ) {
             final String inputLine = input.readLine();
-            io.println(String.format("Received message (%s): %s", RequestWorker.formatAddress(client), inputLine));
+            io.println("");
+            io.println(String.format("Received (%s): %s", RequestWorker.formatAddress(client), inputLine));
             output.println("re: " + inputLine);
         }
     }
