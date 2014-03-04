@@ -17,6 +17,7 @@ import de.weltraumschaf.dht.log.Logger;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.util.logging.Level;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -45,7 +46,13 @@ final class RequestWorker implements Task {
     @Override
     public void run() {
         while (true) {
-            if (!queue.isEmpty()) {
+            if (queue.isEmpty()) {
+                try {
+                    Thread.sleep(1); // Prevent 100 % CPU usage.
+                } catch (final InterruptedException ex) {
+                    LOG.error("Can't sleep request worker llop!", ex);
+                }
+            } else {
                 handleRequset(queue.get());
             }
 
