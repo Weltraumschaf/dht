@@ -6,6 +6,8 @@ import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
+import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.Server;
 import de.weltraumschaf.dht.shell.InteractiveShell;
 import java.io.IOException;
@@ -30,6 +32,7 @@ public final class Main extends InvokableAdapter implements Application {
     private final CliOptions options = new CliOptions();
     private final JCommander cliOptionsParser = new JCommander();
     private final InteractiveShell shell = new InteractiveShell(this);
+    private final MessageBox inbox = Messaging.newMessageBox();
     private Server server;
 
     /**
@@ -110,6 +113,17 @@ public final class Main extends InvokableAdapter implements Application {
         return options;
     }
 
+
+    @Override
+    public Server getServer() {
+        return server;
+    }
+
+    @Override
+    public MessageBox getInbox() {
+        return inbox;
+    }
+
     @Override
     public void execute() throws Exception {
         initEnvironment();
@@ -157,11 +171,6 @@ public final class Main extends InvokableAdapter implements Application {
 
             LOG.error(ex.getMessage(), ex);
         }
-    }
-
-    @Override
-    public Server getServer() {
-        return server;
     }
 
 }

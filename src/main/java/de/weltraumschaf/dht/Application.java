@@ -13,6 +13,7 @@ package de.weltraumschaf.dht;
 
 import de.weltraumschaf.commons.IOStreams;
 import de.weltraumschaf.commons.Version;
+import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.server.Server;
 
 /**
@@ -34,7 +35,7 @@ public interface Application {
      * The encoding used by this application for any I/O.
      */
     public static final String ENCODING = "utf-8";
-    
+
     /**
      * Get the applications I/O streams.
      *
@@ -57,4 +58,6 @@ public interface Application {
     CliOptions getOptions();
 
     Server getServer();
+
+    MessageBox getInbox();
 }
