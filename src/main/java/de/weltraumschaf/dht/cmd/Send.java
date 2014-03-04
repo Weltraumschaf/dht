@@ -43,7 +43,7 @@ final class Send extends BaseCommand {
         ) {
             output.println(args.getMessage());
             output.flush();
-            println(String.format("Sent to %s:%d:%n%s", args.getHost(), args.getPort(), args.getMessage()));
+            println(String.format("Sent (%s:%d): %s", args.getHost(), args.getPort(), args.getMessage()));
         } catch (final IOException ex) {
             throw new CommandRuntimeException(
                     String.format("Can't open client conection to %s:%s!", args.getHost(), args.getPort()), ex);

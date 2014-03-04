@@ -29,16 +29,17 @@ final class RequestWorker implements Task {
      * Logging facility.
      */
     private static final Logger LOG = Log.getLogger(RequestWorker.class);
-    private final RequestHandler requestHandler = new RequestHandler();
+    private final RequestHandler requestHandler;
     private final ConnectionQueue<AsynchronousSocketChannel> queue;
     private final IO io;
-    private volatile boolean stop = false;
-    private volatile boolean ready = false;
+    private volatile boolean stop;
+    private volatile boolean ready;
 
     public RequestWorker(final ConnectionQueue<AsynchronousSocketChannel> queue, final IO io) {
         super();
         this.queue = Validate.notNull(queue, "Parameter >queue< must not be null!");
         this.io = Validate.notNull(io, "Parameter >io< must not be null!");
+        requestHandler = new RequestHandler(io);
     }
 
     @Override
@@ -81,7 +82,7 @@ final class RequestWorker implements Task {
         }
     }
 
-    private static String formatAddress(final AsynchronousSocketChannel client) {
+    static String formatAddress(final AsynchronousSocketChannel client) {
         try {
             final InetSocketAddress address = (InetSocketAddress) client.getRemoteAddress();
             return String.format("%s:%d", address.getHostString(), address.getPort());

@@ -11,6 +11,7 @@
  */
 package de.weltraumschaf.dht.server;
 
+import de.weltraumschaf.commons.IO;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,6 +27,14 @@ import org.apache.commons.lang3.Validate;
  */
 final class RequestHandler  {
 
+    private final IO io;
+
+    public RequestHandler(final IO io) {
+        super();
+        this.io = Validate.notNull(io, "Parameter >io< must not be null!");
+    }
+
+
     public void execute(final AsynchronousSocketChannel client) throws IOException, InterruptedException {
         Validate.notNull(client, "Parameter >client< must not be null!");
 
@@ -34,7 +43,7 @@ final class RequestHandler  {
             final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
         ) {
             final String inputLine = input.readLine();
-            Thread.sleep(10);
+            io.println(String.format("Received message (%s): %s", RequestWorker.formatAddress(client), inputLine));
             output.println("re: " + inputLine);
         }
     }
