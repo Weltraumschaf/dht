@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Exit.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.cmd</a> &gt; <span class="el_source">Exit.java</span></div><h1>Exit.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.cmd;
+
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.EXIT;
+import java.io.IOException;
+
+/**
+ * Executes `exit` command.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+<span class="nc" id="L23">final class Exit extends BaseCommand {</span>
+
+    @Override
+    public void execute() {
+        try {
+<span class="nc bnc" id="L28" title="All 2 branches missed.">            if (getApplication().getServer().isRunning()) {</span>
+<span class="nc" id="L29">                getApplication().getServer().stop();</span>
+            }
+<span class="nc" id="L31">        } catch (final IOException | InterruptedException ex) {</span>
+<span class="nc" id="L32">            errorln(&quot;Error: &quot; + ex.getMessage());</span>
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (isDebug()) {</span>
+<span class="nc" id="L35">                printStackTrace(ex);</span>
+            }
+<span class="nc" id="L37">        }</span>
+
+<span class="nc" id="L39">        println(&quot;Bye bye &amp; HAND!&quot;);</span>
+<span class="nc" id="L40">    }</span>
+
+    @Override
+    public Descriptor getDescriptor() {
+<span class="nc" id="L44">        return new BaseDescriptor() {</span>
+
+            @Override
+            public CommandMainType getCommand() {
+<span class="nc" id="L48">                return EXIT;</span>
+            }
+
+            @Override
+            public String getUsage() {
+<span class="nc" id="L53">                return &quot;exit&quot;;</span>
+            }
+
+            @Override
+            public String getHelpDescription() {
+<span class="nc" id="L58">                return &quot;Exit the interactive shell.&quot;;</span>
+            }
+        };
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

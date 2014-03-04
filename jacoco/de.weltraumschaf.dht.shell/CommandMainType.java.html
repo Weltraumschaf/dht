@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CommandMainType.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.shell</a> &gt; <span class="el_source">CommandMainType.java</span></div><h1>CommandMainType.java</h1><pre class="source lang-java linenums">/*
+ * LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf(at)googlemail(dot)com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf(at)googlemail(dot)com&gt;
+ */
+package de.weltraumschaf.dht.shell;
+
+import com.google.common.collect.Lists;
+import de.weltraumschaf.commons.shell.MainCommandType;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Enumerates the available commands.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+<span class="pc" id="L24">public enum CommandMainType implements MainCommandType {</span>
+
+    /**
+     * Help command.
+     */
+<span class="fc" id="L29">    HELP(&quot;help&quot;),</span>
+    /**
+     * Exit command.
+     */
+<span class="fc" id="L33">    EXIT(&quot;exit&quot;),</span>
+    /**
+     * Send message command.
+     */
+<span class="fc" id="L37">    SEND(&quot;send&quot;),</span>
+    /**
+     * Start server command.
+     */
+<span class="fc" id="L41">    START(&quot;start&quot;),</span>
+    /**
+     * Stop server command.
+     */
+<span class="fc" id="L45">    STOP(&quot;stop&quot;),</span>
+    /**
+     * Current status command.
+     */
+<span class="fc" id="L49">    STATUS(&quot;status&quot;);</span>
+
+    /**
+     * Literal command string used in shell.
+     */
+    private final String literal;
+
+    /**
+     * Initialize name.
+     *
+     * @param name literal shell command string
+     */
+<span class="fc" id="L61">    private CommandMainType(final String name) {</span>
+<span class="fc" id="L62">        this.literal = name;</span>
+<span class="fc" id="L63">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L67">        return literal;</span>
+    }
+
+    /**
+     * Returns the list of available sub commands.
+     *
+     * If a command does not support sub commands an empty list is returned.
+     *
+     * @return unmodifiable list of subtypes
+     */
+    List&lt;CommandSubType&gt; subCommands() {
+        final List&lt;CommandSubType&gt; subCommands;
+
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        switch (this) {</span>
+            case HELP:
+<span class="nc" id="L82">                subCommands = Lists.newArrayList(</span>
+                    CommandSubType.EXIT,
+                    CommandSubType.SEND,
+                    CommandSubType.START,
+                    CommandSubType.STOP,
+                    CommandSubType.STATUS
+                );
+<span class="nc" id="L89">                break;</span>
+            default:
+<span class="nc" id="L91">                subCommands = Collections.emptyList();</span>
+        }
+
+<span class="nc" id="L94">        return Collections.unmodifiableList(subCommands);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

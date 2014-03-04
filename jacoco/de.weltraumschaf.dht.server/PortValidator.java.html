@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PortValidator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.server</a> &gt; <span class="el_source">PortValidator.java</span></div><h1>PortValidator.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.server;
+
+/**
+ * Validates that a given number is a valid port.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+<span class="nc" id="L19">public final class PortValidator {</span>
+
+    /**
+     * All ports below 1024 are privileged.
+     */
+    private static final int MIN = 1025;
+    /**
+     * Max is 2^16.
+     */
+    private static final int MAX = 65535;
+
+    /**
+     * Validates if given number is a valid TCP port for this application.
+     *
+     * @param port any number
+     * @return {@code true} if valid, else {@code false}
+     */
+    public static final boolean isValid(final int port) {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (isToSmall(port)) {</span>
+<span class="fc" id="L38">            return false;</span>
+        }
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (isToLarge(port)) {</span>
+<span class="fc" id="L42">            return false;</span>
+        }
+
+<span class="fc" id="L45">        return true;</span>
+    }
+
+    /**
+     * Indicates if a port is too small.
+     *
+     * @param port port any number
+     * @return {@code true} if port is too small, else {@code false}
+     */
+    public static final boolean isToSmall(final int port) {
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        return port &lt; MIN;</span>
+    }
+
+    /**
+     * Indicates if a port is too large.
+     *
+     * @param port port any number
+     * @return {@code true} if port is too lage, else {@code false}
+     */
+    public static final boolean isToLarge(final int port) {
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        return port &gt; MAX;</span>
+    }
+
+    /**
+     * Gives a string describing the valid range.
+     *
+     * @return never {@code null} or empty
+     */
+    public static final String range() {
+<span class="fc" id="L74">        return MIN + &quot;..&quot; + MAX;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

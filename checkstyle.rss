@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<rss version="0.91">
+  <channel>
+    <title>DHT - Checkstyle report</title>
+    <link>http://weltraumschaf.github.com/dht/</link>
+    <description>DHT - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2014</copyright>
+    <item>
+      <title>File: 49,
+             Errors: 161,
+             Warnings: 14,
+             Infos: 0
+      </title>
+            <link>http://weltraumschaf.github.com/dht//checkstyle.html</link>
+      <description>
+        <p>Click <a href="http://weltraumschaf.github.com/dht//checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.InteractiveShell.java">de/weltraumschaf/dht/shell/InteractiveShell.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.BaseDescriptor.java">de/weltraumschaf/dht/cmd/BaseDescriptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.HelpTest.java">de/weltraumschaf/dht/cmd/HelpTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  7
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.id.BaseIdentity.java">de/weltraumschaf/dht/id/BaseIdentity.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.DhtLiteralCommandMap.java">de/weltraumschaf/dht/shell/DhtLiteralCommandMap.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.log.Logger.java">de/weltraumschaf/dht/log/Logger.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.MainTest.java">de/weltraumschaf/dht/MainTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.id.Identity.java">de/weltraumschaf/dht/id/Identity.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.server.PortValidator.java">de/weltraumschaf/dht/server/PortValidator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.DhtLiteralCommandMapTest.java">de/weltraumschaf/dht/shell/DhtLiteralCommandMapTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Stop.java">de/weltraumschaf/dht/cmd/Stop.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.Node.java">de/weltraumschaf/dht/Node.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Command.java">de/weltraumschaf/dht/cmd/Command.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.Bits.java">de/weltraumschaf/dht/Bits.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  11
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.server.PortValidatorTest.java">de/weltraumschaf/dht/server/PortValidatorTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.ExitCodeImpl.java">de/weltraumschaf/dht/ExitCodeImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.server.RequestHandler.java">de/weltraumschaf/dht/server/RequestHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.Application.java">de/weltraumschaf/dht/Application.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.BaseCommand.java">de/weltraumschaf/dht/cmd/BaseCommand.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.DhtService.java">de/weltraumschaf/dht/DhtService.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  18
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.CommandFactory.java">de/weltraumschaf/dht/cmd/CommandFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  7
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.server.Server.java">de/weltraumschaf/dht/server/Server.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  29
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Help.java">de/weltraumschaf/dht/cmd/Help.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.ClientContact.java">de/weltraumschaf/dht/ClientContact.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#log4j.properties">log4j.properties</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.Main.java">de/weltraumschaf/dht/Main.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  9
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.CliOptions.java">de/weltraumschaf/dht/CliOptions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.server.ConnectionQueue.java">de/weltraumschaf/dht/server/ConnectionQueue.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Describable.java">de/weltraumschaf/dht/cmd/Describable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.ParserTest.java">de/weltraumschaf/dht/shell/ParserTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.id.NodeId.java">de/weltraumschaf/dht/id/NodeId.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Exit.java">de/weltraumschaf/dht/cmd/Exit.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.CommandMainType.java">de/weltraumschaf/dht/shell/CommandMainType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Start.java">de/weltraumschaf/dht/cmd/Start.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.server.Task.java">de/weltraumschaf/dht/server/Task.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.server.RequestWorker.java">de/weltraumschaf/dht/server/RequestWorker.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  8
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Descriptor.java">de/weltraumschaf/dht/cmd/Descriptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.CommandSubType.java">de/weltraumschaf/dht/shell/CommandSubType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.log.Log.java">de/weltraumschaf/dht/log/Log.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.id.DataKey.java">de/weltraumschaf/dht/id/DataKey.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Send.java">de/weltraumschaf/dht/cmd/Send.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.DhtCommandVerifier.java">de/weltraumschaf/dht/shell/DhtCommandVerifier.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.BitsTest.java">de/weltraumschaf/dht/BitsTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.log.LoggerTest.java">de/weltraumschaf/dht/log/LoggerTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.CommandRuntimeException.java">de/weltraumschaf/dht/shell/CommandRuntimeException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.server.ServerTest.java">de/weltraumschaf/dht/server/ServerTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.version.properties">de/weltraumschaf/dht/version.properties</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.cmd.Status.java">de/weltraumschaf/dht/cmd/Status.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://weltraumschaf.github.com/dht//checkstyle.html#de.weltraumschaf.dht.shell.CommandArgumentExcpetion.java">de/weltraumschaf/dht/shell/CommandArgumentExcpetion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+

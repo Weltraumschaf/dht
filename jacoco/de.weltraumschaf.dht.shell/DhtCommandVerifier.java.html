@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DhtCommandVerifier.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.shell</a> &gt; <span class="el_source">DhtCommandVerifier.java</span></div><h1>DhtCommandVerifier.java</h1><pre class="source lang-java linenums">/*
+ * LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf(at)googlemail(dot)com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf(at)googlemail(dot)com&gt;
+ */
+package de.weltraumschaf.dht.shell;
+
+import de.weltraumschaf.commons.shell.CommandVerifier;
+import de.weltraumschaf.commons.shell.ShellCommand;
+import de.weltraumschaf.commons.shell.SyntaxException;
+
+/**
+ * Verifies the commands.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+<span class="fc" id="L23">public class DhtCommandVerifier implements CommandVerifier {</span>
+
+    private static final int ARGS_1 = 1;
+    private static final int ARGS_2 = 2;
+    private static final int ARGS_3 = 3;
+
+    /**
+     * Verifies parsed command of consistency.
+     *
+     * Consistency checks are: - correct sub command type - correct number of arguments
+     *
+     * @param cmd command to verify
+     * @throws SyntaxException if, verification has failed
+     */
+    @Override
+    public void verifyCommand(final ShellCommand cmd) throws SyntaxException {
+<span class="pc bpc" id="L39" title="2 of 4 branches missed.">        switch ((CommandMainType) cmd.getCommand()) {</span>
+            // No argument commands.
+            case EXIT:
+            case STATUS:
+            case START:
+            case STOP:
+<span class="fc" id="L45">                assertNoSubCommand(cmd);</span>
+<span class="fc" id="L46">                assertNoArguments(cmd);</span>
+<span class="fc" id="L47">                break;</span>
+            case HELP:
+<span class="fc" id="L49">                assertNoArguments(cmd);</span>
+<span class="fc" id="L50">                break;</span>
+            case SEND:
+<span class="nc" id="L52">                assertNoSubCommand(cmd);</span>
+<span class="nc" id="L53">                assertArgumentsCount(cmd, ARGS_3);</span>
+<span class="nc" id="L54">                break;</span>
+<span class="fc" id="L55">            default:</span>
+            // Nothing to do here.
+        }
+<span class="fc" id="L58">    }</span>
+
+    private void assertNoArguments(final ShellCommand cmd) throws SyntaxException {
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (!cmd.getArguments().isEmpty()) {</span>
+<span class="fc" id="L62">            throw new SyntaxException(String.format(&quot;Command '%s' does not support arguments!&quot;,</span>
+                    cmd.getCommand()));
+        }
+<span class="fc" id="L65">    }</span>
+
+    private void assertArgumentsCount(final ShellCommand cmd, final int expectedCount) throws SyntaxException {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (cmd.getArguments().size() != expectedCount) {</span>
+<span class="nc" id="L69">            throw new SyntaxException(String.format(&quot;Command '%s' expects %d arguments!&quot;,</span>
+                    cmd.getCommand(), expectedCount));
+        }
+<span class="nc" id="L72">    }</span>
+
+    private void assertNoSubCommand(final ShellCommand cmd) throws SyntaxException {
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (cmd.getSubCommand() != CommandSubType.NONE) {</span>
+<span class="nc" id="L76">            throw new SyntaxException(String.format(&quot;Command '%s' does not support subcommand '%s'!&quot;,</span>
+                    cmd.getCommand(), cmd.getSubCommand()));
+        }
+<span class="fc" id="L79">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

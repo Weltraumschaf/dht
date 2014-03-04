@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CommandFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.cmd</a> &gt; <span class="el_source">CommandFactory.java</span></div><h1>CommandFactory.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.cmd;
+
+import com.beust.jcommander.internal.Maps;
+import de.weltraumschaf.commons.shell.MainCommandType;
+import de.weltraumschaf.commons.shell.ShellCommand;
+import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.shell.CommandMainType;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import org.apache.commons.lang3.Validate;
+
+/**
+ * Factory to create command objects depending on the parsed {@link ShellCommand}.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+public final class CommandFactory {
+
+    /**
+     * In which package the commands are.
+     */
+    private static final String COMMAND_PACKAGE = &quot;de.weltraumschaf.dht.cmd&quot;;
+    /**
+     * Holds descriptors for all command classes.
+     *
+     * Lazy computed once speed up subsequent requests.
+     */
+<span class="nc" id="L40">    private static Map&lt;String, Descriptor&gt; DESCRIPTORS = null;</span>
+    /**
+     * Invoking application.
+     */
+    private final Application app;
+    /**
+     * Holds a map of command type and command classes.
+     */
+    private final Map&lt;MainCommandType, Class&lt;?&gt;&gt; classLookup;
+
+    /**
+     * Dedicated constructor.
+     *
+     * @param app the invoking application
+     * @throws ClassNotFoundException if a command class is not found
+     */
+    public CommandFactory(final Application app) throws ClassNotFoundException {
+<span class="nc" id="L57">        super();</span>
+<span class="nc" id="L58">        this.app = Validate.notNull(app, &quot;Parameter &gt;app&lt; must not be null!&quot;);</span>
+<span class="nc" id="L59">        classLookup = createClassLookup();</span>
+<span class="nc" id="L60">    }</span>
+
+    /**
+     * Generates class name for command type.
+     *
+     * @param type must not be {@code null}
+     * @return never {@code null} or empty
+     */
+    private static String generateClassName(final CommandMainType type) {
+<span class="nc" id="L69">        final String name = Validate.notNull(type).name().toLowerCase();</span>
+<span class="nc" id="L70">        return COMMAND_PACKAGE + &quot;.&quot; + Character.toUpperCase(name.charAt(0)) + name.substring(1);</span>
+    }
+
+    /**
+     * Creates the command type class lookup.
+     *
+     * Must never be more visible than private, unless remaining not final because used in constructor.
+     *
+     * @return never {@code null} or empty, unmodifiable map
+     * @throws ClassNotFoundException if a command class is not found
+     */
+    private static Map&lt;MainCommandType, Class&lt;?&gt;&gt; createClassLookup() throws ClassNotFoundException {
+<span class="nc" id="L82">        final Map&lt;MainCommandType, Class&lt;?&gt;&gt; temp = Maps.newHashMap();</span>
+
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        for (final CommandMainType type : CommandMainType.values()) {</span>
+<span class="nc" id="L85">            temp.put(type, Class.forName(generateClassName(type)));</span>
+        }
+
+<span class="nc" id="L88">        return Collections.unmodifiableMap(temp);</span>
+    }
+
+    /**
+     * Get sorted list of all command descriptors.
+     *
+     * Sorting is done by the literal command.
+     *
+     * @return never {@code null}, unmodifiable
+     * @throws ClassNotFoundException if a command class is not found
+     * @throws InstantiationException if command can't be instantiated
+     * @throws IllegalAccessException if default constructor is not accessible
+     */
+    static Collection&lt;Descriptor&gt; getDescriptors() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+<span class="nc" id="L102">        initDescriptors();</span>
+<span class="nc" id="L103">        return DESCRIPTORS.values();</span>
+    }
+
+    private static void initDescriptors() throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (null == DESCRIPTORS) {</span>
+<span class="nc" id="L108">            final Map&lt;String, Descriptor&gt; descriptors = Maps.newHashMap();</span>
+
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            for (final Class&lt;?&gt; comamndClass : createClassLookup().values()) {</span>
+<span class="nc" id="L111">                final Descriptor descriptor = ((Command) comamndClass.newInstance()).getDescriptor();</span>
+<span class="nc" id="L112">                descriptors.put(descriptor.getCommand().toString(), descriptor);</span>
+<span class="nc" id="L113">            }</span>
+
+<span class="nc" id="L115">            DESCRIPTORS = Collections.unmodifiableMap(descriptors);</span>
+        }
+<span class="nc" id="L117">    }</span>
+
+    static Descriptor getDescriptor(final String command) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+<span class="nc" id="L120">        Validate.notEmpty(command, &quot;Parameter &gt;command&lt; must not be null or empty!&quot;);</span>
+<span class="nc" id="L121">        initDescriptors();</span>
+
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (DESCRIPTORS.containsKey(command)) {</span>
+<span class="nc" id="L124">            return DESCRIPTORS.get(command);</span>
+        }
+
+<span class="nc" id="L127">        throw new IllegalArgumentException(&quot;Doesnot knwo command &gt;&quot; + command + &quot;&lt;!&quot;);</span>
+    }
+
+    /**
+     * Create command instances according to the parsed shell command.
+     *
+     * This method also injects {@link Application} and list of arguments.
+     *
+     * @param shellCmd used to determine appropriate command
+     * @return command object
+     * @throws InstantiationException if command can't be instantiated
+     * @throws IllegalAccessException if default constructor is not accessible
+     * CHECKSTYLE:OFF
+     * @throws IllegalArgumentException if, can't create command of bad main or sub command type
+     * CHECKSTYLE:ON
+     */
+    public Command newCommand(final ShellCommand shellCmd) throws InstantiationException, IllegalAccessException {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (classLookup.containsKey(shellCmd.getCommand())) {</span>
+<span class="nc" id="L145">            final Class&lt;?&gt; comamndClass = classLookup.get(shellCmd.getCommand());</span>
+<span class="nc" id="L146">            final Command cmd = (Command) comamndClass.newInstance();</span>
+<span class="nc" id="L147">            cmd.setSubCommandType(shellCmd.getSubCommand());</span>
+<span class="nc" id="L148">            cmd.setApplication(app);</span>
+<span class="nc" id="L149">            cmd.setArguments(shellCmd.getArguments());</span>
+<span class="nc" id="L150">            return cmd;</span>
+        }
+
+<span class="nc" id="L153">        throw new IllegalArgumentException(String.format(&quot;Unsupported main command type '%s'!&quot;, shellCmd.getCommand()));</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>
