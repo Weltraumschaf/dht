@@ -14,7 +14,9 @@ package de.weltraumschaf.dht.server;
 import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
+import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.msg.Messaging;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -91,8 +93,10 @@ final class RequestWorker implements Task {
             final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
         ) {
             final String inputLine = input.readLine();
+            final Message incomming = Messaging.newMessage((InetSocketAddress) client.getRemoteAddress(), inputLine);
+            inbox.put(incomming);
             io.println("");
-            io.println(String.format("Received (%s): %s", RequestWorker.formatAddress(client), inputLine));
+            io.println("Message received.");
             output.println("re: " + inputLine);
         } catch (final IOException ex) {
             LOG.debug("Error while talking with client" + formatAddress(client) + ": " + ex.getMessage());
