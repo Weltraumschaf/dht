@@ -14,17 +14,40 @@ package de.weltraumschaf.dht.msg;
 import java.net.InetSocketAddress;
 
 /**
+ * Represents a message send over the network.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public interface Message {
 
+    /**
+     * From where the message came.
+     *
+     * @return never {@code null}
+     */
     InetSocketAddress getFrom();
 
+    /**
+     * Get the message body.
+     *
+     * @return never {@code null}
+     */
     String getBody();
 
+    /**
+     * Mark the message as read.
+     *
+     * Subsequent calls has no effect.
+     */
     void markAsRead();
 
+    /**
+     * Whether the message is unread or not.
+     *
+     * This method must return {@code true} until first invocation of {@link #markAsRead()}.
+     *
+     * @return {@code true} if message is unread, else {@code false}
+     */
     boolean isUnread();
 
 }
