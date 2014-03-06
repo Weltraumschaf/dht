@@ -14,6 +14,7 @@ package de.weltraumschaf.dht.server;
 import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
+import de.weltraumschaf.dht.msg.MessageBox;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,13 +36,15 @@ final class RequestWorker implements Task {
     private static final Logger LOG = Log.getLogger(RequestWorker.class);
     private final ConnectionQueue<AsynchronousSocketChannel> queue;
     private final IO io;
+    private final MessageBox inbox;
     private volatile boolean stop;
     private volatile boolean ready;
 
-    public RequestWorker(final ConnectionQueue<AsynchronousSocketChannel> queue, final IO io) {
+    public RequestWorker(final ConnectionQueue<AsynchronousSocketChannel> queue, final IO io, final MessageBox inbox) {
         super();
         this.queue = Validate.notNull(queue, "Parameter >queue< must not be null!");
         this.io = Validate.notNull(io, "Parameter >io< must not be null!");
+        this.inbox = Validate.notNull(inbox, "Parameter >inbox< must not be null!");
     }
 
     @Override

@@ -12,6 +12,7 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
+import de.weltraumschaf.dht.msg.MessageBox;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -34,6 +35,7 @@ public final class Server {
     private static final int THREAD_POOL_SIZE = 1;
 
     private final IO io;
+    private final MessageBox inbox;
     private final ConnectionQueue<AsynchronousSocketChannel> queue = new ConnectionQueue<AsynchronousSocketChannel>();
 
     private ExecutorService workerService;
@@ -46,9 +48,10 @@ public final class Server {
 
     private volatile State state = State.NOT_RUNNING;
 
-    public Server(final IO io) {
+    public Server(final IO io, final MessageBox inbox) {
         super();
         this.io = Validate.notNull(io, "Parameter >io< must not be null!");
+        this.inbox = Validate.notNull(inbox, "Parameter >inbox< must not be null!");
     }
 
     public void setHost(final String host) {
@@ -77,7 +80,7 @@ public final class Server {
         state = State.STARTING;
 
         queue.clear();
-        worker = new RequestWorker(queue, io);
+        worker = new RequestWorker(queue, io, inbox);
         workerService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
         workerService.execute(worker);
 

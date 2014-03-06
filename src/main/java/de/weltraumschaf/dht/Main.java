@@ -57,7 +57,7 @@ public final class Main extends InvokableAdapter implements Application {
             throw new ApplicationException(ExitCodeImpl.FATAL, "Can't load version file!", ex);
         }
 
-        server = new Server(getIoStreams());
+        server = new Server(getIoStreams(), inbox);
         server.setHost(options.getHost());
         server.setPort(options.getPort());
 
