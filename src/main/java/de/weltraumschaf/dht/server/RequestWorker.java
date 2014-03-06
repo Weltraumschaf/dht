@@ -14,10 +14,13 @@ package de.weltraumschaf.dht.server;
 import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.logging.Level;
+import java.nio.channels.Channels;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -30,7 +33,6 @@ final class RequestWorker implements Task {
      * Logging facility.
      */
     private static final Logger LOG = Log.getLogger(RequestWorker.class);
-    private final RequestHandler requestHandler;
     private final ConnectionQueue<AsynchronousSocketChannel> queue;
     private final IO io;
     private volatile boolean stop;
@@ -40,7 +42,6 @@ final class RequestWorker implements Task {
         super();
         this.queue = Validate.notNull(queue, "Parameter >queue< must not be null!");
         this.io = Validate.notNull(io, "Parameter >io< must not be null!");
-        requestHandler = new RequestHandler(io);
     }
 
     @Override
@@ -82,14 +83,20 @@ final class RequestWorker implements Task {
     private void handleRequset(final AsynchronousSocketChannel client) {
         LOG.debug("Opened connection from " + formatAddress(client));
 
-        try {
-            requestHandler.execute(client);
-        } catch (final IOException | InterruptedException ex) {
+        try (
+            final BufferedReader input = new BufferedReader(new InputStreamReader(Channels.newInputStream(client)));
+            final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
+        ) {
+            final String inputLine = input.readLine();
+            io.println("");
+            io.println(String.format("Received (%s): %s", RequestWorker.formatAddress(client), inputLine));
+            output.println("re: " + inputLine);
+        } catch (final IOException ex) {
             LOG.debug("Error while talking with client" + formatAddress(client) + ": " + ex.getMessage());
         }
     }
 
-    static String formatAddress(final AsynchronousSocketChannel client) {
+    private static String formatAddress(final AsynchronousSocketChannel client) {
         try {
             final InetSocketAddress address = (InetSocketAddress) client.getRemoteAddress();
             return String.format("%s:%d", address.getHostString(), address.getPort());
