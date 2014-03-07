@@ -40,6 +40,10 @@ import org.apache.commons.lang3.Validate;
 public class InteractiveShell {
 
     /**
+     * The welcome string showed very first to the user.
+     */
+    private static final String WELCOME_FORMAT = "« Welcome to the %s interactive shell »%n";
+    /**
      * Logging facility.
      */
     private static final Logger LOG = Log.getLogger(InteractiveShell.class);
@@ -86,7 +90,7 @@ public class InteractiveShell {
      * @throws IOException if I/O error occurs
      */
     public void start() throws IOException {
-        app.getIoStreams().println(String.format("Welcome to " + Application.NAME + " interactive shell!%n"));
+        app.getIoStreams().println(String.format(WELCOME_FORMAT, Application.NAME));
         final ConsoleReader reader = new ConsoleReader(app.getIoStreams().getStdin(), app.getIoStreams().getStdout());
         reader.addCompleter(createCompletionHints());
         reader.setPrompt(PROMPT);
