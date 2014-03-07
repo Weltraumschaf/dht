@@ -24,12 +24,13 @@ public enum CommandSubType implements SubCommandType {
      * No sub command.
      */
     NONE(""),
-    
-    EXIT(CommandMainType.EXIT.toString()),
-    SEND(CommandMainType.SEND.toString()),
-    START(CommandMainType.START.toString()),
-    STOP(CommandMainType.STOP.toString()),
-    STATUS(CommandMainType.STATUS.toString());
+
+    HELP_EXIT(CommandMainType.EXIT.toString()),
+    HELP_INBOX(CommandMainType.INBOX.toString()),
+    HELP_SEND(CommandMainType.SEND.toString()),
+    HELP_START(CommandMainType.START.toString()),
+    HELP_STOP(CommandMainType.STOP.toString()),
+    HELP_STATUS(CommandMainType.STATUS.toString());
 
     /**
      * Literal sub command string used in shell.

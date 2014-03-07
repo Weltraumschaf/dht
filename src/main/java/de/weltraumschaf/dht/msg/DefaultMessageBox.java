@@ -25,11 +25,12 @@ import org.apache.commons.lang3.Validate;
 class DefaultMessageBox implements MessageBox {
 
     private final List<Message> messages = Lists.newArrayList();
+    private final Object lock = new Object();
 
     @Override
     public void put(final Message msg) {
         Validate.notNull(msg, "Parameter >msg< must not be null!");
-        synchronized (messages) {
+        synchronized (lock) {
             messages.add(msg);
         }
     }
@@ -37,7 +38,7 @@ class DefaultMessageBox implements MessageBox {
     @Override
     public void remove(final Message msg) {
         Validate.notNull(msg, "Parameter >msg< must not be null!");
-        synchronized (messages) {
+        synchronized (lock) {
             messages.remove(msg);
         }
     }
@@ -45,9 +46,9 @@ class DefaultMessageBox implements MessageBox {
     @Override
     public int countUnread() {
         int count = 0;
-        // Work on coy to preven concurrent modification exceptions.
+        // Work on copy to prevent concurrent modification exceptions.
         final Collection<Message> localCopy;
-        synchronized (this) {
+        synchronized (lock) {
             localCopy = Collections.unmodifiableCollection(messages);
         }
 
@@ -62,8 +63,23 @@ class DefaultMessageBox implements MessageBox {
 
     @Override
     public int count() {
-        synchronized (messages) {
+        synchronized (lock) {
             return messages.size();
         }
     }
+
+    @Override
+    public Collection<Message> getAll() {
+        synchronized (lock) {
+            return Collections.unmodifiableCollection(messages);
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        synchronized (lock) {
+            return messages.isEmpty();
+        }
+    }
+
 }

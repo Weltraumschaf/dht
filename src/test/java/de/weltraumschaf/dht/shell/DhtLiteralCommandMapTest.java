@@ -83,11 +83,11 @@ public class DhtLiteralCommandMapTest {
 
     @Test
     public void isSubCommand() {
-        assertThat(sut.isSubCommand(CommandSubType.EXIT.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.SEND.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.START.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.STATUS.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.STOP.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.HELP_EXIT.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.HELP_SEND.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.HELP_START.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.HELP_STATUS.toString()), is(true));
+        assertThat(sut.isSubCommand(CommandSubType.HELP_STOP.toString()), is(true));
         assertThat(sut.isSubCommand(CommandSubType.NONE.toString()), is(false));
         assertThat(sut.isSubCommand(BadSubType.FOO.toString()), is(false));
         assertThat(sut.isSubCommand(BadSubType.BAR.toString()), is(false));

@@ -93,6 +93,10 @@ abstract class BaseCommand implements Command {
         getApplication().getIoStreams().println(msg);
     }
 
+    void println() {
+        println("");
+    }
+
     /**
      * Delegates to the STDOUT of the applicationlication.
      *

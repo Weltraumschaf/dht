@@ -32,6 +32,10 @@ public enum CommandMainType implements MainCommandType {
      */
     EXIT("exit"),
     /**
+     * Inbox command.
+     */
+    INBOX("inbox"),
+    /**
      * Send message command.
      */
     SEND("send"),
@@ -80,11 +84,12 @@ public enum CommandMainType implements MainCommandType {
         switch (this) {
             case HELP:
                 subCommands = Lists.newArrayList(
-                    CommandSubType.EXIT,
-                    CommandSubType.SEND,
-                    CommandSubType.START,
-                    CommandSubType.STOP,
-                    CommandSubType.STATUS
+                    CommandSubType.HELP_EXIT,
+                    CommandSubType.HELP_INBOX,
+                    CommandSubType.HELP_SEND,
+                    CommandSubType.HELP_START,
+                    CommandSubType.HELP_STOP,
+                    CommandSubType.HELP_STATUS
                 );
                 break;
             default:
