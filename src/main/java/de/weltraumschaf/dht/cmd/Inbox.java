@@ -134,9 +134,11 @@ final class Inbox extends BaseCommand {
     }
 
     private void answerMessage() {
+        @SuppressWarnings("unchecked")
         final Token<Integer> idToken = getArguments().get(0);
         final int id = validateId(idToken);
         final Message message = getInbox().get(id);
+        @SuppressWarnings("unchecked")
         final Token<String> messageBodyToken = getArguments().get(1);
         final Message answer = Messaging.newMessage(
                 newLocalAddress(),
@@ -154,6 +156,7 @@ final class Inbox extends BaseCommand {
     }
 
     private void removeMessage() {
+        @SuppressWarnings("unchecked")
         final Token<Integer> idToken = getArguments().get(0);
         final int id = validateId(idToken);
         getInbox().remove(id);
@@ -162,6 +165,7 @@ final class Inbox extends BaseCommand {
     }
 
     private void showMessage() {
+        @SuppressWarnings("unchecked")
         final Token<Integer> idToken = getArguments().get(0);
         final int id = validateId(idToken);
         final Message message = getInbox().get(id);
