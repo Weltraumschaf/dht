@@ -12,14 +12,14 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
+import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.msg.Messaging;
-import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -112,10 +112,13 @@ final class RequestWorker implements Task {
         LOG.debug("Opened connection from " + formatAddress(client));
 
         try (
-            final BufferedReader input = new BufferedReader(new InputStreamReader(Channels.newInputStream(client)));
+            final DataInputStream input = new DataInputStream(Channels.newInputStream(client));
             final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
         ) {
-            final String inputLine = input.readLine();
+            final int length = input.readInt();
+            final byte[] data = new byte[length];
+            input.readFully(data);
+            final String inputLine = new String(data, Application.ENCODING);
             final Message incomming = Messaging.newMessage(
                 (InetSocketAddress) client.getRemoteAddress(),
                 (InetSocketAddress) client.getLocalAddress(),
@@ -124,6 +127,7 @@ final class RequestWorker implements Task {
             io.println("");
             io.println("Message received.");
             output.println("re: " + inputLine);
+            output.flush();
         } catch (final IOException ex) {
             LOG.debug("Error while talking with client" + formatAddress(client) + ": " + ex.getMessage());
         }

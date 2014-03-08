@@ -9,12 +9,11 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.msg;
 
-import de.weltraumschaf.dht.shell.CommandRuntimeException;
+import de.weltraumschaf.dht.Application;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import org.apache.commons.lang3.Validate;
@@ -33,9 +32,11 @@ final class DefaultMessageSender implements MessageSender {
 
         try (
             final Socket client = new Socket(to.getHostString(), to.getPort());
-            final PrintStream output = new PrintStream(client.getOutputStream());
+            final DataOutputStream output = new DataOutputStream(client.getOutputStream());
         ) {
-            output.println(message.getBody());
+            final byte[] data = message.getBody().getBytes(Application.ENCODING);
+            output.writeInt(data.length);
+            output.write(data, 0, data.length);
             output.flush();
         }
     }
