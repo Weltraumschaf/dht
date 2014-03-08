@@ -25,7 +25,7 @@ final class Start extends BaseCommand {
     @Override
     public void execute() {
         if (getApplication().getServer().isRunning()) {
-            println(String.format("Server already listening on %s.", formatListenedAddress()));
+            println(String.format("Server already listening on %s.", formatLocalAddress()));
             return;
         }
 
@@ -35,14 +35,15 @@ final class Start extends BaseCommand {
             getApplication().getServer().start();
         } catch (final IOException ex) {
             println(String.format(
-                    "Exception caught when trying to listen on %s or listening for a connection", formatListenedAddress()));
+                    "Exception caught when trying to listen on %s or listening for a connection",
+                    formatLocalAddress()));
 
             if (isDebug()) {
                 printStackTrace(ex);
             }
         }
 
-        println(String.format("Server listening on %s.", formatListenedAddress()));
+        println(String.format("Server listening on %s.", formatLocalAddress()));
     }
 
     @Override

@@ -32,11 +32,12 @@ public final class Messaging {
      * Create a new message.
      *
      * @param from must not be {@code null}
+     * @param to must not be {@code null}
      * @param body must not be {@code null}
      * @return never {@code null}, always new instance
      */
-    public static Message newMessage(final InetSocketAddress from, final String body) {
-        return new TextMessage(from, body);
+    public static Message newMessage(final InetSocketAddress from, final InetSocketAddress to, final String body) {
+        return new TextMessage(from, to, body);
     }
 
     /**
@@ -48,4 +49,12 @@ public final class Messaging {
         return new DefaultMessageBox();
     }
 
+    /**
+     * Creates a new sender.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public static MessageSender newSender() {
+        return new DefaultMessageSender();
+    }
 }

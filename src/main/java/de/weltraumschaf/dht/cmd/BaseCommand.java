@@ -14,6 +14,8 @@ package de.weltraumschaf.dht.cmd;
 import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.shell.CommandSubType;
+import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
@@ -31,10 +33,15 @@ abstract class BaseCommand implements Command {
     private List<Token> arguments;
 
     /**
-     * Invoking applicationlication.
+     * Invoking application.
      */
     private Application application;
-    private SubCommandType subCommand;
+    /**
+     * Holds the subcommand.
+     *
+     * Default is {@link CommandSubType#NONE}.
+     */
+    private SubCommandType subCommand = CommandSubType.NONE;
 
     /**
      * Getter for sub classes.
@@ -73,19 +80,30 @@ abstract class BaseCommand implements Command {
         this.subCommand = Validate.notNull(subCommand, "Parameter >subCommand< must not be null!");
     }
 
+
+    InetSocketAddress newAddress(final String host, final int port) {
+        return new InetSocketAddress(host, port);
+    }
+
+    InetSocketAddress newLocalAddress() {
+        return newAddress(
+                getApplication().getOptions().getHost(),
+                getApplication().getOptions().getPort());
+    }
+
     /**
-     * Returns formatted host address the applicationlication is configured by CLI options.
+     * Returns formatted host address the application is configured by CLI options.
      *
      * @return never {@code null} or empty
      */
-    String formatListenedAddress() {
+    String formatLocalAddress() {
         return String.format("%s:%d",
                 getApplication().getOptions().getHost(),
                 getApplication().getOptions().getPort());
     }
 
     /**
-     * Delegates to the STDOUT of the applicationlication.
+     * Delegates to the STDOUT of the application.
      *
      * @param msg may be {@code null} or empty
      */
@@ -93,12 +111,15 @@ abstract class BaseCommand implements Command {
         getApplication().getIoStreams().println(msg);
     }
 
+    /**
+     * Prints empty line on STDOUT.
+     */
     void println() {
         println("");
     }
 
     /**
-     * Delegates to the STDOUT of the applicationlication.
+     * Delegates to the STDOUT of the application.
      *
      * @param msg may be {@code null} or empty
      */
@@ -107,7 +128,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Delegates to the STDERR of the applicationlication.
+     * Delegates to the STDERR of the application.
      *
      * @param msg may be {@code null} or empty
      */
@@ -116,7 +137,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Prints stacktrace to the STDOUT of the applicationlication.
+     * Prints stack trace to the STDOUT of the application.
      *
      * @param msg may be {@code null} or empty
      */
@@ -125,7 +146,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Whether debug option is enabled by the applicationlications CLI options.
+     * Whether debug option is enabled by the application CLI options.
      *
      * @return {@code true} if debug is enabled, else {@code false}
      */
@@ -134,7 +155,7 @@ abstract class BaseCommand implements Command {
     }
 
     /**
-     * Get the applicationlication wide new line string.
+     * Get the application wide new line string.
      *
      * @return never {@code null} or empty
      */

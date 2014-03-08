@@ -28,6 +28,13 @@ public interface Message {
     InetSocketAddress getFrom();
 
     /**
+     * The message receiver.
+     *
+     * @return never {@code null}
+     */
+    InetSocketAddress getTo();
+
+    /**
      * Get the message body.
      *
      * @return never {@code null}

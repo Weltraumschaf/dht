@@ -24,14 +24,15 @@ import static org.hamcrest.Matchers.*;
  */
 public class DefaultMessageBoxTest {
 
-    private final InetSocketAddress addr = new InetSocketAddress(4444);
+    private final InetSocketAddress from = new InetSocketAddress(4444);
+    private final InetSocketAddress to = new InetSocketAddress(5555);
     private final MessageBox sut = new DefaultMessageBox();
 
     @Test
     public void putAndRemoveMessages() {
-        final Message m1 = Messaging.newMessage(addr, "foo");
-        final Message m2 = Messaging.newMessage(addr, "bar");
-        final Message m3 = Messaging.newMessage(addr, "baz");
+        final Message m1 = Messaging.newMessage(from, to, "foo");
+        final Message m2 = Messaging.newMessage(from, to,  "bar");
+        final Message m3 = Messaging.newMessage(from, to,  "baz");
 
         assertThat(sut.count(), is(0));
         assertThat(sut.countUnread(), is(0));
@@ -63,9 +64,9 @@ public class DefaultMessageBoxTest {
 
     @Test
     public void countUnread() {
-        final Message m1 = Messaging.newMessage(addr, "foo");
-        final Message m2 = Messaging.newMessage(addr, "bar");
-        final Message m3 = Messaging.newMessage(addr, "baz");
+        final Message m1 = Messaging.newMessage(from, to,  "foo");
+        final Message m2 = Messaging.newMessage(from, to,  "bar");
+        final Message m3 = Messaging.newMessage(from, to,  "baz");
 
         sut.put(m1);
         sut.put(m2);

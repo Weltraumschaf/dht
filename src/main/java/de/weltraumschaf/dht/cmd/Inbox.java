@@ -12,6 +12,7 @@
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
+import de.weltraumschaf.commons.shell.TokenType;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
@@ -66,9 +67,9 @@ final class Inbox extends BaseCommand {
     }
 
     private boolean showList() {
-        println(String.format("Your incomming messages for %s:", formatListenedAddress()));
+        println(String.format("Your incomming messages for %s:", formatLocalAddress()));
         println();
-        final MessageBox inbox = getApplication().getInbox();
+        final MessageBox inbox = getInbox();
         if (inbox.isEmpty()) {
             println("Your inbox is empty.");
             println();
@@ -127,26 +128,48 @@ final class Inbox extends BaseCommand {
 
     private void answerMessage() {
         final Token<Integer> idToken = getArguments().get(0);
-        final int id = idToken.getValue();
+        final int id = validateId(idToken);
     }
 
     private void removeMessage() {
         final Token<Integer> idToken = getArguments().get(0);
-        final int id = idToken.getValue();
-        getApplication().getInbox().remove(id);
+        final int id = validateId(idToken);
+        getInbox().remove(id);
         println(String.format("Message with id %d removed.", id));
         println();
     }
 
     private void showMessage() {
         final Token<Integer> idToken = getArguments().get(0);
-        final int id = idToken.getValue();
-        final Message message = getApplication().getInbox().get(id);
+        final int id = validateId(idToken);
+        final Message message = getInbox().get(id);
         println(String.format("Id: %d", id));
         println(String.format("From: %s", message.getFrom().toString()));
         println(String.format("Body: %s", message.getBody()));
         println();
         message.markAsRead();
+    }
+
+    private MessageBox getInbox() {
+        return getApplication().getInbox();
+    }
+
+    private int validateId(final Token<Integer> idToken) {
+        if (idToken.getType() != TokenType.NUMBER) {
+            throw new CommandArgumentExcpetion("Id must be a number!");
+        }
+
+        final Integer id = idToken.getValue();
+
+        if (id < 0) {
+            throw new CommandArgumentExcpetion("Id must not be negative!");
+        }
+
+        if (id > getInbox().count() - 1) {
+            throw new CommandArgumentExcpetion(String.format("Id must not be less than %d!", getInbox().count()));
+        }
+
+        return id;
     }
 
 }

@@ -23,12 +23,13 @@ import static org.hamcrest.Matchers.*;
  */
 public class TextMessageTest {
 
-    private final InetSocketAddress addr = new InetSocketAddress(4444);
-    private final Message sut = new TextMessage(addr, "text");
+    private final InetSocketAddress from = new InetSocketAddress(4444);
+    private final InetSocketAddress to = new InetSocketAddress(5555);
+    private final Message sut = new TextMessage(from, to, "text");
 
     @Test
     public void getFrom() {
-        assertThat(sut.getFrom(), is(sameInstance(addr)));
+        assertThat(sut.getFrom(), is(sameInstance(from)));
     }
 
     @Test

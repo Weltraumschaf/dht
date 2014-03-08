@@ -35,7 +35,7 @@ final class Stop extends BaseCommand {
             getApplication().getServer().stop();
         } catch (final IOException | InterruptedException ex) {
             println(String.format(
-                "Exception caught when trying to stop listen on %s.", formatListenedAddress()));
+                "Exception caught when trying to stop listen on %s.", formatLocalAddress()));
 
             if (isDebug()) {
                 printStackTrace(ex);

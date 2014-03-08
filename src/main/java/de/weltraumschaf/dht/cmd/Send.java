@@ -13,14 +13,14 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.dht.msg.Message;
+import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.PortValidator;
 import de.weltraumschaf.dht.shell.CommandRuntimeException;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.SEND;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.net.Socket;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
 
@@ -34,16 +34,38 @@ import org.apache.commons.lang3.Validate;
 final class Send extends BaseCommand {
 
     @Override
+    public Descriptor getDescriptor() {
+        return new BaseDescriptor() {
+
+            @Override
+            public CommandMainType getCommand() {
+                return SEND;
+            }
+
+            @Override
+            public String getUsage() {
+                return "send <host> <port> <message>";
+            }
+
+            @Override
+            public String getHelpDescription() {
+                return String.format("Sends <message> to <host:port>. The message must be encapsulated in quotes if it "
+                        + "has more than one word. Port must be in range of %s.", PortValidator.range());
+            }
+        };
+    }
+
+    @Override
     public void execute() {
         final Arguments args = validateArguments();
+        final Message message = Messaging.newMessage(
+                newLocalAddress(),
+                newAddress(args.getHost(), args.getPort()),
+                args.getMessage());
 
-        try (
-            final Socket client = new Socket(args.getHost(), args.getPort());
-            final PrintStream output = new PrintStream(client.getOutputStream());
-        ) {
-            output.println(args.getMessage());
-            output.flush();
-            println(String.format("Sent (%s:%d): %s", args.getHost(), args.getPort(), args.getMessage()));
+        try {
+            Messaging.newSender().send(message);
+            println(String.format("Message sent to %s:%d.", args.getHost(), args.getPort()));
         } catch (final IOException ex) {
             throw new CommandRuntimeException(
                     String.format("Can't open client conection to %s:%s!", args.getHost(), args.getPort()), ex);
@@ -82,28 +104,6 @@ final class Send extends BaseCommand {
         }
 
         return new Arguments(hostToken.getValue(), port, messageToken.getValue());
-    }
-
-    @Override
-    public Descriptor getDescriptor() {
-        return new BaseDescriptor() {
-
-            @Override
-            public CommandMainType getCommand() {
-                return SEND;
-            }
-
-            @Override
-            public String getUsage() {
-                return "send <host> <port> <message>";
-            }
-
-            @Override
-            public String getHelpDescription() {
-                return String.format("Sends <message> to <host:port>. The message must be encapsulated in quotes if it "
-                        + "has more than one word. Port must be in range of %s.", PortValidator.range());
-            }
-        };
     }
 
     /**

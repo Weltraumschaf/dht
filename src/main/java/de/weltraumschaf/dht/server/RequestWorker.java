@@ -27,6 +27,7 @@ import java.nio.channels.Channels;
 import org.apache.commons.lang3.Validate;
 
 /**
+ * Processes the incoming requests.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
@@ -36,10 +37,27 @@ final class RequestWorker implements Task {
      * Logging facility.
      */
     private static final Logger LOG = Log.getLogger(RequestWorker.class);
+    /**
+     * To obtain requests to process from.
+     */
     private final ConnectionQueue<AsynchronousSocketChannel> queue;
+    /**
+     * Used for I/O.
+     *
+     * TODO Decouple from I/O by using events.
+     */
     private final IO io;
+    /**
+     * Used to store incoming messages.
+     */
     private final MessageBox inbox;
+    /**
+     * Indicates the worker to empty the queue and then stops.
+     */
     private volatile boolean stop;
+    /**
+     * Signals that the worker as stopped.
+     */
     private volatile boolean ready;
 
     public RequestWorker(final ConnectionQueue<AsynchronousSocketChannel> queue, final IO io, final MessageBox inbox) {
@@ -85,6 +103,11 @@ final class RequestWorker implements Task {
         return ready;
     }
 
+    /**
+     * Process an incoming request.
+     *
+     * @param client must not be {@code null}
+     */
     private void handleRequset(final AsynchronousSocketChannel client) {
         LOG.debug("Opened connection from " + formatAddress(client));
 
@@ -93,7 +116,10 @@ final class RequestWorker implements Task {
             final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
         ) {
             final String inputLine = input.readLine();
-            final Message incomming = Messaging.newMessage((InetSocketAddress) client.getRemoteAddress(), inputLine);
+            final Message incomming = Messaging.newMessage(
+                (InetSocketAddress) client.getRemoteAddress(),
+                (InetSocketAddress) client.getLocalAddress(),
+                inputLine);
             inbox.put(incomming);
             io.println("");
             io.println("Message received.");
@@ -103,6 +129,12 @@ final class RequestWorker implements Task {
         }
     }
 
+    /**
+     * Formats the remote address (host:port) of incoming request.
+     *
+     * @param client must not be {@code null}
+     * @return never {@code null}
+     */
     private static String formatAddress(final AsynchronousSocketChannel client) {
         try {
             final InetSocketAddress address = (InetSocketAddress) client.getRemoteAddress();
