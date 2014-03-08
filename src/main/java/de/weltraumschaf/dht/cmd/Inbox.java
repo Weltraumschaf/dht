@@ -137,18 +137,11 @@ final class Inbox extends BaseCommand {
         final Token<Integer> idToken = getArguments().get(0);
         final int id = validateId(idToken);
         final Message message = getInbox().get(id);
-        final StringBuilder messageBody = new StringBuilder();
-        String line;
-
-        try (final BufferedReader br = new BufferedReader(new InputStreamReader(getApplication().getIoStreams().getStdin()))){
-            while ((line = br.readLine()) != null) {
-                messageBody.append(line);
-            }
-        } catch (final IOException ex) {
-            throw new CommandRuntimeException("Can't read message body!", ex);
-        }
-
-        final Message answer = Messaging.newMessage(newLocalAddress(), message.getFrom(), messageBody.toString());
+        final Token<String> messageBodyToken = getArguments().get(1);
+        final Message answer = Messaging.newMessage(
+                newLocalAddress(),
+                message.getFrom(),
+                messageBodyToken.getValue());
 
         try {
             Messaging.newSender().send(answer);

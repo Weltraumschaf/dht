@@ -112,7 +112,7 @@ public class InteractiveShell {
                 if (app.getOptions().isDebug()) {
                     app.getIoStreams().printStackTrace(ex);
                 }
-            } catch (final CommandArgumentExcpetion ex) {
+            } catch (final IllegalArgumentException ex) {
                 app.getIoStreams().println(ex.getMessage());
             } catch (final CommandRuntimeException ex) {
                 handleException("Error: ", ex);
