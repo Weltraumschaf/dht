@@ -11,8 +11,6 @@
  */
 package de.weltraumschaf.dht.msg;
 
-import java.net.InetSocketAddress;
-
 /**
  * Represents a message send over the network.
  *
@@ -25,14 +23,14 @@ public interface Message {
      *
      * @return never {@code null}
      */
-    InetSocketAddress getFrom();
+    MessageAddress getFrom();
 
     /**
      * The message receiver.
      *
      * @return never {@code null}
      */
-    InetSocketAddress getTo();
+    MessageAddress getTo();
 
     /**
      * Get the message body.
@@ -56,5 +54,7 @@ public interface Message {
      * @return {@code true} if message is unread, else {@code false}
      */
     boolean isUnread();
+
+    MessageType getType();
 
 }

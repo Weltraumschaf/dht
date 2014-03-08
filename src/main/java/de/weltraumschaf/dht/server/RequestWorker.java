@@ -16,6 +16,7 @@ import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
 import de.weltraumschaf.dht.msg.Message;
+import de.weltraumschaf.dht.msg.MessageAddress;
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.msg.Messaging;
 import java.io.DataInputStream;
@@ -120,8 +121,8 @@ final class RequestWorker implements Task {
             input.readFully(data);
             final String inputLine = new String(data, Application.ENCODING);
             final Message incomming = Messaging.newMessage(
-                (InetSocketAddress) client.getRemoteAddress(),
-                (InetSocketAddress) client.getLocalAddress(),
+                new MessageAddress((InetSocketAddress) client.getRemoteAddress()),
+                new MessageAddress((InetSocketAddress) client.getLocalAddress()),
                 inputLine);
             inbox.put(incomming);
             io.println("");

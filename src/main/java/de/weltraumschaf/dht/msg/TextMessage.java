@@ -12,24 +12,24 @@
 package de.weltraumschaf.dht.msg;
 
 import com.google.common.base.Objects;
-import java.net.InetSocketAddress;
 import org.apache.commons.lang3.Validate;
-
+import org.msgpack.annotation.Optional;
 /**
  * Implements a message type which has a plain text body.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
+@org.msgpack.annotation.Message
 final class TextMessage implements Message {
 
     /**
      * Holds the senders address.
      */
-    private final InetSocketAddress from;
+    private final MessageAddress from;
     /**
      * Holds the receivers address.
      */
-    private final InetSocketAddress to;
+    private final MessageAddress to;
     /**
      * Holds the text message.
      */
@@ -37,7 +37,15 @@ final class TextMessage implements Message {
     /**
      * Flags if message is read or not.
      */
+    @Optional
     private boolean unread = true;
+
+    /**
+     * Necessary for message pack.
+     */
+    TextMessage() {
+        this(new MessageAddress(), new MessageAddress(), "");
+    }
 
     /**
      * Dedicated constructor.
@@ -46,7 +54,7 @@ final class TextMessage implements Message {
      * @param to must not be {@code null}
      * @param body must not be {@code null}
      */
-    public TextMessage(final InetSocketAddress from, final InetSocketAddress to, final String body) {
+    public TextMessage(final MessageAddress from, final MessageAddress to, final String body) {
         super();
         this.from = Validate.notNull(from, "Parameter >from< must not be null!");
         this.to = Validate.notNull(to, "Parameter >to< must not be null!");
@@ -54,12 +62,12 @@ final class TextMessage implements Message {
     }
 
     @Override
-    public InetSocketAddress getFrom() {
+    public MessageAddress getFrom() {
         return from;
     }
 
     @Override
-    public InetSocketAddress getTo() {
+    public MessageAddress getTo() {
         return to;
     }
 
@@ -106,6 +114,11 @@ final class TextMessage implements Message {
                 .add("to", to)
                 .add("body", body)
                 .add("unread", unread).toString();
+    }
+
+    @Override
+    public MessageType getType() {
+        return MessageType.TEXT;
     }
 
 }

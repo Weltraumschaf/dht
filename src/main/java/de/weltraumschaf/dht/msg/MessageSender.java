@@ -25,6 +25,7 @@ public interface MessageSender {
      * Sends a message.
      *
      * @param message must not be {@code null}
+     * @throws IOException on any network I/O error
      */
     void send(Message message) throws IOException;
 

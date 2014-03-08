@@ -28,7 +28,7 @@ final class DefaultMessageSender implements MessageSender {
     @Override
     public void send(final Message message) throws IOException {
         Validate.notNull(message, "Parameter >message< must not be null!");
-        final InetSocketAddress to = message.getTo();
+        final InetSocketAddress to = message.getTo().newInetSocketAddress();
 
         try (
             final Socket client = new Socket(to.getHostString(), to.getPort());

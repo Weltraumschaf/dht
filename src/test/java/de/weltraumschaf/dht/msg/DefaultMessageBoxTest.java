@@ -12,7 +12,6 @@
 
 package de.weltraumschaf.dht.msg;
 
-import java.net.InetSocketAddress;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -24,8 +23,8 @@ import static org.hamcrest.Matchers.*;
  */
 public class DefaultMessageBoxTest {
 
-    private final InetSocketAddress from = new InetSocketAddress(4444);
-    private final InetSocketAddress to = new InetSocketAddress(5555);
+    private final MessageAddress from = new MessageAddress("127.0.0.1", 4444);
+    private final MessageAddress to = new MessageAddress("127.0.0.1", 5555);
     private final MessageBox sut = new DefaultMessageBox();
 
     @Test
