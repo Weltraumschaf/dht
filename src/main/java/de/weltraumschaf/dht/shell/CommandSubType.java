@@ -30,7 +30,11 @@ public enum CommandSubType implements SubCommandType {
     HELP_SEND(CommandMainType.SEND.toString()),
     HELP_START(CommandMainType.START.toString()),
     HELP_STOP(CommandMainType.STOP.toString()),
-    HELP_STATUS(CommandMainType.STATUS.toString());
+    HELP_STATUS(CommandMainType.STATUS.toString()),
+
+    INBOX_REMOVE("remove"),
+    INBOX_SHOW("show"),
+    INBOX_ANSWER("answer");
 
     /**
      * Literal sub command string used in shell.

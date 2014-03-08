@@ -28,11 +28,11 @@ public interface MessageBox {
      */
     void put(Message msg);
     /**
-     * Removes a message in to the box.
+     * Removes a message in the box.
      *
-     * @param msg must not be {@code null}
+     * @param id must not be negative
      */
-    void remove(Message msg);
+    void remove(int id);
     /**
      * Gets the number of unread messages.
      *
@@ -59,4 +59,6 @@ public interface MessageBox {
      * @return {@code true} if no messages were put in to the box, else {@code false}
      */
     boolean isEmpty();
+
+    Message get(int id);
 }

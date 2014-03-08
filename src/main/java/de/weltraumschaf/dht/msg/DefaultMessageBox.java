@@ -36,10 +36,10 @@ class DefaultMessageBox implements MessageBox {
     }
 
     @Override
-    public void remove(final Message msg) {
-        Validate.notNull(msg, "Parameter >msg< must not be null!");
+    public void remove(final int id) {
+        Validate.isTrue(id >= 0, "Parameter >id< must not be negative!");
         synchronized (lock) {
-            messages.remove(msg);
+            messages.remove(id);
         }
     }
 
@@ -79,6 +79,13 @@ class DefaultMessageBox implements MessageBox {
     public boolean isEmpty() {
         synchronized (lock) {
             return messages.isEmpty();
+        }
+    }
+
+    @Override
+    public Message get(final int id) {
+        synchronized (lock) {
+            return messages.get(id);
         }
     }
 

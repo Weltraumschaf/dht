@@ -48,15 +48,15 @@ public class DefaultMessageBoxTest {
         assertThat(sut.count(), is(3));
         assertThat(sut.countUnread(), is(3));
 
-        sut.remove(m1);
+        sut.remove(2);
         assertThat(sut.count(), is(2));
         assertThat(sut.countUnread(), is(2));
 
-        sut.remove(m2);
+        sut.remove(1);
         assertThat(sut.count(), is(1));
         assertThat(sut.countUnread(), is(1));
 
-        sut.remove(m3);
+        sut.remove(0);
         assertThat(sut.count(), is(0));
         assertThat(sut.countUnread(), is(0));
     }

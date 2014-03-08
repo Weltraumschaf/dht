@@ -9,69 +9,30 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.INBOX;
+import de.weltraumschaf.dht.shell.CommandSubType;
 import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Executes `inbox` command.
  *
+ * Sub commands: - remve ID - show ID - answer ID
+ *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 final class Inbox extends BaseCommand {
 
-    public static final int SECOND_COLUMN_PAD = 30;
-    private static final int FIRST_COLUMN_PAD = 14;
-
-    @Override
-    public void execute() {
-        println(String.format("Your incomming messages for %s:", formatListenedAddress()));
-        println();
-
-        final MessageBox inbox = getApplication().getInbox();
-
-        if (inbox.isEmpty()) {
-            println("Your inbox is empty.");
-            println();
-            return;
-        }
-
-        print(StringUtils.rightPad(String.format("Unread (%d)", inbox.countUnread()), FIRST_COLUMN_PAD));
-        print(StringUtils.rightPad("From", SECOND_COLUMN_PAD));
-        println("Body");
-
-
-        final Collection<Message> messages = inbox.getAll();
-
-        for (final Message message : messages) {
-            println(formatMessage(message));
-        }
-
-        println();
-    }
-
-    private String formatMessage(final Message message) {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(formatUnread(message));
-        buffer.append(formatFrom(message));
-        buffer.append(message.getBody());
-        return buffer.toString();
-    }
-
-    private String formatUnread(final Message message) {
-        final String unread = message.isUnread() ? "yes" : "no";
-        return StringUtils.rightPad(unread, FIRST_COLUMN_PAD);
-    }
-
-    private String formatFrom(Message message) {
-        return StringUtils.rightPad(message.getFrom().toString(), SECOND_COLUMN_PAD);
-    }
+    private static final int FIRST_COLUMN_PAD = 4;
+    private static final int SECOND_COLUMN_PAD = 12;
+    private static final int THIRD_COLUMN_PAD = 20;
 
     @Override
     public Descriptor getDescriptor() {
@@ -92,6 +53,100 @@ final class Inbox extends BaseCommand {
                 return "Give sacces to the message inbox.";
             }
         };
+    }
+
+    @Override
+    public void execute() {
+        if (getSubCommand() == CommandSubType.NONE) {
+            showList();
+            return;
+        }
+
+        dispatchSubCommand();
+    }
+
+    private boolean showList() {
+        println(String.format("Your incomming messages for %s:", formatListenedAddress()));
+        println();
+        final MessageBox inbox = getApplication().getInbox();
+        if (inbox.isEmpty()) {
+            println("Your inbox is empty.");
+            println();
+            return true;
+        }
+        print(StringUtils.rightPad("Id", FIRST_COLUMN_PAD));
+        print(StringUtils.rightPad(String.format("Unread (%d)", inbox.countUnread()), SECOND_COLUMN_PAD));
+        print(StringUtils.rightPad("From", THIRD_COLUMN_PAD));
+        println("Body");
+        final Collection<Message> messages = inbox.getAll();
+        int id = 0;
+        for (final Message message : messages) {
+            println(formatMessage(message, id++));
+        }
+        println();
+        return false;
+    }
+
+    private String formatMessage(final Message message, final int id) {
+        final StringBuilder buffer = new StringBuilder();
+        buffer.append(formatId(id));
+        buffer.append(formatUnread(message));
+        buffer.append(formatFrom(message));
+        buffer.append(message.getBody());
+        return buffer.toString();
+    }
+
+    private Object formatId(final int id) {
+        return StringUtils.leftPad(String.valueOf(id) + " ", FIRST_COLUMN_PAD);
+    }
+
+    private String formatUnread(final Message message) {
+        final String unread = message.isUnread() ? "yes" : "no";
+        return StringUtils.rightPad(unread, SECOND_COLUMN_PAD);
+    }
+
+    private String formatFrom(Message message) {
+        return StringUtils.rightPad(message.getFrom().toString(), THIRD_COLUMN_PAD);
+    }
+
+    private void dispatchSubCommand() {
+        switch ((CommandSubType) getSubCommand()) {
+            case INBOX_ANSWER:
+                answerMessage();
+                break;
+            case INBOX_REMOVE:
+                removeMessage();
+                break;
+            case INBOX_SHOW:
+                showMessage();
+                break;
+            default:
+                throw new CommandArgumentExcpetion("Unsupport subcommand >" + getSubCommand().toString() + "<");
+        }
+    }
+
+    private void answerMessage() {
+        final Token<Integer> idToken = getArguments().get(0);
+        final int id = idToken.getValue();
+    }
+
+    private void removeMessage() {
+        final Token<Integer> idToken = getArguments().get(0);
+        final int id = idToken.getValue();
+        getApplication().getInbox().remove(id);
+        println(String.format("Message with id %d removed.", id));
+        println();
+    }
+
+    private void showMessage() {
+        final Token<Integer> idToken = getArguments().get(0);
+        final int id = idToken.getValue();
+        final Message message = getApplication().getInbox().get(id);
+        println(String.format("Id: %d", id));
+        println(String.format("From: %s", message.getFrom().toString()));
+        println(String.format("Body: %s", message.getBody()));
+        println();
+        message.markAsRead();
     }
 
 }
