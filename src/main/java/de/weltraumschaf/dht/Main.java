@@ -33,6 +33,7 @@ public final class Main extends InvokableAdapter implements Application {
     private final JCommander cliOptionsParser = new JCommander();
     private final InteractiveShell shell = new InteractiveShell(this);
     private final MessageBox inbox = Messaging.newMessageBox();
+    private final MessageBox outbox = Messaging.newMessageBox();
     private Server server;
 
     /**
@@ -122,6 +123,11 @@ public final class Main extends InvokableAdapter implements Application {
     @Override
     public MessageBox getInbox() {
         return inbox;
+    }
+
+    @Override
+    public MessageBox getOutbox() {
+        return outbox;
     }
 
     @Override

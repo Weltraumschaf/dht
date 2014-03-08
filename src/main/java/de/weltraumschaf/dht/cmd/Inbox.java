@@ -15,11 +15,18 @@ import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.INBOX;
+import de.weltraumschaf.dht.shell.CommandRuntimeException;
 import de.weltraumschaf.dht.shell.CommandSubType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -129,6 +136,28 @@ final class Inbox extends BaseCommand {
     private void answerMessage() {
         final Token<Integer> idToken = getArguments().get(0);
         final int id = validateId(idToken);
+        final Message message = getInbox().get(id);
+        final StringBuilder messageBody = new StringBuilder();
+        String line;
+
+        try (final BufferedReader br = new BufferedReader(new InputStreamReader(getApplication().getIoStreams().getStdin()))){
+            while ((line = br.readLine()) != null) {
+                messageBody.append(line);
+            }
+        } catch (final IOException ex) {
+            throw new CommandRuntimeException("Can't read message body!", ex);
+        }
+
+        final Message answer = Messaging.newMessage(newLocalAddress(), message.getFrom(), messageBody.toString());
+
+        try {
+            Messaging.newSender().send(answer);
+        } catch (IOException ex) {
+            throw new CommandRuntimeException(String.format("Can't send message to %s!", message.getFrom()), ex);
+        }
+
+        answer.markAsRead();
+        getApplication().getOutbox().put(answer);
     }
 
     private void removeMessage() {

@@ -60,4 +60,7 @@ public interface Application {
     Server getServer();
 
     MessageBox getInbox();
+
+    MessageBox getOutbox();
+
 }
