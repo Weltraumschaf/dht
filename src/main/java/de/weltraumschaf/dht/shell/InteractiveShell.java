@@ -42,7 +42,7 @@ public class InteractiveShell {
     /**
      * The welcome string showed very first to the user.
      */
-    private static final String WELCOME_FORMAT = "« Welcome to the %s interactive shell »%n";
+    private static final String WELCOME_FORMAT = "    ‹—« Welcome to the %s interactive shell »—›%n";
     /**
      * Logging facility.
      */
@@ -128,9 +128,8 @@ public class InteractiveShell {
     }
 
     private void showWelcome() {
-        app.getIoStreams().println(String.format(WELCOME_FORMAT, Application.NAME));
-        app.getIoStreams().println("");
-        app.getIoStreams().println(String.format("Your node id is: %s", app.getNodeId().asString()));
+        app.getIoStreams().println(String.format(WELCOME_FORMAT, Application.NAME.toUpperCase()));
+        app.getIoStreams().println(String.format("Your node id is: %s%n", app.getNodeId().asString()));
     }
 
     private void handleException(final String prefix, final Exception ex) {

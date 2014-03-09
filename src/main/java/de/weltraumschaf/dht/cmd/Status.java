@@ -26,6 +26,9 @@ final class Status extends BaseCommand {
     public void execute() {
         final StringBuilder buffer = new StringBuilder();
 
+        buffer.append("Node:").append(nl());
+        buffer.append("  Id:      ").append(getApplication().getNodeId().asString()).append(nl());
+
         buffer.append("Server:").append(nl());
         buffer.append("  State:   ").append(getApplication().getServer().getState()).append(nl());
         buffer.append("  Address: ").append(formatLocalAddress()).append(nl());
