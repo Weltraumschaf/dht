@@ -25,7 +25,7 @@ import org.apache.commons.lang3.Validate;
  */
 public final class NodeId {
 
-    private static final int LEFT_SHIFT = 0xFF;
+    private static final int LEFT_SHIFT = 8;
     private final UUID id;
 
     public NodeId(final UUID id) {
