@@ -63,4 +63,5 @@ public interface Application {
 
     MessageBox getOutbox();
 
+    NodeId getNodeId();
 }

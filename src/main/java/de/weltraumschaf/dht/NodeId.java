@@ -17,11 +17,15 @@ import java.util.UUID;
 import org.apache.commons.lang3.Validate;
 
 /**
+ * System wide unique node id.
+ *
+ * A node should generate a new node on each start up to join the network with.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public final class NodeId {
 
+    private static final int LEFT_SHIFT = 0xFF;
     private final UUID id;
 
     public NodeId(final UUID id) {
@@ -35,8 +39,12 @@ public final class NodeId {
 
     public BigInteger asInteger() {
         return BigInteger.valueOf(id.getMostSignificantBits())
-            .shiftLeft(64)
+            .shiftLeft(LEFT_SHIFT)
             .and(BigInteger.valueOf(id.getLeastSignificantBits()));
+    }
+
+    static BigInteger create128bitInteger(final long high, final long low) {
+        return BigInteger.valueOf(high);
     }
 
     public static NodeId newRandom() {

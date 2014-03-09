@@ -90,7 +90,8 @@ public class InteractiveShell {
      * @throws IOException if I/O error occurs
      */
     public void start() throws IOException {
-        app.getIoStreams().println(String.format(WELCOME_FORMAT, Application.NAME));
+        showWelcome();
+
         final ConsoleReader reader = new ConsoleReader(app.getIoStreams().getStdin(), app.getIoStreams().getStdout());
         reader.addCompleter(createCompletionHints());
         reader.setPrompt(PROMPT);
@@ -124,6 +125,12 @@ public class InteractiveShell {
                 break;
             }
         }
+    }
+
+    private void showWelcome() {
+        app.getIoStreams().println(String.format(WELCOME_FORMAT, Application.NAME));
+        app.getIoStreams().println("");
+        app.getIoStreams().println(String.format("Your node id is: %s", app.getNodeId().asString()));
     }
 
     private void handleException(final String prefix, final Exception ex) {

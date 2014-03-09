@@ -34,6 +34,7 @@ public final class Main extends InvokableAdapter implements Application {
     private final InteractiveShell shell = new InteractiveShell(this);
     private final MessageBox inbox = Messaging.newMessageBox();
     private final MessageBox outbox = Messaging.newMessageBox();
+    private final NodeId nodeId = NodeId.newRandom();
     private Server server;
 
     /**
@@ -128,6 +129,11 @@ public final class Main extends InvokableAdapter implements Application {
     @Override
     public MessageBox getOutbox() {
         return outbox;
+    }
+
+    @Override
+    public NodeId getNodeId() {
+        return nodeId;
     }
 
     @Override
