@@ -30,6 +30,9 @@ import java.util.UUID;
  */
 public final class UuidConverter {
 
+    /**
+     * Hidden for pure static utility class.
+     */
     private UuidConverter() {
         super();
     }
@@ -39,21 +42,17 @@ public final class UuidConverter {
      *
      * @param uuid The UUID
      * @return The byte array representing the UUID provided, or null if it can't be computed
+     * @throws IOException should never happen
      */
-    public static byte[] toByteArray(UUID uuid) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream outputStream = new DataOutputStream(baos);
-
-        try {
+    public static byte[] toByteArray(final UUID uuid) throws IOException {
+        try (
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream outputStream = new DataOutputStream(baos);
+        ) {
             outputStream.writeLong(uuid.getMostSignificantBits());
             outputStream.writeLong(uuid.getLeastSignificantBits());
+            return baos.toByteArray();
         }
-        catch (IOException e) {
-            // Should not happen
-            return null;
-        }
-
-        return baos.toByteArray();
     }
 
     /**
@@ -61,29 +60,26 @@ public final class UuidConverter {
      *
      * @param bytes The byte array (will be automatically padded left if size < 16)
      * @return The UUID
+     * @throws IOException should never happen
      */
-    public static UUID fromByteArray(byte[] bytes) {
+    public static UUID fromByteArray(final byte[] bytes) throws IOException {
         int usableBytes = Math.min(bytes.length, 16);
 
         // Need exactly 16 bytes - pad the input if not enough bytes are provided
         // Use provided bytes in the least significant position; if more than 16 bytes are given,
         // then use the first 16 bytes from the array;
         byte[] barr = new byte[16];
-        for (int i = 15, j = usableBytes-1; j >= 0; i--, j--)
+        for (int i = 15, j = usableBytes-1; j >= 0; i--, j--) {
             barr[i] = bytes[j];
+        }
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(barr);
-        DataInputStream inputStream = new DataInputStream(bais);
-
-        try {
+        try (
+            ByteArrayInputStream bais = new ByteArrayInputStream(barr);
+            DataInputStream inputStream = new DataInputStream(bais);
+        ) {
             long msb = inputStream.readLong();
             long lsb = inputStream.readLong();
-
             return new UUID(msb, lsb);
-        }
-        catch (IOException e) {
-            // Should never happen
-            return null;
         }
     }
 
@@ -92,8 +88,9 @@ public final class UuidConverter {
      *
      * @param uuid The UUID
      * @return The BigInteger
+     * @throws IOException should never happen
      */
-    public static BigInteger toBigInteger(UUID uuid) {
+    public static BigInteger toBigInteger(final UUID uuid) throws IOException {
         return new BigInteger(toByteArray(uuid));
     }
 
@@ -102,8 +99,10 @@ public final class UuidConverter {
      *
      * @param bigInteger The big integer
      * @return The UUID
+     * @throws IOException should never happen
      */
-    public static UUID fromBigInteger(BigInteger bigInteger) {
+    public static UUID fromBigInteger(final BigInteger bigInteger) throws IOException {
         return fromByteArray(bigInteger.toByteArray());
     }
+
 }

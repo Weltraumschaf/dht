@@ -9,7 +9,6 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.id;
 
 import org.junit.Test;
@@ -24,7 +23,19 @@ import static org.hamcrest.Matchers.*;
 public class UuidConverterTest {
 
     @Test
-    public void testSomeMethod() {
+    public void toByteArray() {
+    }
+
+    @Test
+    public void fromByteArray() {
+    }
+
+    @Test
+    public void toBigInteger() {
+    }
+
+    @Test
+    public void fromBigInteger() {
     }
 
 }
