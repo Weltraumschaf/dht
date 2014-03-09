@@ -13,13 +13,12 @@ package de.weltraumschaf.dht.msg;
 
 import com.google.common.base.Objects;
 import org.apache.commons.lang3.Validate;
-import org.msgpack.annotation.Ignore;
+
 /**
  * Implements a message type which has a plain text body.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-@org.msgpack.annotation.Message
 final class TextMessage implements Message {
 
     /**
@@ -37,7 +36,6 @@ final class TextMessage implements Message {
     /**
      * Flags if message is read or not.
      */
-    @Ignore
     private boolean unread = true;
 
     /**

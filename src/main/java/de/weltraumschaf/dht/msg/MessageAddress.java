@@ -15,14 +15,12 @@ package de.weltraumschaf.dht.msg;
 import com.google.common.base.Objects;
 import java.net.InetSocketAddress;
 import org.apache.commons.lang3.Validate;
-import org.msgpack.annotation.Message;
 
 /**
  * Immutable message address.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-@Message
 public final class MessageAddress {
 
     /**

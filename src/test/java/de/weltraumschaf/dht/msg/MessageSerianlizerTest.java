@@ -12,12 +12,14 @@
 
 package de.weltraumschaf.dht.msg;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Output;
+import static de.weltraumschaf.dht.msg.MessageSerianlizer.newSerializer;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Test;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import org.junit.Ignore;
-import org.msgpack.MessagePack;
 
 /**
  * Tests for {@link MessageSerianlizer}.
@@ -27,17 +29,22 @@ import org.msgpack.MessagePack;
 public class MessageSerianlizerTest {
 
     private final MessageSerianlizer sut = new MessageSerianlizer();
+    private final Kryo kryo = newSerializer();
 
     @Test
     public void serialize() throws IOException {
         final Message in = new TextMessage(new MessageAddress("from", 1), new MessageAddress("to", 2), "data");
 
+        final Output output = new Output(new ByteArrayOutputStream());
+        kryo.writeObject(output, in);
+        output.close();
+
         assertThat(
             sut.serialize(in),
-            is(equalTo(new RawMessage(in.getType().value(), new MessagePack().write(in)))));
+            is(equalTo(new RawMessage(in.getType().value(), output.getBuffer()))));
     }
 
-    @Test @Ignore
+    @Test
     public void deserialize() throws IOException {
         final Message expected = new TextMessage(new MessageAddress("from", 1), new MessageAddress("to", 2), "data");
 

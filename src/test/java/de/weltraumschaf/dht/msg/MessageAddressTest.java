@@ -12,11 +12,16 @@
 
 package de.weltraumschaf.dht.msg;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import static de.weltraumschaf.dht.msg.MessageSerianlizer.newSerializer;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
-import org.msgpack.MessagePack;
 
 /**
  * Tests for {@link MessageAddress}.
@@ -25,13 +30,23 @@ import org.msgpack.MessagePack;
  */
 public class MessageAddressTest {
 
+    private final Kryo kryo = newSerializer();
+
     @Test
     public void serialization() throws IOException {
         final MessageAddress in = new MessageAddress("foo", 1234);
-        final MessagePack msgpack = new MessagePack();
-        final byte[] data = msgpack.write(in);
 
-        assertThat(msgpack.read(data, MessageAddress.class), is(equalTo(in)));
+        final Output output = new Output(new ByteArrayOutputStream());
+        kryo.writeObject(output, in);
+        output.flush();
+        final byte[] data = output.getBuffer();
+        output.close();
+
+        final Input input = new Input(new ByteArrayInputStream(data));
+        final MessageAddress out = kryo.readObject(input, MessageAddress.class);
+        input.close();
+
+        assertThat(out, is(equalTo(in)));
     }
 
 }

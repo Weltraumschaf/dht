@@ -11,9 +11,13 @@
  */
 package de.weltraumschaf.dht.msg;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.apache.commons.lang3.Validate;
-import org.msgpack.MessagePack;
 
 /**
  * (De-)Serialize messages.
@@ -25,7 +29,19 @@ final class MessageSerianlizer {
     /**
      * Used to serialize the data.
      */
-    private final MessagePack msgpack = new MessagePack();
+    private final Kryo kryo = newSerializer();
+
+    /**
+     * Creates new serializer with registered class templates.
+     *
+     * @return never {@code null}, always new instance
+     */
+    static Kryo newSerializer() {
+        final Kryo kryo = new Kryo();
+        kryo.register(TextMessage.class);
+        kryo.register(MessageAddress.class);
+        return kryo;
+    }
 
     /**
      * Converts a message into a raw message.
@@ -36,7 +52,14 @@ final class MessageSerianlizer {
      */
     public RawMessage serialize(final Message message) throws IOException {
         Validate.notNull(message, "Parameter >message< must not be null!");
-        return new RawMessage(message.getType().value(), msgpack.write(message));
+
+        try (
+            final Output output = new Output(new ByteArrayOutputStream());
+        ) {
+            kryo.writeObject(output, message);
+            output.flush();
+            return new RawMessage(message.getType().value(), output.getBuffer());
+        }
     }
 
     /**
@@ -59,7 +82,11 @@ final class MessageSerianlizer {
                 throw new IllegalArgumentException("Unsupported type " + type + "!");
         }
 
-        return msgpack.read(raw.getData(), template);
+        try (
+            final Input input = new Input(new ByteArrayInputStream(raw.getData()));
+        ) {
+            return kryo.readObject(input, template);
+        }
     }
 
 }
