@@ -28,17 +28,17 @@ public final class MessageAddress {
     /**
      * Address host name.
      */
-    private final String hostname;
+    private String hostname;
     /**
      * Address port.
      */
-    private final int port;
+    private int port;
 
     /**
      * Necessary for message pack.
      */
     MessageAddress() {
-        this("", 0);
+        this("localhost", 0);
     }
 
     /**

@@ -13,7 +13,7 @@ package de.weltraumschaf.dht.msg;
 
 import com.google.common.base.Objects;
 import org.apache.commons.lang3.Validate;
-import org.msgpack.annotation.Optional;
+import org.msgpack.annotation.Ignore;
 /**
  * Implements a message type which has a plain text body.
  *
@@ -37,7 +37,7 @@ final class TextMessage implements Message {
     /**
      * Flags if message is read or not.
      */
-    @Optional
+    @Ignore
     private boolean unread = true;
 
     /**
