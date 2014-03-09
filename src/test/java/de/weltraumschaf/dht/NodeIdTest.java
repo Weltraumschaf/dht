@@ -26,27 +26,18 @@ import org.junit.Test;
  */
 public class NodeIdTest {
 
+    private static final String UUID_AS_STRING = "f07bb8b7-cdf9-4731-8992-d538dc3abc0b";
+    private static final String UUID_AS_BIGINT = "-f8447483206b8ce766d2ac723c543f5";
+    private final NodeId sut = new NodeId(UUID.fromString(UUID_AS_STRING));
+
     @Test
     public void asInteger() {
-
-//        final long high = 4121525995650369167L; // 0x 39 32 9A 0E 67 47 46 8F
-//        final long low = -5808030885311500692L;
-//        final NodeId id = new NodeId(new UUID(high, low));
-//        assertThat(id.asInteger().toString(), is(equalTo("")));
-//        BigInteger i = BigInteger.valueOf(0xa1L);
-//        System.out.println(i.toString(16));
-//        i = i.shiftLeft(8);
-//        System.out.println(i.toString(16));
-//        i = i.add(BigInteger.valueOf(0xb2L));
-//        System.out.println(i.toString(16));
+        assertThat(sut.asInteger(), is(equalTo(new BigInteger(UUID_AS_BIGINT, 16))));
     }
 
-    @Test public void create128bitInteger() {
-        final long high = 0xa1a1a1a1a1a1a1a1L;
-        final long low = 0xb2b2b2b2b2b2b2b2L;
-
-        assertThat(NodeId.create128bitInteger(high, low).toString(16)
-                , is(equalTo("a1a1a1a1a1a1a1a10000000000000000")));
+    @Test
+    public void asString() {
+        assertThat(sut.asString(), is(equalTo(UUID_AS_STRING)));
     }
 
 }
