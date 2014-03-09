@@ -11,6 +11,7 @@
  */
 package de.weltraumschaf.dht;
 
+import de.weltraumschaf.dht.id.NodeId;
 import de.weltraumschaf.commons.IOStreams;
 import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.dht.msg.MessageBox;

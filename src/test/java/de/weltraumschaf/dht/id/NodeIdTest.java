@@ -10,8 +10,9 @@
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
 
-package de.weltraumschaf.dht;
+package de.weltraumschaf.dht.id;
 
+import de.weltraumschaf.dht.id.NodeId;
 import java.math.BigInteger;
 import java.util.UUID;
 import static org.hamcrest.Matchers.equalTo;

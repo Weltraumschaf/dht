@@ -12,21 +12,74 @@
 
 package de.weltraumschaf.dht.id;
 
+import de.weltraumschaf.dht.id.UuidConverter;
+import java.io.IOError;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.UUID;
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
+ * System wide unique node id.
+ *
+ * A node should generate a new node on each start up to join the network with.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public final class NodeId extends BaseIdentity {
+public final class NodeId {
 
-    public NodeId(byte[] id) {
-        super(id);
+    /**
+     * Holds the UUID.
+     */
+    private final UUID id;
+
+    /**
+     * Dedicated constructor.
+     *
+     * <p>
+     * You should use {@link #newRandom()} to get an instance.
+     * </p>
+     *
+     * @param id must not be {@code null}
+     */
+    NodeId(final UUID id) {
+        super();
+        this.id = Validate.notNull(id, "Parameter >id< must not be null!");
     }
 
-    public static NodeId create() {
-        final String uuid = UUID.randomUUID().toString();
-        return new NodeId(DigestUtils.sha1(uuid));
+    /**
+     * Returns the standardized string format.
+     *
+     * <p>
+     * Example: {@code f07bb8b7-cdf9-4731-8992-d538dc3abc0b}
+     * </p>
+     *
+     * @return never {@code null} or empty
+     */
+    public String asString() {
+        return id.toString();
     }
+
+    /**
+     * Returns the id as 128 bit integer.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public BigInteger asInteger() {
+        try {
+            return UuidConverter.toBigInteger(id);
+        } catch (final IOException ex) {
+            throw new IOError(ex); // Should never hapen.
+        }
+    }
+
+    /**
+     * Creates a new random id.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public static NodeId newRandom() {
+        return new NodeId(UUID.randomUUID());
+    }
+
 }

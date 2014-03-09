@@ -1,5 +1,6 @@
 package de.weltraumschaf.dht;
 
+import de.weltraumschaf.dht.id.NodeId;
 import com.beust.jcommander.JCommander;
 import de.weltraumschaf.commons.ApplicationException;
 import de.weltraumschaf.commons.InvokableAdapter;

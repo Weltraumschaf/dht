@@ -13,11 +13,9 @@
 package de.weltraumschaf.dht;
 
 import com.google.common.base.Objects;
-import de.weltraumschaf.dht.id.DataKey;
 import de.weltraumschaf.dht.server.PortValidator;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -61,10 +59,6 @@ public final class ClientContact {
 
     public SocketAddress createAddress() {
         return new InetSocketAddress("cloudnine1999.no-ip.org", port);
-    }
-
-    public DataKey creteKey() {
-        return new DataKey(DigestUtils.sha1(userId));
     }
 
     @Override

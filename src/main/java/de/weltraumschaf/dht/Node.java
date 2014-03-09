@@ -13,7 +13,6 @@
 package de.weltraumschaf.dht;
 
 import com.beust.jcommander.internal.Maps;
-import de.weltraumschaf.dht.id.DataKey;
 import de.weltraumschaf.dht.id.NodeId;
 import java.util.Map;
 import org.apache.commons.lang3.Validate;
@@ -26,7 +25,7 @@ public class Node<T> {
 
     private final NodeId id;
     private final Node<T> next;
-    private final Map<DataKey, T> data = Maps.newHashMap();
+    private final Map<NodeId, T> data = Maps.newHashMap();
 
     public Node(final NodeId id, final Node<T> next) {
         super();
@@ -42,16 +41,16 @@ public class Node<T> {
         return next;
     }
 
-    public void put(final DataKey key, final T date) {
+    public void put(final NodeId key, final T date) {
         data.put(key, date);
     }
 
-    public T get(final DataKey key) {
+    public T get(final NodeId key) {
         Validate.isTrue(has(key), "Does not have key: " + key.toString());
         return data.get(key);
     }
 
-    public boolean has(final DataKey key) {
+    public boolean has(final NodeId key) {
         return data.containsKey(key);
     }
 }

@@ -11,8 +11,8 @@
  */
 package de.weltraumschaf.dht;
 
-import de.weltraumschaf.dht.id.DataKey;
-import de.weltraumschaf.dht.id.Identity;
+import de.weltraumschaf.dht.id.NodeId;
+import java.math.BigInteger;
 
 /**
  * http://www.linuxjournal.com/article/6797
@@ -32,8 +32,8 @@ public class DhtService {
      * @param b
      * @return
      */
-    public static byte[] distance(final Identity a, final Identity b) {
-        return Bits.xor(a.getId(), b.getId());
+    public static BigInteger distance(final NodeId a, final NodeId b) {
+        return a.asInteger().xor(b.asInteger());
     }
 
     /**
@@ -44,11 +44,10 @@ public class DhtService {
      * @param key
      * @return
      */
-    public static <T> Node<T> findNode(final Node<T> start, final DataKey key) {
+    public static <T> Node<T> findNode(final Node<T> start, final NodeId key) {
         Node<T> current = start;
 
-        while (Bits.CompareResult.GREATER == Bits.compare(distance(current.getId(), key),
-                                                           distance(current.getNext().getId(), key))) {
+        while (1 == distance(current.getId(), key).compareTo(distance(current.getNext().getId(), key))) {
             current = current.getNext();
         }
 
@@ -63,7 +62,7 @@ public class DhtService {
      * @param key
      * @return
      */
-    public static <T> T lookup(final Node<T> start, final DataKey key) {
+    public static <T> T lookup(final Node<T> start, final NodeId key) {
         final Node<T> node = findNode(start, key);
         return node.get(key);
     }
@@ -76,7 +75,7 @@ public class DhtService {
      * @param key
      * @param value
      */
-    public static <T> void store(final Node<T> start, final DataKey key, final T value) {
+    public static <T> void store(final Node<T> start, final NodeId key, final T value) {
         final Node<T> node = findNode(start, key);
         node.put(key, value);
     }
