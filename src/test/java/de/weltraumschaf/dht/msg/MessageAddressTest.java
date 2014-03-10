@@ -15,7 +15,7 @@ package de.weltraumschaf.dht.msg;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import static de.weltraumschaf.dht.msg.MessageSerianlizer.newSerializer;
+import static de.weltraumschaf.dht.msg.MessageSerializer.newSerializer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

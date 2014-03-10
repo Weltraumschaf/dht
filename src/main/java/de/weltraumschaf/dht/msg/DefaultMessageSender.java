@@ -11,7 +11,6 @@
  */
 package de.weltraumschaf.dht.msg;
 
-import de.weltraumschaf.dht.Application;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -25,6 +24,8 @@ import org.apache.commons.lang3.Validate;
  */
 final class DefaultMessageSender implements MessageSender {
 
+    private final MessageSerializer serializer = new MessageSerializer();
+
     @Override
     public void send(final Message message) throws IOException {
         Validate.notNull(message, "Parameter >message< must not be null!");
@@ -34,9 +35,7 @@ final class DefaultMessageSender implements MessageSender {
             final Socket client = new Socket(to.getHostString(), to.getPort());
             final DataOutputStream output = new DataOutputStream(client.getOutputStream());
         ) {
-            final byte[] data = message.getBody().getBytes(Application.ENCODING);
-            output.writeInt(data.length);
-            output.write(data, 0, data.length);
+            StreamIo.write(output, serializer.serialize(message));
             output.flush();
         }
     }

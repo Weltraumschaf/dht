@@ -21,7 +21,7 @@ import org.apache.commons.lang3.Validate;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-final class RawMessage {
+public final class RawMessage {
 
     /**
      * Native type.

@@ -24,7 +24,7 @@ import org.apache.commons.lang3.Validate;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-final class MessageSerianlizer {
+public final class MessageSerializer {
 
     /**
      * Used to serialize the data.

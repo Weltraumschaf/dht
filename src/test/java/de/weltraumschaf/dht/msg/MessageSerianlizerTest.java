@@ -14,7 +14,7 @@ package de.weltraumschaf.dht.msg;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
-import static de.weltraumschaf.dht.msg.MessageSerianlizer.newSerializer;
+import static de.weltraumschaf.dht.msg.MessageSerializer.newSerializer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Test;
@@ -22,13 +22,13 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
- * Tests for {@link MessageSerianlizer}.
+ * Tests for {@link MessageSerializer}.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public class MessageSerianlizerTest {
 
-    private final MessageSerianlizer sut = new MessageSerianlizer();
+    private final MessageSerializer sut = new MessageSerializer();
     private final Kryo kryo = newSerializer();
 
     @Test

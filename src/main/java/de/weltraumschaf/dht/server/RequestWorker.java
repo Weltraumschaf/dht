@@ -12,13 +12,15 @@
 package de.weltraumschaf.dht.server;
 
 import de.weltraumschaf.commons.IO;
-import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageAddress;
 import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.msg.MessageSerializer;
 import de.weltraumschaf.dht.msg.Messaging;
+import de.weltraumschaf.dht.msg.RawMessage;
+import de.weltraumschaf.dht.msg.StreamIo;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,6 +40,7 @@ final class RequestWorker implements Task {
      * Logging facility.
      */
     private static final Logger LOG = Log.getLogger(RequestWorker.class);
+    private final MessageSerializer serializer = new MessageSerializer();
     /**
      * To obtain requests to process from.
      */
@@ -116,18 +119,11 @@ final class RequestWorker implements Task {
             final DataInputStream input = new DataInputStream(Channels.newInputStream(client));
             final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
         ) {
-            final int length = input.readInt();
-            final byte[] data = new byte[length];
-            input.readFully(data);
-            final String inputLine = new String(data, Application.ENCODING);
-            final Message incomming = Messaging.newMessage(
-                new MessageAddress((InetSocketAddress) client.getRemoteAddress()),
-                new MessageAddress((InetSocketAddress) client.getLocalAddress()),
-                inputLine);
+            final Message incomming = serializer.deserialize(StreamIo.read(input));
             inbox.put(incomming);
             io.println("");
             io.println("Message received.");
-            output.println("re: " + inputLine);
+            output.println("re: " + incomming.getBody());
             output.flush();
         } catch (final IOException ex) {
             LOG.debug("Error while talking with client" + formatAddress(client) + ": " + ex.getMessage());
