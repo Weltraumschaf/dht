@@ -140,7 +140,7 @@ final class Inbox extends BaseCommand {
         final Message message = getInbox().get(id);
         @SuppressWarnings("unchecked")
         final Token<String> messageBodyToken = getArguments().get(1);
-        final Message answer = Messaging.newMessage(
+        final Message answer = Messaging.newTextMessage(
                 newLocalAddress(),
                 message.getFrom(),
                 messageBodyToken.getValue());

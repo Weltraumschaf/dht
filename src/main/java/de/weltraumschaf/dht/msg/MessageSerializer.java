@@ -54,9 +54,7 @@ public final class MessageSerializer {
     public RawMessage serialize(final Message message) throws IOException {
         Validate.notNull(message, "Parameter >message< must not be null!");
 
-        try (
-            final Output output = new Output(new ByteArrayOutputStream());
-        ) {
+        try (final Output output = new Output(new ByteArrayOutputStream())) {
             kryo.writeObject(output, message);
             output.flush();
             return new RawMessage(message.getType().value(), output.getBuffer());
@@ -66,7 +64,7 @@ public final class MessageSerializer {
     /**
      * Converts a raw message back into a message.
      *
-     * @param must not be {@code null}
+     * @param raw must not be {@code null}
      * @return never {@code null}
      * @throws IOException on any serialization error
      */
@@ -79,13 +77,24 @@ public final class MessageSerializer {
             case TEXT:
                 template = TextMessage.class;
                 break;
+            case PING:
+                template = ProtocollMessage.PingMessage.class;
+                break;
+            case STORE:
+                template = ProtocollMessage.StoreMessage.class;
+                break;
+            case FIND_NODE:
+                template = ProtocollMessage.FindNodeMessage.class;
+                break;
+            case FIND_VALUE:
+                template = ProtocollMessage.FindValueMessage.class;
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported type " + type + "!");
         }
 
         try (
-            final Input input = new Input(new ByteArrayInputStream(raw.getData()));
-        ) {
+                final Input input = new Input(new ByteArrayInputStream(raw.getData()));) {
             return kryo.readObject(input, template);
         }
     }

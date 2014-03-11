@@ -25,7 +25,7 @@ public class TextMessageTest {
 
     private final NetworkAddress from = new NetworkAddress("127.0.0.1", 4444);
     private final NetworkAddress to = new NetworkAddress("127.0.0.1", 5555);
-    private final Message sut = new TextMessage(from, to, "text");
+    private final TextMessage sut = new TextMessage(from, to, "text");
 
     @Test
     public void getFrom() {

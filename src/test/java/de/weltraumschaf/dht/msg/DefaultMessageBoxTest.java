@@ -30,9 +30,9 @@ public class DefaultMessageBoxTest {
 
     @Test
     public void putAndRemoveMessages() {
-        final Message m1 = Messaging.newMessage(from, to, "foo");
-        final Message m2 = Messaging.newMessage(from, to,  "bar");
-        final Message m3 = Messaging.newMessage(from, to,  "baz");
+        final Message m1 = Messaging.newTextMessage(from, to, "foo");
+        final Message m2 = Messaging.newTextMessage(from, to,  "bar");
+        final Message m3 = Messaging.newTextMessage(from, to,  "baz");
 
         assertThat(sut.count(), is(0));
         assertThat(sut.countUnread(), is(0));
@@ -64,9 +64,9 @@ public class DefaultMessageBoxTest {
 
     @Test
     public void countUnread() {
-        final Message m1 = Messaging.newMessage(from, to,  "foo");
-        final Message m2 = Messaging.newMessage(from, to,  "bar");
-        final Message m3 = Messaging.newMessage(from, to,  "baz");
+        final Message m1 = Messaging.newTextMessage(from, to,  "foo");
+        final Message m2 = Messaging.newTextMessage(from, to,  "bar");
+        final Message m3 = Messaging.newTextMessage(from, to,  "baz");
 
         sut.put(m1);
         sut.put(m2);

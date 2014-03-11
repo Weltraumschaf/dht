@@ -50,7 +50,7 @@ abstract class BaseMessage<B> implements Message<B> {
         super();
         this.from = Validate.notNull(from, "Parameter >from< must not be null!");
         this.to = Validate.notNull(to, "Parameter >to< must not be null!");
-        this.body = Validate.notNull(body, "Parameter >body< must not be null!");
+        this.body = body;
     }
 
     @Override
@@ -71,7 +71,7 @@ abstract class BaseMessage<B> implements Message<B> {
     @Override
     public void markAsRead() {
         synchronized (lock) {
-            unread = true;
+            unread = false;
         }
     }
 
@@ -99,12 +99,19 @@ abstract class BaseMessage<B> implements Message<B> {
                 && Objects.equal(getBody(), other.getBody());
     }
 
+    protected StringBuilder properties() {
+        final StringBuilder buffer = new StringBuilder();
+        buffer.append("from=").append(from).append(", ");
+        buffer.append("to=").append(to).append(", ");
+        buffer.append("body=").append(body).append(", ");
+        buffer.append("unread=").append(unread);
+        return buffer;
+    }
+
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("from", from)
-                .add("to", to)
-                .add("body", body)
-                .add("unread", unread).toString();
+        final StringBuilder buffer = new StringBuilder();
+        buffer.append(getClass().getSimpleName()).append('{').append(properties()).append('}');
+        return buffer.toString();
     }
 }

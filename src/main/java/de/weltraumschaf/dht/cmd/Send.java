@@ -58,7 +58,7 @@ final class Send extends BaseCommand {
     @Override
     public void execute() {
         final Arguments args = validateArguments();
-        final Message message = Messaging.newMessage(
+        final Message message = Messaging.newTextMessage(
                 newLocalAddress(),
                 newAddress(args.getHost(), args.getPort()),
                 args.getMessage());

@@ -12,6 +12,7 @@
 package de.weltraumschaf.dht.msg;
 
 import de.weltraumschaf.dht.net.NetworkAddress;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Implements a message type which has a plain text body.
@@ -28,7 +29,7 @@ final class TextMessage extends BaseMessage<String>  {
     }
 
     public TextMessage(final NetworkAddress from, final NetworkAddress to, final String body) {
-        super(from, to, body);
+        super(from, to, Validate.notNull(body, "Parameter >body< must not be null!"));
     }
 
     @Override
