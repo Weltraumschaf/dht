@@ -29,7 +29,7 @@ public class CliOptions {
     /**
      * Default port to listen on, if not given as CLI option.
      */
-    private static final int DEFAULT_PORT = 8888;
+    public static final int DEFAULT_PORT = 8888;
 
     /**
      * Port to listen on.

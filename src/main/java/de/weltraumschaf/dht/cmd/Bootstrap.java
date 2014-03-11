@@ -9,18 +9,19 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
+
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.dht.CliOptions;
 import de.weltraumschaf.dht.shell.CommandMainType;
-import static de.weltraumschaf.dht.shell.CommandMainType.EXIT;
-import java.io.IOException;
+import static de.weltraumschaf.dht.shell.CommandMainType.BOOTSTRAP;
 
 /**
- * Executes `exit` command.
+ * Executes `bootstrap` command.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-final class Exit extends BaseCommand {
+public class Bootstrap extends BaseCommand {
 
     @Override
     public Descriptor getDescriptor() {
@@ -28,36 +29,27 @@ final class Exit extends BaseCommand {
 
             @Override
             public CommandMainType getCommand() {
-                return EXIT;
+                return BOOTSTRAP;
             }
 
             @Override
             public String getUsage() {
-                return EXIT.toString();
+                return String.format("%s <host> [port]", BOOTSTRAP.toString());
             }
 
             @Override
             public String getHelpDescription() {
-                return "Exit the interactive shell.";
+                return String.format(
+                    "Bootstraps the network. If optional port is not given, then %d is used.",
+                    CliOptions.DEFAULT_PORT);
             }
         };
     }
 
     @Override
     public void execute() {
-        try {
-            if (getApplication().getServer().isRunning()) {
-                getApplication().getServer().stop();
-            }
-        } catch (final IOException | InterruptedException ex) {
-            errorln("Error: " + ex.getMessage());
-
-            if (isDebug()) {
-                printStackTrace(ex);
-            }
-        }
-
-        println("Bye bye & HAND!");
+        println("Start bootstrapping...");
+        println("Bootstrapping done.");
     }
 
 }

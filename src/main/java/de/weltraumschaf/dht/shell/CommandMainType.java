@@ -24,6 +24,10 @@ import java.util.List;
 public enum CommandMainType implements MainCommandType {
 
     /**
+     * Bootstrap command.
+     */
+    BOOTSTRAP("bootstrap"),
+    /**
      * Help command.
      */
     HELP("help"),
