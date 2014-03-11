@@ -13,7 +13,15 @@ package de.weltraumschaf.dht.shell;
 
 import de.weltraumschaf.commons.shell.CommandVerifier;
 import de.weltraumschaf.commons.shell.ShellCommand;
+import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.SyntaxException;
+import org.hamcrest.MatcherAssert;
+import static org.hamcrest.Matchers.either;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 /**
  * Verifies the commands.
@@ -37,8 +45,7 @@ public class DhtCommandVerifier implements CommandVerifier {
     @Override
     public void verifyCommand(final ShellCommand cmd) throws SyntaxException {
         switch ((CommandMainType) cmd.getCommand()) {
-            // No argument commands.
-            case BOOTSTRAP:
+            // No argument, no subcommand.
             case EXIT:
             case STATUS:
             case START:
@@ -46,9 +53,15 @@ public class DhtCommandVerifier implements CommandVerifier {
                 assertNoSubCommand(cmd);
                 assertNoArguments(cmd);
                 break;
+            // Nor arguments w/ subcommand
             case HELP:
                 assertNoArguments(cmd);
                 break;
+            // 1 or 2 arguments, w/o subcommand
+            case BOOTSTRAP:
+                assertOneOrTwoArguments(cmd);
+                break;
+            // 3 arguments, w/o subcommand
             case SEND:
                 assertNoSubCommand(cmd);
                 assertArgumentsCount(cmd, ARGS_3);
@@ -59,23 +72,46 @@ public class DhtCommandVerifier implements CommandVerifier {
     }
 
     private void assertNoArguments(final ShellCommand cmd) throws SyntaxException {
-        if (!cmd.getArguments().isEmpty()) {
-            throw new SyntaxException(String.format("Command '%s' does not support arguments!",
-                    cmd.getCommand()));
+        try {
+            MatcherAssert.assertThat(cmd.getArguments(), is(empty()));
+        } catch (final AssertionError err) {
+            throw new SyntaxException(
+                String.format("Command '%s' does not support arguments!", cmd.getCommand()),
+                err
+            );
         }
     }
 
     private void assertArgumentsCount(final ShellCommand cmd, final int expectedCount) throws SyntaxException {
-        if (cmd.getArguments().size() != expectedCount) {
-            throw new SyntaxException(String.format("Command '%s' expects %d arguments!",
-                    cmd.getCommand(), expectedCount));
+        try {
+            MatcherAssert.assertThat(cmd.getArguments(), hasSize(expectedCount));
+        } catch (final AssertionError err) {
+            throw new SyntaxException(
+                String.format("Command '%s' expects %d arguments!", cmd.getCommand(), expectedCount),
+                err
+            );
         }
     }
 
     private void assertNoSubCommand(final ShellCommand cmd) throws SyntaxException {
-        if (cmd.getSubCommand() != CommandSubType.NONE) {
-            throw new SyntaxException(String.format("Command '%s' does not support subcommand '%s'!",
-                    cmd.getCommand(), cmd.getSubCommand()));
+        try {
+            MatcherAssert.assertThat(cmd.getSubCommand(), is(equalTo((SubCommandType) CommandSubType.NONE)));
+        } catch (final AssertionError err) {
+            throw new SyntaxException(
+                String.format("Command '%s' does not support subcommand '%s'!", cmd.getCommand(), cmd.getSubCommand()),
+                err
+            );
+        }
+    }
+
+    private void assertOneOrTwoArguments(final ShellCommand cmd) throws SyntaxException {
+        try {
+            MatcherAssert.assertThat(cmd.getArguments(), either(hasSize(ARGS_1)).or(hasSize(ARGS_2)));
+        } catch (final AssertionError err) {
+            throw new SyntaxException(
+                String.format("Command '%s' expects one or two arguments!", cmd.getCommand()),
+                err
+            );
         }
     }
 
