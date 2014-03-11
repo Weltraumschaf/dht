@@ -19,6 +19,7 @@ import de.weltraumschaf.dht.shell.CommandMainType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.TreeMap;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -105,7 +106,7 @@ public final class CommandFactory {
 
     private static void initDescriptors() throws IllegalAccessException, ClassNotFoundException, InstantiationException {
         if (null == DESCRIPTORS) {
-            final Map<String, Descriptor> descriptors = Maps.newHashMap();
+            final Map<String, Descriptor> descriptors = new TreeMap<>();
 
             for (final Class<?> comamndClass : createClassLookup().values()) {
                 final Descriptor descriptor = ((Command) comamndClass.newInstance()).getDescriptor();
