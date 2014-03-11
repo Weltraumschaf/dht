@@ -11,6 +11,7 @@
  */
 package de.weltraumschaf.dht.msg;
 
+import de.weltraumschaf.dht.net.NetworkAddress;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -36,10 +37,10 @@ public final class MessageSerializer {
      *
      * @return never {@code null}, always new instance
      */
-    static Kryo newSerializer() {
+    public static Kryo newSerializer() {
         final Kryo kryo = new Kryo();
         kryo.register(TextMessage.class);
-        kryo.register(MessageAddress.class);
+        kryo.register(NetworkAddress.class);
         return kryo;
     }
 

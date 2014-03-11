@@ -11,6 +11,8 @@
  */
 package de.weltraumschaf.dht.msg;
 
+import de.weltraumschaf.dht.net.NetworkAddress;
+
 /**
  * Represents a message send over the network.
  *
@@ -23,14 +25,14 @@ public interface Message {
      *
      * @return never {@code null}
      */
-    MessageAddress getFrom();
+    NetworkAddress getFrom();
 
     /**
      * The message receiver.
      *
      * @return never {@code null}
      */
-    MessageAddress getTo();
+    NetworkAddress getTo();
 
     /**
      * Get the message body.

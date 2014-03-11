@@ -14,7 +14,7 @@ package de.weltraumschaf.dht.cmd;
 import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
-import de.weltraumschaf.dht.msg.MessageAddress;
+import de.weltraumschaf.dht.net.NetworkAddress;
 import de.weltraumschaf.dht.shell.CommandSubType;
 import java.net.InetSocketAddress;
 import java.util.Collections;
@@ -82,11 +82,11 @@ abstract class BaseCommand implements Command {
     }
 
 
-    MessageAddress newAddress(final String host, final int port) {
-        return new MessageAddress(host, port);
+    NetworkAddress newAddress(final String host, final int port) {
+        return new NetworkAddress(host, port);
     }
 
-    MessageAddress newLocalAddress() {
+    NetworkAddress newLocalAddress() {
         return newAddress(
                 getApplication().getOptions().getHost(),
                 getApplication().getOptions().getPort());

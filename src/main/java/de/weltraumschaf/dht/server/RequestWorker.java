@@ -15,7 +15,7 @@ import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
 import de.weltraumschaf.dht.msg.Message;
-import de.weltraumschaf.dht.msg.MessageAddress;
+import de.weltraumschaf.dht.net.NetworkAddress;
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.msg.MessageSerializer;
 import de.weltraumschaf.dht.msg.Messaging;

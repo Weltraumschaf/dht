@@ -12,6 +12,8 @@
 
 package de.weltraumschaf.dht.msg;
 
+import de.weltraumschaf.dht.net.NetworkAddress;
+
 /**
  * Factory to get messaging implementations.
  *
@@ -34,7 +36,7 @@ public final class Messaging {
      * @param body must not be {@code null}
      * @return never {@code null}, always new instance
      */
-    public static Message newMessage(final MessageAddress from, final MessageAddress to, final String body) {
+    public static Message newMessage(final NetworkAddress from, final NetworkAddress to, final String body) {
         return new TextMessage(from, to, body);
     }
 

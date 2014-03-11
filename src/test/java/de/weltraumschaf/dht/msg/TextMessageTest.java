@@ -11,6 +11,7 @@
  */
 package de.weltraumschaf.dht.msg;
 
+import de.weltraumschaf.dht.net.NetworkAddress;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -22,8 +23,8 @@ import static org.hamcrest.Matchers.*;
  */
 public class TextMessageTest {
 
-    private final MessageAddress from = new MessageAddress("127.0.0.1", 4444);
-    private final MessageAddress to = new MessageAddress("127.0.0.1", 5555);
+    private final NetworkAddress from = new NetworkAddress("127.0.0.1", 4444);
+    private final NetworkAddress to = new NetworkAddress("127.0.0.1", 5555);
     private final Message sut = new TextMessage(from, to, "text");
 
     @Test

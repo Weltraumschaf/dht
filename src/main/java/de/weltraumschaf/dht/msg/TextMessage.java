@@ -11,6 +11,7 @@
  */
 package de.weltraumschaf.dht.msg;
 
+import de.weltraumschaf.dht.net.NetworkAddress;
 import com.google.common.base.Objects;
 import org.apache.commons.lang3.Validate;
 
@@ -24,11 +25,11 @@ final class TextMessage implements Message {
     /**
      * Holds the senders address.
      */
-    private final MessageAddress from;
+    private final NetworkAddress from;
     /**
      * Holds the receivers address.
      */
-    private final MessageAddress to;
+    private final NetworkAddress to;
     /**
      * Holds the text message.
      */
@@ -39,10 +40,10 @@ final class TextMessage implements Message {
     private boolean unread = true;
 
     /**
-     * Necessary for message pack.
+     * For serialization.
      */
-    TextMessage() {
-        this(new MessageAddress(), new MessageAddress(), "");
+    public TextMessage() {
+        this(new NetworkAddress(), new NetworkAddress(), "");
     }
 
     /**
@@ -52,7 +53,7 @@ final class TextMessage implements Message {
      * @param to must not be {@code null}
      * @param body must not be {@code null}
      */
-    public TextMessage(final MessageAddress from, final MessageAddress to, final String body) {
+    public TextMessage(final NetworkAddress from, final NetworkAddress to, final String body) {
         super();
         this.from = Validate.notNull(from, "Parameter >from< must not be null!");
         this.to = Validate.notNull(to, "Parameter >to< must not be null!");
@@ -60,12 +61,12 @@ final class TextMessage implements Message {
     }
 
     @Override
-    public MessageAddress getFrom() {
+    public NetworkAddress getFrom() {
         return from;
     }
 
     @Override
-    public MessageAddress getTo() {
+    public NetworkAddress getTo() {
         return to;
     }
 

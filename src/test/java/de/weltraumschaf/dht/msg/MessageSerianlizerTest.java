@@ -12,6 +12,7 @@
 
 package de.weltraumschaf.dht.msg;
 
+import de.weltraumschaf.dht.net.NetworkAddress;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 import static de.weltraumschaf.dht.msg.MessageSerializer.newSerializer;
@@ -33,7 +34,7 @@ public class MessageSerianlizerTest {
 
     @Test
     public void serialize() throws IOException {
-        final Message in = new TextMessage(new MessageAddress("from", 1), new MessageAddress("to", 2), "data");
+        final Message in = new TextMessage(new NetworkAddress("from", 1), new NetworkAddress("to", 2), "data");
 
         final Output output = new Output(new ByteArrayOutputStream());
         kryo.writeObject(output, in);
@@ -46,7 +47,7 @@ public class MessageSerianlizerTest {
 
     @Test
     public void deserialize() throws IOException {
-        final Message expected = new TextMessage(new MessageAddress("from", 1), new MessageAddress("to", 2), "data");
+        final Message expected = new TextMessage(new NetworkAddress("from", 1), new NetworkAddress("to", 2), "data");
 
         assertThat(
             sut.deserialize(sut.serialize(expected)),
