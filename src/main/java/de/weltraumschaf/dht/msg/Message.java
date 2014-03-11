@@ -18,7 +18,7 @@ import de.weltraumschaf.dht.net.NetworkAddress;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public interface Message {
+public interface Message<B> {
 
     /**
      * From where the message came.
@@ -39,7 +39,7 @@ public interface Message {
      *
      * @return never {@code null}
      */
-    String getBody();
+    B getBody();
 
     /**
      * Mark the message as read.

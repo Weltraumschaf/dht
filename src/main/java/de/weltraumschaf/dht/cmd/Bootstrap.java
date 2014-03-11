@@ -34,7 +34,7 @@ public class Bootstrap extends BaseCommand {
 
             @Override
             public String getUsage() {
-                return String.format("%s <host> [port]", BOOTSTRAP.toString());
+                return String.format("%s <host> [ <port> ]", BOOTSTRAP.toString());
             }
 
             @Override
