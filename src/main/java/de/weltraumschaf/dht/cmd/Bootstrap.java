@@ -15,6 +15,7 @@ package de.weltraumschaf.dht.cmd;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
 import de.weltraumschaf.dht.CliOptions;
+import de.weltraumschaf.dht.Contact;
 import de.weltraumschaf.dht.server.PortValidator;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
@@ -61,7 +62,7 @@ public class Bootstrap extends BaseCommand {
 
     private void bootstrap() {
         final Arguments args = validateArguments();
-//        insertBootstrappingNodeInKBucket();
+        insertBootstrappingNodeInKBucket();
     }
 
     private Arguments validateArguments() throws CommandArgumentExcpetion {
@@ -93,6 +94,10 @@ public class Bootstrap extends BaseCommand {
         }
 
         return new Arguments(hostToken.getValue(), port);
+    }
+
+    private void insertBootstrappingNodeInKBucket() {
+        final Contact self = new Contact(getApplication().getNodeId(), newLocalAddress());
     }
 
     /**

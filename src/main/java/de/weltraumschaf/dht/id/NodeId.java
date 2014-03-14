@@ -9,7 +9,6 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.id;
 
 import de.weltraumschaf.dht.id.UuidConverter;
@@ -71,6 +70,21 @@ public final class NodeId {
         } catch (final IOException ex) {
             throw new IOError(ex); // Should never hapen.
         }
+    }
+
+    @Override
+    public String toString() {
+        return asString();
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return id.equals(obj);
     }
 
     /**

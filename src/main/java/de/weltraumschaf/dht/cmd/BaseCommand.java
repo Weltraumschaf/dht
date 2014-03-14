@@ -16,7 +16,6 @@ import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.net.NetworkAddress;
 import de.weltraumschaf.dht.shell.CommandSubType;
-import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.Validate;

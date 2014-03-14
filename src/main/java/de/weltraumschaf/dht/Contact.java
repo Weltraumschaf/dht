@@ -13,8 +13,8 @@
 package de.weltraumschaf.dht;
 
 import com.google.common.base.Objects;
+import de.weltraumschaf.dht.id.NodeId;
 import de.weltraumschaf.dht.net.NetworkAddress;
-import java.util.UUID;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -30,7 +30,7 @@ public final class Contact {
     /**
      * Global unique user id.
      */
-    private final UUID nodeId;
+    private final NodeId nodeId;
     /**
      * Host on which the users client listen.
      */
@@ -42,7 +42,7 @@ public final class Contact {
      * @param userId must not be {@code null}
      * @param networkAddress must not be {@code null}
      */
-    public Contact(final UUID userId, final NetworkAddress networkAddress) {
+    public Contact(final NodeId userId, final NetworkAddress networkAddress) {
         super();
         this.nodeId = Validate.notNull(userId, "Parameter >userId< must not be null!");
         this.networkAddress = Validate.notNull(networkAddress, "Parameter >networkAddress< must not be null!");
@@ -53,7 +53,7 @@ public final class Contact {
      *
      * @return never {@code null}
      */
-    public UUID getNodeId() {
+    public NodeId getNodeId() {
         return nodeId;
     }
 
