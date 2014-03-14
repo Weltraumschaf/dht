@@ -30,6 +30,38 @@ public class CliOptions {
      * Default port to listen on, if not given as CLI option.
      */
     public static final int DEFAULT_PORT = 8888;
+    /**
+     * A small number representing the degree of parallelism in network calls, usually 3.
+     */
+    public static final int DEFAULT_ALPHA = 3;
+    /**
+     * The size in bits of the keys used to identify nodes and store and retrieve data; in basic Kademlia this is 160,
+     * the length of a SHA-1 digest (hash).
+     *
+     * In DHT it is 128 bits, the length of an UUID.
+     */
+    private static final int DEFAULT_B = 128;
+    /**
+     * k is the maximum number f contacts stored in a bucket this is normally 20.
+     */
+    private static final int DEFAULT_K = 20;
+    /**
+     * The time in seconds after which a key/value pair expires, this is a time-to-live (TTL) from the original
+     * publication date.
+     */
+    private static final int DEFAULT_T_EXPIRES = 86_400;
+    /**
+     * Time in seconds after which an otherwise unaccessed bucket must be refreshed.
+     */
+    private static final int DEFAULT_T_REFRESH = 3_600;
+    /**
+     * Interval in seconds between Kademlia replication events,when a node is required to publish the entire database.
+     */
+    private static final int DEFAULT_T_REPLICATION = 3_600;
+    /**
+     * The time in seconds after which the original publisher must republish a key/value pair.
+     */
+    private static final int DEFAULT_T_REPUBLISH = 86_400;
 
     /**
      * Port to listen on.
@@ -79,6 +111,34 @@ public class CliOptions {
 
     public boolean isDebug() {
         return debug;
+    }
+
+    public int getAlpha() {
+        return DEFAULT_ALPHA;
+    }
+
+    public int getB() {
+        return DEFAULT_B;
+    }
+
+    public int getK() {
+        return DEFAULT_K;
+    }
+
+    public int getTExpires() {
+        return DEFAULT_T_EXPIRES;
+    }
+
+    public int getTRefresh() {
+        return DEFAULT_T_REFRESH;
+    }
+
+    public int getTReplication() {
+        return DEFAULT_T_REPLICATION;
+    }
+
+    public int getTRepublish() {
+        return DEFAULT_T_REPUBLISH;
     }
 
 }
