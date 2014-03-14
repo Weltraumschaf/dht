@@ -12,6 +12,9 @@ The tool provides an interactive shell. To build it you need
 To start the interactive shell run:
 
     $> ./bin/dht
+    
+See [project site][site] for more informations.
 
-[dht]: https://en.wikipedia.org/wiki/Distributed_hash_table
-[mvn]: https://maven.apache.org/
+[dht]:  https://en.wikipedia.org/wiki/Distributed_hash_table
+[mvn]:  https://maven.apache.org/
+[site]: https://weltraumschaf.github.io/dht/
