@@ -13,6 +13,10 @@ To start the interactive shell run:
 
     $> ./bin/dht
     
+To get help about the command line options:
+
+    $> ./bin/dht --help
+    
 See [project site][site] for more informations.
 
 [dht]:  https://en.wikipedia.org/wiki/Distributed_hash_table
