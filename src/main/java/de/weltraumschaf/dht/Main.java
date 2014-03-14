@@ -36,6 +36,7 @@ public final class Main extends InvokableAdapter implements Application {
     private final MessageBox inbox = Messaging.newMessageBox();
     private final MessageBox outbox = Messaging.newMessageBox();
     private final NodeId nodeId = NodeId.newRandom();
+    private final Clock clock = new Clock().start();
     private Server server;
 
     /**
@@ -135,6 +136,11 @@ public final class Main extends InvokableAdapter implements Application {
     @Override
     public NodeId getNodeId() {
         return nodeId;
+    }
+
+    @Override
+    public Clock getClock() {
+        return clock;
     }
 
     @Override
