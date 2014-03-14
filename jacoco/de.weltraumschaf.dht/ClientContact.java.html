@@ -13,11 +13,9 @@
 package de.weltraumschaf.dht;
 
 import com.google.common.base.Objects;
-import de.weltraumschaf.dht.id.DataKey;
 import de.weltraumschaf.dht.server.PortValidator;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -51,25 +49,21 @@ public final class ClientContact {
      * @param port must be in range 0 .. {@link Application#MAX_PORT}
      */
     public ClientContact(final String userId, final String host, final int port) {
-<span class="nc" id="L54">        super();</span>
-<span class="nc" id="L55">        this.userId = Validate.notEmpty(userId, &quot;Parameter &gt;userId&lt; must not be null or empty!&quot;);</span>
-<span class="nc" id="L56">        this.host = Validate.notEmpty(host, &quot;Parameter &gt;host&lt; must not be null or empty!&quot;);</span>
-<span class="nc" id="L57">        Validate.isTrue(PortValidator.isValid(port),</span>
+<span class="nc" id="L52">        super();</span>
+<span class="nc" id="L53">        this.userId = Validate.notEmpty(userId, &quot;Parameter &gt;userId&lt; must not be null or empty!&quot;);</span>
+<span class="nc" id="L54">        this.host = Validate.notEmpty(host, &quot;Parameter &gt;host&lt; must not be null or empty!&quot;);</span>
+<span class="nc" id="L55">        Validate.isTrue(PortValidator.isValid(port),</span>
             String.format(&quot;Parameter &gt;port&lt; must be in range %s! Given &gt;%d&lt;.&quot;, PortValidator.range(), port));
-<span class="nc" id="L59">        this.port = port;</span>
-<span class="nc" id="L60">    }</span>
+<span class="nc" id="L57">        this.port = port;</span>
+<span class="nc" id="L58">    }</span>
 
     public SocketAddress createAddress() {
-<span class="nc" id="L63">        return new InetSocketAddress(&quot;cloudnine1999.no-ip.org&quot;, port);</span>
-    }
-
-    public DataKey creteKey() {
-<span class="nc" id="L67">        return new DataKey(DigestUtils.sha1(userId));</span>
+<span class="nc" id="L61">        return new InetSocketAddress(&quot;cloudnine1999.no-ip.org&quot;, port);</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L72">        return Objects.toStringHelper(this).add(&quot;userId&quot;, userId).add(&quot;host&quot;, host).add(&quot;port&quot;, port).toString();</span>
+<span class="nc" id="L66">        return Objects.toStringHelper(this).add(&quot;userId&quot;, userId).add(&quot;host&quot;, host).add(&quot;port&quot;, port).toString();</span>
     }
 
 }

@@ -1,6 +1,10 @@
 de.weltraumschaf.dht
 de.weltraumschaf.dht.cmd
+de.weltraumschaf.dht.collection
+de.weltraumschaf.dht.event
 de.weltraumschaf.dht.id
 de.weltraumschaf.dht.log
+de.weltraumschaf.dht.msg
+de.weltraumschaf.dht.net
 de.weltraumschaf.dht.server
 de.weltraumschaf.dht.shell

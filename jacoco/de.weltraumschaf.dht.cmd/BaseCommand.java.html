@@ -14,6 +14,9 @@ package de.weltraumschaf.dht.cmd;
 import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.net.NetworkAddress;
+import de.weltraumschaf.dht.shell.CommandSubType;
+import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
@@ -23,7 +26,7 @@ import org.apache.commons.lang3.Validate;
  *
  * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
  */
-<span class="nc" id="L26">abstract class BaseCommand implements Command {</span>
+<span class="nc" id="L29">abstract class BaseCommand implements Command {</span>
 
     /**
      * Arguments for the command.
@@ -31,10 +34,15 @@ import org.apache.commons.lang3.Validate;
     private List&lt;Token&gt; arguments;
 
     /**
-     * Invoking applicationlication.
+     * Invoking application.
      */
     private Application application;
-    private SubCommandType subCommand;
+    /**
+     * Holds the subcommand.
+     *
+     * Default is {@link CommandSubType#NONE}.
+     */
+<span class="nc" id="L45">    private SubCommandType subCommand = CommandSubType.NONE;</span>
 
     /**
      * Getter for sub classes.
@@ -42,7 +50,7 @@ import org.apache.commons.lang3.Validate;
      * @return shellI/O
      */
     Application getApplication() {
-<span class="nc" id="L45">        return application;</span>
+<span class="nc" id="L53">        return application;</span>
     }
 
     /**
@@ -51,91 +59,109 @@ import org.apache.commons.lang3.Validate;
      * @return parsed shell arguments, may return empty list
      */
     List&lt;Token&gt; getArguments() {
-<span class="nc" id="L54">        return arguments;</span>
+<span class="nc" id="L62">        return arguments;</span>
     }
 
     SubCommandType getSubCommand() {
-<span class="nc" id="L58">        return subCommand;</span>
+<span class="nc" id="L66">        return subCommand;</span>
     }
 
     @Override
     public void setArguments(final List&lt;Token&gt; arguments) {
-<span class="nc" id="L63">        this.arguments = Collections.unmodifiableList(Validate.notNull(arguments, &quot;Parameter &gt;arguments&lt; must not be null!&quot;));</span>
-<span class="nc" id="L64">    }</span>
+<span class="nc" id="L71">        this.arguments = Collections.unmodifiableList(Validate.notNull(arguments, &quot;Parameter &gt;arguments&lt; must not be null!&quot;));</span>
+<span class="nc" id="L72">    }</span>
 
     @Override
     public void setApplication(final Application applocation) {
-<span class="nc" id="L68">        this.application = Validate.notNull(applocation, &quot;Parameter &gt;applocation&lt; must not be null!&quot;);</span>
-<span class="nc" id="L69">    }</span>
+<span class="nc" id="L76">        this.application = Validate.notNull(applocation, &quot;Parameter &gt;applocation&lt; must not be null!&quot;);</span>
+<span class="nc" id="L77">    }</span>
 
     @Override
     public void setSubCommandType(final SubCommandType subCommand) {
-<span class="nc" id="L73">        this.subCommand = Validate.notNull(subCommand, &quot;Parameter &gt;subCommand&lt; must not be null!&quot;);</span>
-<span class="nc" id="L74">    }</span>
+<span class="nc" id="L81">        this.subCommand = Validate.notNull(subCommand, &quot;Parameter &gt;subCommand&lt; must not be null!&quot;);</span>
+<span class="nc" id="L82">    }</span>
 
-    /**
-     * Returns formatted host address the applicationlication is configured by CLI options.
-     *
-     * @return never {@code null} or empty
-     */
-    String formatListenedAddress() {
-<span class="nc" id="L82">        return String.format(&quot;%s:%d&quot;,</span>
+
+    NetworkAddress newAddress(final String host, final int port) {
+<span class="nc" id="L86">        return new NetworkAddress(host, port);</span>
+    }
+
+    NetworkAddress newLocalAddress() {
+<span class="nc" id="L90">        return newAddress(</span>
                 getApplication().getOptions().getHost(),
                 getApplication().getOptions().getPort());
     }
 
     /**
-     * Delegates to the STDOUT of the applicationlication.
+     * Returns formatted host address the application is configured by CLI options.
+     *
+     * @return never {@code null} or empty
+     */
+    String formatLocalAddress() {
+<span class="nc" id="L101">        return String.format(&quot;%s:%d&quot;,</span>
+                getApplication().getOptions().getHost(),
+                getApplication().getOptions().getPort());
+    }
+
+    /**
+     * Delegates to the STDOUT of the application.
      *
      * @param msg may be {@code null} or empty
      */
     void println(final String msg) {
-<span class="nc" id="L93">        getApplication().getIoStreams().println(msg);</span>
-<span class="nc" id="L94">    }</span>
+<span class="nc" id="L112">        getApplication().getIoStreams().println(msg);</span>
+<span class="nc" id="L113">    }</span>
 
     /**
-     * Delegates to the STDOUT of the applicationlication.
+     * Prints empty line on STDOUT.
+     */
+    void println() {
+<span class="nc" id="L119">        println(&quot;&quot;);</span>
+<span class="nc" id="L120">    }</span>
+
+    /**
+     * Delegates to the STDOUT of the application.
      *
      * @param msg may be {@code null} or empty
      */
     void print(final String msg) {
-<span class="nc" id="L102">        getApplication().getIoStreams().print(msg);</span>
-<span class="nc" id="L103">    }</span>
+<span class="nc" id="L128">        getApplication().getIoStreams().print(msg);</span>
+<span class="nc" id="L129">    }</span>
 
     /**
-     * Delegates to the STDERR of the applicationlication.
+     * Delegates to the STDERR of the application.
      *
      * @param msg may be {@code null} or empty
      */
     void errorln(final String msg) {
-<span class="nc" id="L111">        println(&quot;Error: &quot; + msg);</span>
-<span class="nc" id="L112">    }</span>
+<span class="nc" id="L137">        println(&quot;Error: &quot; + msg);</span>
+<span class="nc" id="L138">    }</span>
 
     /**
-     * Prints stacktrace to the STDOUT of the applicationlication.
+     * Prints stack trace to the STDOUT of the application.
      *
      * @param msg may be {@code null} or empty
      */
     void printStackTrace(final Throwable ex) {
-<span class="nc" id="L120">        getApplication().getIoStreams().printStackTrace(ex);</span>
-<span class="nc" id="L121">    }</span>
+<span class="nc" id="L146">        getApplication().getIoStreams().printStackTrace(ex);</span>
+<span class="nc" id="L147">    }</span>
 
     /**
-     * Whether debug option is enabled by the applicationlications CLI options.
+     * Whether debug option is enabled by the application CLI options.
      *
      * @return {@code true} if debug is enabled, else {@code false}
      */
     boolean isDebug() {
-<span class="nc" id="L129">        return getApplication().getOptions().isDebug();</span>
+<span class="nc" id="L155">        return getApplication().getOptions().isDebug();</span>
     }
 
     /**
-     * Get the applicationlication wide new line string.
+     * Get the application wide new line string.
      *
      * @return never {@code null} or empty
      */
     String nl() {
-<span class="nc" id="L138">        return Application.NL;</span>
+<span class="nc" id="L164">        return Application.NL;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

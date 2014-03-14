@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultMessageBox.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.msg</a> &gt; <span class="el_source">DefaultMessageBox.java</span></div><h1>DefaultMessageBox.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.msg;
+
+import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import org.apache.commons.lang3.Validate;
+
+/**
+ * Implements a default message box to hold some messages.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+<span class="fc" id="L25">class DefaultMessageBox implements MessageBox {</span>
+
+<span class="fc" id="L27">    private final List&lt;Message&gt; messages = Lists.newArrayList();</span>
+<span class="fc" id="L28">    private final Object lock = new Object();</span>
+
+    @Override
+    public void put(final Message msg) {
+<span class="fc" id="L32">        Validate.notNull(msg, &quot;Parameter &gt;msg&lt; must not be null!&quot;);</span>
+<span class="fc" id="L33">        synchronized (lock) {</span>
+<span class="fc" id="L34">            messages.add(msg);</span>
+<span class="pc" id="L35">        }</span>
+<span class="fc" id="L36">    }</span>
+
+    @Override
+    public void remove(final int id) {
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        Validate.isTrue(id &gt;= 0, &quot;Parameter &gt;id&lt; must not be negative!&quot;);</span>
+<span class="fc" id="L41">        synchronized (lock) {</span>
+<span class="fc" id="L42">            messages.remove(id);</span>
+<span class="pc" id="L43">        }</span>
+<span class="fc" id="L44">    }</span>
+
+    @Override
+    public int countUnread() {
+<span class="fc" id="L48">        int count = 0;</span>
+        // Work on copy to prevent concurrent modification exceptions.
+        final Collection&lt;Message&gt; localCopy;
+<span class="fc" id="L51">        synchronized (lock) {</span>
+<span class="fc" id="L52">            localCopy = Collections.unmodifiableCollection(messages);</span>
+<span class="pc" id="L53">        }</span>
+
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for (final Message m : localCopy) {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if (m.isUnread()) {</span>
+<span class="fc" id="L57">                ++count;</span>
+            }
+<span class="fc" id="L59">        }</span>
+
+<span class="fc" id="L61">        return count;</span>
+    }
+
+    @Override
+    public int count() {
+<span class="fc" id="L66">        synchronized (lock) {</span>
+<span class="fc" id="L67">            return messages.size();</span>
+<span class="nc" id="L68">        }</span>
+    }
+
+    @Override
+    public Collection&lt;Message&gt; getAll() {
+<span class="nc" id="L73">        synchronized (lock) {</span>
+<span class="nc" id="L74">            return Collections.unmodifiableCollection(messages);</span>
+<span class="nc" id="L75">        }</span>
+    }
+
+    @Override
+    public boolean isEmpty() {
+<span class="nc" id="L80">        synchronized (lock) {</span>
+<span class="nc" id="L81">            return messages.isEmpty();</span>
+<span class="nc" id="L82">        }</span>
+    }
+
+    @Override
+    public Message get(final int id) {
+<span class="nc" id="L87">        synchronized (lock) {</span>
+<span class="nc" id="L88">            return messages.get(id);</span>
+<span class="nc" id="L89">        }</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

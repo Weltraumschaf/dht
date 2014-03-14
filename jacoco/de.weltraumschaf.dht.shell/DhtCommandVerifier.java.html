@@ -13,14 +13,22 @@ package de.weltraumschaf.dht.shell;
 
 import de.weltraumschaf.commons.shell.CommandVerifier;
 import de.weltraumschaf.commons.shell.ShellCommand;
+import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.SyntaxException;
+import org.hamcrest.MatcherAssert;
+import static org.hamcrest.Matchers.either;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 /**
  * Verifies the commands.
  *
  * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
  */
-<span class="fc" id="L23">public class DhtCommandVerifier implements CommandVerifier {</span>
+<span class="fc" id="L31">public class DhtCommandVerifier implements CommandVerifier {</span>
 
     private static final int ARGS_1 = 1;
     private static final int ARGS_2 = 2;
@@ -36,47 +44,76 @@ import de.weltraumschaf.commons.shell.SyntaxException;
      */
     @Override
     public void verifyCommand(final ShellCommand cmd) throws SyntaxException {
-<span class="pc bpc" id="L39" title="2 of 4 branches missed.">        switch ((CommandMainType) cmd.getCommand()) {</span>
-            // No argument commands.
+<span class="pc bpc" id="L47" title="3 of 5 branches missed.">        switch ((CommandMainType) cmd.getCommand()) {</span>
+            // No argument, no subcommand.
             case EXIT:
             case STATUS:
             case START:
             case STOP:
-<span class="fc" id="L45">                assertNoSubCommand(cmd);</span>
-<span class="fc" id="L46">                assertNoArguments(cmd);</span>
-<span class="fc" id="L47">                break;</span>
+<span class="fc" id="L53">                assertNoSubCommand(cmd);</span>
+<span class="fc" id="L54">                assertNoArguments(cmd);</span>
+<span class="fc" id="L55">                break;</span>
+            // Nor arguments w/ subcommand
             case HELP:
-<span class="fc" id="L49">                assertNoArguments(cmd);</span>
-<span class="fc" id="L50">                break;</span>
+<span class="fc" id="L58">                assertNoArguments(cmd);</span>
+<span class="fc" id="L59">                break;</span>
+            // 1 or 2 arguments, w/o subcommand
+            case BOOTSTRAP:
+<span class="nc" id="L62">                assertOneOrTwoArguments(cmd);</span>
+<span class="nc" id="L63">                break;</span>
+            // 3 arguments, w/o subcommand
             case SEND:
-<span class="nc" id="L52">                assertNoSubCommand(cmd);</span>
-<span class="nc" id="L53">                assertArgumentsCount(cmd, ARGS_3);</span>
-<span class="nc" id="L54">                break;</span>
-<span class="fc" id="L55">            default:</span>
+<span class="nc" id="L66">                assertNoSubCommand(cmd);</span>
+<span class="nc" id="L67">                assertArgumentsCount(cmd, ARGS_3);</span>
+<span class="nc" id="L68">                break;</span>
+<span class="fc" id="L69">            default:</span>
             // Nothing to do here.
         }
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L72">    }</span>
 
     private void assertNoArguments(final ShellCommand cmd) throws SyntaxException {
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (!cmd.getArguments().isEmpty()) {</span>
-<span class="fc" id="L62">            throw new SyntaxException(String.format(&quot;Command '%s' does not support arguments!&quot;,</span>
-                    cmd.getCommand()));
-        }
-<span class="fc" id="L65">    }</span>
+        try {
+<span class="fc" id="L76">            MatcherAssert.assertThat(cmd.getArguments(), is(empty()));</span>
+<span class="fc" id="L77">        } catch (final AssertionError err) {</span>
+<span class="fc" id="L78">            throw new SyntaxException(</span>
+                String.format(&quot;Command '%s' does not support arguments!&quot;, cmd.getCommand()),
+                err
+            );
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">    }</span>
 
     private void assertArgumentsCount(final ShellCommand cmd, final int expectedCount) throws SyntaxException {
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (cmd.getArguments().size() != expectedCount) {</span>
-<span class="nc" id="L69">            throw new SyntaxException(String.format(&quot;Command '%s' expects %d arguments!&quot;,</span>
-                    cmd.getCommand(), expectedCount));
-        }
-<span class="nc" id="L72">    }</span>
+        try {
+<span class="nc" id="L87">            MatcherAssert.assertThat(cmd.getArguments(), hasSize(expectedCount));</span>
+<span class="nc" id="L88">        } catch (final AssertionError err) {</span>
+<span class="nc" id="L89">            throw new SyntaxException(</span>
+                String.format(&quot;Command '%s' expects %d arguments!&quot;, cmd.getCommand(), expectedCount),
+                err
+            );
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">    }</span>
 
     private void assertNoSubCommand(final ShellCommand cmd) throws SyntaxException {
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (cmd.getSubCommand() != CommandSubType.NONE) {</span>
-<span class="nc" id="L76">            throw new SyntaxException(String.format(&quot;Command '%s' does not support subcommand '%s'!&quot;,</span>
-                    cmd.getCommand(), cmd.getSubCommand()));
-        }
-<span class="fc" id="L79">    }</span>
+        try {
+<span class="fc" id="L98">            MatcherAssert.assertThat(cmd.getSubCommand(), is(equalTo((SubCommandType) CommandSubType.NONE)));</span>
+<span class="nc" id="L99">        } catch (final AssertionError err) {</span>
+<span class="nc" id="L100">            throw new SyntaxException(</span>
+                String.format(&quot;Command '%s' does not support subcommand '%s'!&quot;, cmd.getCommand(), cmd.getSubCommand()),
+                err
+            );
+<span class="fc" id="L104">        }</span>
+<span class="fc" id="L105">    }</span>
+
+    private void assertOneOrTwoArguments(final ShellCommand cmd) throws SyntaxException {
+        try {
+<span class="nc" id="L109">            MatcherAssert.assertThat(cmd.getArguments(), either(hasSize(ARGS_1)).or(hasSize(ARGS_2)));</span>
+<span class="nc" id="L110">        } catch (final AssertionError err) {</span>
+<span class="nc" id="L111">            throw new SyntaxException(</span>
+                String.format(&quot;Command '%s' expects one or two arguments!&quot;, cmd.getCommand()),
+                err
+            );
+<span class="nc" id="L115">        }</span>
+<span class="nc" id="L116">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

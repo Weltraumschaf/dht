@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Bootstrap.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.cmd</a> &gt; <span class="el_source">Bootstrap.java</span></div><h1>Bootstrap.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+
+package de.weltraumschaf.dht.cmd;
+
+import de.weltraumschaf.commons.shell.Token;
+import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.dht.CliOptions;
+import de.weltraumschaf.dht.server.PortValidator;
+import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.BOOTSTRAP;
+import java.util.List;
+import org.apache.commons.lang3.Validate;
+
+/**
+ * Executes `bootstrap` command.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+<span class="nc" id="L30">public class Bootstrap extends BaseCommand {</span>
+
+    @Override
+    public Descriptor getDescriptor() {
+<span class="nc" id="L34">        return new BaseDescriptor() {</span>
+
+            @Override
+            public CommandMainType getCommand() {
+<span class="nc" id="L38">                return BOOTSTRAP;</span>
+            }
+
+            @Override
+            public String getUsage() {
+<span class="nc" id="L43">                return String.format(&quot;%s &lt;host&gt; [ &lt;port&gt; ]&quot;, BOOTSTRAP.toString());</span>
+            }
+
+            @Override
+            public String getHelpDescription() {
+<span class="nc" id="L48">                return String.format(</span>
+                    &quot;Bootstraps the network. If optional port is not given, then %d is used.&quot;,
+                    CliOptions.DEFAULT_PORT);
+            }
+        };
+    }
+
+    @Override
+    public void execute() {
+<span class="nc" id="L57">        println(&quot;Start bootstrapping...&quot;);</span>
+<span class="nc" id="L58">        bootstrap();</span>
+<span class="nc" id="L59">        println(&quot;Bootstrapping done.&quot;);</span>
+<span class="nc" id="L60">    }</span>
+
+    private void bootstrap() {
+<span class="nc" id="L63">        final Arguments args = validateArguments();</span>
+//        insertBootstrappingNodeInKBucket();
+<span class="nc" id="L65">    }</span>
+
+    private Arguments validateArguments() throws CommandArgumentExcpetion {
+<span class="nc" id="L68">        final List&lt;Token&gt; args = getArguments();</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L71">        final Token&lt;String&gt; hostToken = args.get(0);</span>
+
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (hostToken.getType() != TokenType.LITERAL) {</span>
+<span class="nc" id="L74">            throw new CommandArgumentExcpetion(&quot;Host must be a literal!&quot;);</span>
+        }
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (args.size() == 1) {</span>
+<span class="nc" id="L78">            return new Arguments(hostToken.getValue(), CliOptions.DEFAULT_PORT);</span>
+        }
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L82">        final Token&lt;Integer&gt; portToken = args.get(1);</span>
+
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (portToken.getType() != TokenType.NUMBER) {</span>
+<span class="nc" id="L85">            throw new CommandArgumentExcpetion(&quot;Port must be a number!&quot;);</span>
+        }
+
+<span class="nc" id="L88">        final Integer port = portToken.getValue();</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (!PortValidator.isValid(port)) {</span>
+<span class="nc" id="L91">            throw new CommandArgumentExcpetion(</span>
+                    String.format(&quot;Parameter &gt;port&lt; must be in range %s!&quot;, PortValidator.range()));
+        }
+
+<span class="nc" id="L95">        return new Arguments(hostToken.getValue(), port);</span>
+    }
+
+    /**
+     * Container for the command arguments.
+     */
+<span class="nc" id="L101">    private static final class Arguments {</span>
+        /**
+         * Host to send the message.
+         */
+        private final String host;
+        /**
+         * Port to send the message.
+         */
+        private final int port;
+        /**
+         * Dedicated constructor.
+         *
+         * @param host must not be {@code null} or empty
+         * @param port must be in {@link PortValidator#range() specified range}
+         */
+        public Arguments(final String host, final int port) {
+<span class="nc" id="L117">            super();</span>
+<span class="nc" id="L118">            this.host = Validate.notEmpty(host, &quot;Parameter &gt;host&lt; must not be null or empty!&quot;);</span>
+<span class="nc" id="L119">            Validate.isTrue(PortValidator.isValid(port),</span>
+                    String.format(&quot;Parameter &gt;port&lt; must be in range %s! Given &gt;%d&lt;.&quot;, PortValidator.range(), port));
+<span class="nc" id="L121">            this.port = port;</span>
+<span class="nc" id="L122">        }</span>
+
+        /**
+         * Get the host.
+         *
+         * @return never {@code null} or empty
+         */
+        public String getHost() {
+<span class="nc" id="L130">            return host;</span>
+        }
+
+        /**
+         * Get the port.
+         *
+         * @return {@link PortValidator#range() range}
+         */
+        public int getPort() {
+<span class="nc" id="L139">            return port;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

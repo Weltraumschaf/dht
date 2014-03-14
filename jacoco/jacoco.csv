@@ -1,47 +1,74 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-DHT,de.weltraumschaf.dht,Node,54,0,0,0,12,0,6,0,6,0
+DHT,de.weltraumschaf.dht.collection,KBucket,152,0,12,0,33,0,18,0,12,0
+DHT,de.weltraumschaf.dht.collection,ConcurrentHashSet,85,0,8,0,19,0,15,0,11,0
 DHT,de.weltraumschaf.dht,Main.new Runnable() {...},45,0,4,0,10,0,4,0,2,0
-DHT,de.weltraumschaf.dht,Main,200,0,6,0,54,0,15,0,12,0
-DHT,de.weltraumschaf.dht,CliOptions,24,0,0,0,8,0,6,0,6,0
+DHT,de.weltraumschaf.dht,CliOptions,38,0,0,0,15,0,13,0,13,0
 DHT,de.weltraumschaf.dht,DhtService,46,0,2,0,11,0,6,0,5,0
-DHT,de.weltraumschaf.dht,Bits,5,177,2,14,2,36,3,10,1,4
-DHT,de.weltraumschaf.dht,ClientContact,70,0,0,0,9,0,4,0,4,0
-DHT,de.weltraumschaf.dht,ExitCodeImpl,46,0,0,0,7,0,5,0,5,0
-DHT,de.weltraumschaf.dht,Bits.CompareResult,9,39,0,0,0,2,2,2,2,2
-DHT,de.weltraumschaf.dht.server,Server,228,17,15,1,50,2,16,1,8,1
+DHT,de.weltraumschaf.dht,ClientContact,63,0,0,0,8,0,3,0,3,0
+DHT,de.weltraumschaf.dht,Clock,2,54,1,1,1,14,1,6,0,6
+DHT,de.weltraumschaf.dht,Node,54,0,0,0,12,0,6,0,6,0
+DHT,de.weltraumschaf.dht,Main,229,0,6,0,62,0,19,0,16,0
+DHT,de.weltraumschaf.dht,Clock.SystemTimeSource,2,3,0,0,1,1,1,1,1,1
 DHT,de.weltraumschaf.dht.server,Server.State,58,0,0,0,2,0,4,0,4,0
 DHT,de.weltraumschaf.dht.server,Server.new CompletionHandler() {...},32,0,0,0,6,0,3,0,3,0
 DHT,de.weltraumschaf.dht.server,ConnectionQueue,30,0,0,0,9,0,6,0,6,0
-DHT,de.weltraumschaf.dht.server,RequestHandler,141,0,16,0,12,0,10,0,2,0
-DHT,de.weltraumschaf.dht.server,RequestWorker,158,0,6,0,29,0,10,0,7,0
+DHT,de.weltraumschaf.dht.server,Server,238,17,15,1,51,2,16,1,8,1
+DHT,de.weltraumschaf.dht.server,RequestWorker,292,0,22,0,42,0,18,0,7,0
 DHT,de.weltraumschaf.dht.server,PortValidator,3,28,0,8,1,8,1,8,1,4
-DHT,de.weltraumschaf.dht.shell,DhtCommandVerifier.new Object() {...},6,41,0,0,0,1,0,1,0,1
+DHT,de.weltraumschaf.dht.shell,CommandMainType.new Object() {...},19,0,0,0,1,0,1,0,1,0
+DHT,de.weltraumschaf.dht.shell,CommandSubType,5,135,0,0,0,15,1,4,1,4
+DHT,de.weltraumschaf.dht.shell,CommandMainType,61,107,3,0,7,13,4,4,2,4
+DHT,de.weltraumschaf.dht.shell,InteractiveShell,285,0,18,0,58,0,17,0,8,0
+DHT,de.weltraumschaf.dht.shell,DhtCommandVerifier.new Object() {...},7,47,0,0,0,1,0,1,0,1
 DHT,de.weltraumschaf.dht.shell,CommandArgumentExcpetion,9,0,0,0,2,0,1,0,1,0
-DHT,de.weltraumschaf.dht.shell,DhtCommandVerifier,50,45,5,5,7,14,5,6,1,4
-DHT,de.weltraumschaf.dht.shell,CommandMainType.new Object() {...},12,0,0,0,1,0,1,0,1,0
-DHT,de.weltraumschaf.dht.shell,CommandSubType,5,90,0,0,0,11,1,4,1,4
+DHT,de.weltraumschaf.dht.shell,DhtCommandVerifier,85,52,3,2,17,17,5,5,2,4
 DHT,de.weltraumschaf.dht.shell,DhtLiteralCommandMap,0,55,0,6,0,10,0,6,0,3
-DHT,de.weltraumschaf.dht.shell,CommandMainType,40,85,2,0,5,11,3,4,2,4
-DHT,de.weltraumschaf.dht.shell,InteractiveShell,262,0,18,0,55,0,16,0,7,0
 DHT,de.weltraumschaf.dht.shell,CommandRuntimeException,24,0,0,0,4,0,2,0,2,0
-DHT,de.weltraumschaf.dht.cmd,Send,235,0,26,0,28,0,17,0,4,0
-DHT,de.weltraumschaf.dht.cmd,Start,63,0,4,0,14,0,5,0,3,0
-DHT,de.weltraumschaf.dht.cmd,Exit.new BaseDescriptor() {...},12,0,0,0,4,0,4,0,4,0
+DHT,de.weltraumschaf.dht.cmd,Send,147,0,10,0,25,0,9,0,4,0
+DHT,de.weltraumschaf.dht.cmd,Exit.new BaseDescriptor() {...},13,0,0,0,4,0,4,0,4,0
 DHT,de.weltraumschaf.dht.cmd,Help,148,80,4,4,29,12,7,5,5,3
-DHT,de.weltraumschaf.dht.cmd,Status,58,0,0,0,9,0,3,0,3,0
-DHT,de.weltraumschaf.dht.cmd,BaseCommand,96,0,0,0,21,0,14,0,14,0
-DHT,de.weltraumschaf.dht.cmd,CommandFactory,178,0,10,0,34,0,13,0,8,0
-DHT,de.weltraumschaf.dht.cmd,BaseDescriptor,11,0,0,0,2,0,2,0,2,0
 DHT,de.weltraumschaf.dht.cmd,Stop.new BaseDescriptor() {...},12,0,0,0,4,0,4,0,4,0
-DHT,de.weltraumschaf.dht.cmd,Status.new BaseDescriptor() {...},12,0,0,0,4,0,4,0,4,0
 DHT,de.weltraumschaf.dht.cmd,Stop,65,0,4,0,14,0,5,0,3,0
-DHT,de.weltraumschaf.dht.cmd,Help.new BaseDescriptor() {...},12,0,0,0,4,0,4,0,4,0
+DHT,de.weltraumschaf.dht.cmd,Bootstrap.new BaseDescriptor() {...},28,0,0,0,4,0,4,0,4,0
+DHT,de.weltraumschaf.dht.cmd,Inbox,381,0,18,0,80,0,24,0,14,0
+DHT,de.weltraumschaf.dht.cmd,Bootstrap,93,0,8,0,22,0,9,0,5,0
 DHT,de.weltraumschaf.dht.cmd,Exit,40,0,4,0,11,0,5,0,3,0
-DHT,de.weltraumschaf.dht.cmd,Send.Arguments,49,0,0,0,9,0,4,0,4,0
 DHT,de.weltraumschaf.dht.cmd,Send.new BaseDescriptor() {...},19,0,0,0,4,0,4,0,4,0
 DHT,de.weltraumschaf.dht.cmd,Start.new BaseDescriptor() {...},12,0,0,0,4,0,4,0,4,0
-DHT,de.weltraumschaf.dht.id,BaseIdentity,31,0,2,0,10,0,6,0,5,0
-DHT,de.weltraumschaf.dht.id,NodeId,13,0,0,0,4,0,2,0,2,0
-DHT,de.weltraumschaf.dht.id,DataKey,4,0,0,0,2,0,1,0,1,0
+DHT,de.weltraumschaf.dht.cmd,Start,63,0,4,0,14,0,5,0,3,0
+DHT,de.weltraumschaf.dht.cmd,Status,178,0,0,0,27,0,12,0,12,0
+DHT,de.weltraumschaf.dht.cmd,BaseCommand,120,0,0,0,26,0,17,0,17,0
+DHT,de.weltraumschaf.dht.cmd,CommandFactory,180,0,10,0,34,0,13,0,8,0
+DHT,de.weltraumschaf.dht.cmd,BaseDescriptor,11,0,0,0,2,0,2,0,2,0
+DHT,de.weltraumschaf.dht.cmd,Status.new BaseDescriptor() {...},13,0,0,0,4,0,4,0,4,0
+DHT,de.weltraumschaf.dht.cmd,Help.new BaseDescriptor() {...},12,0,0,0,4,0,4,0,4,0
+DHT,de.weltraumschaf.dht.cmd,Bootstrap.Arguments,38,0,0,0,7,0,3,0,3,0
+DHT,de.weltraumschaf.dht.cmd,Inbox.new BaseDescriptor() {...},13,0,0,0,4,0,4,0,4,0
+DHT,de.weltraumschaf.dht.cmd,Inbox.new Object() {...},26,0,0,0,1,0,1,0,1,0
+DHT,de.weltraumschaf.dht.cmd,Send.Arguments,49,0,0,0,9,0,4,0,4,0
+DHT,de.weltraumschaf.dht.id,NodeId,11,19,0,0,3,5,1,3,1,3
+DHT,de.weltraumschaf.dht.id,UuidConverter,123,113,24,10,2,20,17,5,1,4
+DHT,de.weltraumschaf.dht.net,NetworkAddress,48,133,4,10,8,23,10,9,6,6
+DHT,de.weltraumschaf.dht.msg,MessageType,34,133,3,5,2,20,4,6,1,5
+DHT,de.weltraumschaf.dht.msg,BaseMessage,92,88,4,4,12,19,7,7,3,7
+DHT,de.weltraumschaf.dht.msg,TextMessage,0,22,0,0,0,5,0,3,0,3
+DHT,de.weltraumschaf.dht.msg,RawMessage,31,67,3,3,3,13,5,4,2,4
+DHT,de.weltraumschaf.dht.msg,MessageSerializer,86,103,17,5,9,21,13,4,0,4
+DHT,de.weltraumschaf.dht.msg,DefaultMessageSender,119,0,16,0,11,0,10,0,2,0
+DHT,de.weltraumschaf.dht.msg,MessageSerializer.new Object() {...},5,35,0,0,0,1,0,1,0,1
+DHT,de.weltraumschaf.dht.msg,Messaging.new Object() {...},33,0,0,0,1,0,1,0,1,0
+DHT,de.weltraumschaf.dht.msg,StreamIo,39,0,0,0,12,0,3,0,3,0
+DHT,de.weltraumschaf.dht.msg,ProtocollMessage.StoreMessage,9,0,0,0,3,0,2,0,2,0
+DHT,de.weltraumschaf.dht.msg,ProtocollMessage.FindNodeMessage,9,0,0,0,3,0,2,0,2,0
+DHT,de.weltraumschaf.dht.msg,DefaultMessageBox,71,95,1,5,10,24,4,7,3,5
+DHT,de.weltraumschaf.dht.msg,ProtocollMessage,29,0,2,0,5,0,3,0,2,0
+DHT,de.weltraumschaf.dht.msg,Messaging,52,13,5,0,10,2,8,2,4,2
+DHT,de.weltraumschaf.dht.msg,ProtocollMessage.PingMessage,9,0,0,0,3,0,2,0,2,0
+DHT,de.weltraumschaf.dht.msg,Messaging.ProcollMessages,44,6,0,0,5,2,5,1,5,1
+DHT,de.weltraumschaf.dht.msg,ProtocollMessage.FindValueMessage,9,0,0,0,3,0,2,0,2,0
 DHT,de.weltraumschaf.dht.log,Logger,0,165,0,12,0,49,0,28,0,22
 DHT,de.weltraumschaf.dht.log,Log,13,0,0,0,4,0,3,0,3,0
+DHT,de.weltraumschaf.dht.event,Event,0,56,0,0,0,9,0,5,0,5
+DHT,de.weltraumschaf.dht.event,Event.Type,9,19,0,0,0,2,2,2,2,2
+DHT,de.weltraumschaf.dht.event,EventHandler,12,0,0,0,4,0,2,0,2,0
+DHT,de.weltraumschaf.dht.event,DefaultObservable,185,0,6,0,43,0,12,0,9,0

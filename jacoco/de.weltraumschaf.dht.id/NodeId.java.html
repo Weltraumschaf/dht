@@ -12,22 +12,75 @@
 
 package de.weltraumschaf.dht.id;
 
+import de.weltraumschaf.dht.id.UuidConverter;
+import java.io.IOError;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.UUID;
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
+ * System wide unique node id.
+ *
+ * A node should generate a new node on each start up to join the network with.
  *
  * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
  */
-public final class NodeId extends BaseIdentity {
+public final class NodeId {
 
-    public NodeId(byte[] id) {
-<span class="nc" id="L25">        super(id);</span>
-<span class="nc" id="L26">    }</span>
+    /**
+     * Holds the UUID.
+     */
+    private final UUID id;
 
-    public static NodeId create() {
-<span class="nc" id="L29">        final String uuid = UUID.randomUUID().toString();</span>
-<span class="nc" id="L30">        return new NodeId(DigestUtils.sha1(uuid));</span>
+    /**
+     * Dedicated constructor.
+     *
+     * &lt;p&gt;
+     * You should use {@link #newRandom()} to get an instance.
+     * &lt;/p&gt;
+     *
+     * @param id must not be {@code null}
+     */
+    NodeId(final UUID id) {
+<span class="fc" id="L46">        super();</span>
+<span class="fc" id="L47">        this.id = Validate.notNull(id, &quot;Parameter &gt;id&lt; must not be null!&quot;);</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Returns the standardized string format.
+     *
+     * &lt;p&gt;
+     * Example: {@code f07bb8b7-cdf9-4731-8992-d538dc3abc0b}
+     * &lt;/p&gt;
+     *
+     * @return never {@code null} or empty
+     */
+    public String asString() {
+<span class="fc" id="L60">        return id.toString();</span>
     }
+
+    /**
+     * Returns the id as 128 bit integer.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public BigInteger asInteger() {
+        try {
+<span class="fc" id="L70">            return UuidConverter.toBigInteger(id);</span>
+<span class="nc" id="L71">        } catch (final IOException ex) {</span>
+<span class="nc" id="L72">            throw new IOError(ex); // Should never hapen.</span>
+        }
+    }
+
+    /**
+     * Creates a new random id.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public static NodeId newRandom() {
+<span class="nc" id="L82">        return new NodeId(UUID.randomUUID());</span>
+    }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

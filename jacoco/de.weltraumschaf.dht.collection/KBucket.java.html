@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>KBucket.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.collection</a> &gt; <span class="el_source">KBucket.java</span></div><h1>KBucket.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.collection;
+
+import java.util.Collections;
+import java.util.Set;
+
+/**
+ * A concurrent implementation using ConcurrentHashSet. The max size (K) may be temporarily exceeded due to concurrency,
+ * a pending split, or the behavior of the supplied trimmer, as explained below. The creator is responsible for splits.
+ *
+ * This class has no knowledge of the DHT base used for XORing, and thus there are no validity checks in add/remove.
+ *
+ * The begin and end values are immutable. All entries in this bucket will have at least one bit different from us in
+ * the range [begin, end] inclusive. Splits must be implemented by creating two new buckets and discarding this one.
+ *
+ * The keys are kept in a Set and are NOT sorted by last-seen. Per-key last-seen-time, failures, etc. must be tracked
+ * elsewhere.
+ *
+ * If this bucket is full (i.e. begin == end &amp;&amp; size == max) then add() will call KBucketTrimmer.trim() do (possibly)
+ * remove older entries, and indicate whether to add the new entry. If the trimmer returns true without removing
+ * entries, this KBucket will exceed the max size.
+ *
+ * Refactored from net.i2p.router.networkdb.kademlia
+ *
+ * @since 0.9.2 in i2psnark, moved to core in 0.9.10
+ */
+public class KBucket&lt;T&gt; {
+
+    /**
+     * set of Hash objects for the peers in the kbucket
+     */
+    private final Set&lt;T&gt; entries;
+    /**
+     * include if any bits equal or higher to this bit (in big endian order)
+     */
+    private final int begin;
+    /**
+     * include if no bits higher than this bit (inclusive) are set
+     */
+    private final int end;
+    private final int max;
+    private final KBucketTrimmer&lt;T&gt; trimmer;
+    /**
+     * when did we last shake things up
+     */
+    private long lastChanged;
+
+    /**
+     * All entries in this bucket will have at least one bit different from us in the range [begin, end] inclusive.
+     */
+    public KBucket(int begin, int end, int max, KBucketTrimmer&lt;T&gt; trimmer) {
+<span class="nc" id="L62">        super();</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (begin &gt; end) {</span>
+<span class="nc" id="L65">            throw new IllegalArgumentException(begin + &quot; &gt; &quot; + end);</span>
+        }
+
+<span class="nc" id="L68">        this.entries = new ConcurrentHashSet&lt;T&gt;(max + 4);</span>
+<span class="nc" id="L69">        this.begin = begin;</span>
+<span class="nc" id="L70">        this.end = end;</span>
+<span class="nc" id="L71">        this.max = max;</span>
+<span class="nc" id="L72">        this.trimmer = trimmer;</span>
+<span class="nc" id="L73">    }</span>
+
+    public int getRangeBegin() {
+<span class="nc" id="L76">        return begin;</span>
+    }
+
+    public int getRangeEnd() {
+<span class="nc" id="L80">        return end;</span>
+    }
+
+    public int getKeyCount() {
+<span class="nc" id="L84">        return entries.size();</span>
+    }
+
+    /**
+     * @return an unmodifiable view; not a copy
+     */
+    public Set&lt;T&gt; getEntries() {
+<span class="nc" id="L91">        return Collections.unmodifiableSet(entries);</span>
+    }
+
+    public void getEntries(final SelectionCollector&lt;T&gt; collector) {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        for (T h : entries) {</span>
+<span class="nc" id="L96">            collector.add(h);</span>
+<span class="nc" id="L97">        }</span>
+<span class="nc" id="L98">    }</span>
+
+    public void clear() {
+<span class="nc" id="L101">        entries.clear();</span>
+<span class="nc" id="L102">    }</span>
+
+    /**
+     * Sets last-changed if rv is true OR if the peer is already present. Calls the trimmer if begin == end and we are
+     * full. If begin != end then add it and caller must do bucket splitting.
+     *
+     * @return true if added
+     */
+    public boolean add(final T peer) {
+<span class="nc bnc" id="L111" title="All 8 branches missed.">        if (begin != end || entries.size() &lt; max || entries.contains(peer) || trimmer.trim(this, peer)) {</span>
+            // do this even if already contains, to call setLastChanged()
+<span class="nc" id="L113">            boolean rv = entries.add(peer);</span>
+//            setLastChanged();
+<span class="nc" id="L115">            return rv;</span>
+        }
+<span class="nc" id="L117">        return false;</span>
+    }
+
+    /**
+     * @return if removed. Does NOT set lastChanged.
+     */
+    public boolean remove(final T peer) {
+<span class="nc" id="L124">        boolean rv = entries.remove(peer);</span>
+        //if (rv)
+        //    setLastChanged();
+<span class="nc" id="L127">        return rv;</span>
+    }
+
+    /**
+     * Update the last-changed timestamp to now.
+     */
+    public void setLastChanged(final long now) {
+<span class="nc" id="L134">        lastChanged = now;</span>
+<span class="nc" id="L135">    }</span>
+
+    /**
+     * The last-changed timestamp, which actually indicates last-added or last-seen.
+     */
+    public long getLastChanged() {
+<span class="nc" id="L141">        return lastChanged;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L146">        StringBuilder buf = new StringBuilder(1024);</span>
+<span class="nc" id="L147">        buf.append(entries.size());</span>
+<span class="nc" id="L148">        buf.append(&quot; entries in (&quot;).append(begin).append(',').append(end);</span>
+<span class="nc" id="L149">        buf.append(&quot;) : &quot;).append(entries.toString());</span>
+<span class="nc" id="L150">        return buf.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

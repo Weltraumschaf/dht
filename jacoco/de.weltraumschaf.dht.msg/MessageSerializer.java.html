@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MessageSerializer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.msg</a> &gt; <span class="el_source">MessageSerializer.java</span></div><h1>MessageSerializer.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.msg;
+
+import de.weltraumschaf.dht.net.NetworkAddress;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import org.apache.commons.lang3.Validate;
+
+/**
+ * (De-)Serialize messages.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+<span class="fc" id="L28">public final class MessageSerializer {</span>
+
+    /**
+     * Used to serialize the data.
+     */
+<span class="fc" id="L33">    private final Kryo kryo = newSerializer();</span>
+
+    /**
+     * Creates new serializer with registered class templates.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public static Kryo newSerializer() {
+<span class="fc" id="L41">        final Kryo kryo = new Kryo();</span>
+<span class="fc" id="L42">        kryo.register(TextMessage.class);</span>
+<span class="fc" id="L43">        kryo.register(NetworkAddress.class);</span>
+<span class="fc" id="L44">        return kryo;</span>
+    }
+
+    /**
+     * Converts a message into a raw message.
+     *
+     * @param message must not be {@code null}
+     * @return never {@code null}
+     * @throws IOException on any serialization error
+     */
+    public RawMessage serialize(final Message message) throws IOException {
+<span class="fc" id="L55">        Validate.notNull(message, &quot;Parameter &gt;message&lt; must not be null!&quot;);</span>
+
+<span class="pc" id="L57">        try (final Output output = new Output(new ByteArrayOutputStream())) {</span>
+<span class="fc" id="L58">            kryo.writeObject(output, message);</span>
+<span class="fc" id="L59">            output.flush();</span>
+<span class="fc" id="L60">            return new RawMessage(message.getType().value(), output.getBuffer());</span>
+<span class="pc bpc" id="L61" title="6 of 8 branches missed.">        }</span>
+    }
+
+    /**
+     * Converts a raw message back into a message.
+     *
+     * @param raw must not be {@code null}
+     * @return never {@code null}
+     * @throws IOException on any serialization error
+     */
+    public Message deserialize(final RawMessage raw) throws IOException {
+<span class="fc" id="L72">        Validate.notNull(raw, &quot;Parameter &gt;raw&lt; must not be null!&quot;);</span>
+<span class="fc" id="L73">        final MessageType type = MessageType.forValue(raw.getType());</span>
+        final Class&lt;? extends Message&gt; template;
+
+<span class="pc bpc" id="L76" title="5 of 6 branches missed.">        switch (type) {</span>
+            case TEXT:
+<span class="fc" id="L78">                template = TextMessage.class;</span>
+<span class="fc" id="L79">                break;</span>
+            case PING:
+<span class="nc" id="L81">                template = ProtocollMessage.PingMessage.class;</span>
+<span class="nc" id="L82">                break;</span>
+            case STORE:
+<span class="nc" id="L84">                template = ProtocollMessage.StoreMessage.class;</span>
+<span class="nc" id="L85">                break;</span>
+            case FIND_NODE:
+<span class="nc" id="L87">                template = ProtocollMessage.FindNodeMessage.class;</span>
+<span class="nc" id="L88">                break;</span>
+            case FIND_VALUE:
+<span class="nc" id="L90">                template = ProtocollMessage.FindValueMessage.class;</span>
+<span class="nc" id="L91">                break;</span>
+            default:
+<span class="nc" id="L93">                throw new IllegalArgumentException(&quot;Unsupported type &quot; + type + &quot;!&quot;);</span>
+        }
+
+<span class="pc" id="L96">        try (</span>
+<span class="fc" id="L97">                final Input input = new Input(new ByteArrayInputStream(raw.getData()));) {</span>
+<span class="fc" id="L98">            return kryo.readObject(input, template);</span>
+<span class="pc bpc" id="L99" title="6 of 8 branches missed.">        }</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

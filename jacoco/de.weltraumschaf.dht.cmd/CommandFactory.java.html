@@ -19,6 +19,7 @@ import de.weltraumschaf.dht.shell.CommandMainType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.TreeMap;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -37,7 +38,7 @@ public final class CommandFactory {
      *
      * Lazy computed once speed up subsequent requests.
      */
-<span class="nc" id="L40">    private static Map&lt;String, Descriptor&gt; DESCRIPTORS = null;</span>
+<span class="nc" id="L41">    private static Map&lt;String, Descriptor&gt; DESCRIPTORS = null;</span>
     /**
      * Invoking application.
      */
@@ -54,10 +55,10 @@ public final class CommandFactory {
      * @throws ClassNotFoundException if a command class is not found
      */
     public CommandFactory(final Application app) throws ClassNotFoundException {
-<span class="nc" id="L57">        super();</span>
-<span class="nc" id="L58">        this.app = Validate.notNull(app, &quot;Parameter &gt;app&lt; must not be null!&quot;);</span>
-<span class="nc" id="L59">        classLookup = createClassLookup();</span>
-<span class="nc" id="L60">    }</span>
+<span class="nc" id="L58">        super();</span>
+<span class="nc" id="L59">        this.app = Validate.notNull(app, &quot;Parameter &gt;app&lt; must not be null!&quot;);</span>
+<span class="nc" id="L60">        classLookup = createClassLookup();</span>
+<span class="nc" id="L61">    }</span>
 
     /**
      * Generates class name for command type.
@@ -66,8 +67,8 @@ public final class CommandFactory {
      * @return never {@code null} or empty
      */
     private static String generateClassName(final CommandMainType type) {
-<span class="nc" id="L69">        final String name = Validate.notNull(type).name().toLowerCase();</span>
-<span class="nc" id="L70">        return COMMAND_PACKAGE + &quot;.&quot; + Character.toUpperCase(name.charAt(0)) + name.substring(1);</span>
+<span class="nc" id="L70">        final String name = Validate.notNull(type).name().toLowerCase();</span>
+<span class="nc" id="L71">        return COMMAND_PACKAGE + &quot;.&quot; + Character.toUpperCase(name.charAt(0)) + name.substring(1);</span>
     }
 
     /**
@@ -79,13 +80,13 @@ public final class CommandFactory {
      * @throws ClassNotFoundException if a command class is not found
      */
     private static Map&lt;MainCommandType, Class&lt;?&gt;&gt; createClassLookup() throws ClassNotFoundException {
-<span class="nc" id="L82">        final Map&lt;MainCommandType, Class&lt;?&gt;&gt; temp = Maps.newHashMap();</span>
+<span class="nc" id="L83">        final Map&lt;MainCommandType, Class&lt;?&gt;&gt; temp = Maps.newHashMap();</span>
 
-<span class="nc bnc" id="L84" title="All 2 branches missed.">        for (final CommandMainType type : CommandMainType.values()) {</span>
-<span class="nc" id="L85">            temp.put(type, Class.forName(generateClassName(type)));</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        for (final CommandMainType type : CommandMainType.values()) {</span>
+<span class="nc" id="L86">            temp.put(type, Class.forName(generateClassName(type)));</span>
         }
 
-<span class="nc" id="L88">        return Collections.unmodifiableMap(temp);</span>
+<span class="nc" id="L89">        return Collections.unmodifiableMap(temp);</span>
     }
 
     /**
@@ -99,32 +100,32 @@ public final class CommandFactory {
      * @throws IllegalAccessException if default constructor is not accessible
      */
     static Collection&lt;Descriptor&gt; getDescriptors() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-<span class="nc" id="L102">        initDescriptors();</span>
-<span class="nc" id="L103">        return DESCRIPTORS.values();</span>
+<span class="nc" id="L103">        initDescriptors();</span>
+<span class="nc" id="L104">        return DESCRIPTORS.values();</span>
     }
 
     private static void initDescriptors() throws IllegalAccessException, ClassNotFoundException, InstantiationException {
-<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (null == DESCRIPTORS) {</span>
-<span class="nc" id="L108">            final Map&lt;String, Descriptor&gt; descriptors = Maps.newHashMap();</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (null == DESCRIPTORS) {</span>
+<span class="nc" id="L109">            final Map&lt;String, Descriptor&gt; descriptors = new TreeMap&lt;&gt;();</span>
 
-<span class="nc bnc" id="L110" title="All 2 branches missed.">            for (final Class&lt;?&gt; comamndClass : createClassLookup().values()) {</span>
-<span class="nc" id="L111">                final Descriptor descriptor = ((Command) comamndClass.newInstance()).getDescriptor();</span>
-<span class="nc" id="L112">                descriptors.put(descriptor.getCommand().toString(), descriptor);</span>
-<span class="nc" id="L113">            }</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            for (final Class&lt;?&gt; comamndClass : createClassLookup().values()) {</span>
+<span class="nc" id="L112">                final Descriptor descriptor = ((Command) comamndClass.newInstance()).getDescriptor();</span>
+<span class="nc" id="L113">                descriptors.put(descriptor.getCommand().toString(), descriptor);</span>
+<span class="nc" id="L114">            }</span>
 
-<span class="nc" id="L115">            DESCRIPTORS = Collections.unmodifiableMap(descriptors);</span>
+<span class="nc" id="L116">            DESCRIPTORS = Collections.unmodifiableMap(descriptors);</span>
         }
-<span class="nc" id="L117">    }</span>
+<span class="nc" id="L118">    }</span>
 
     static Descriptor getDescriptor(final String command) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
-<span class="nc" id="L120">        Validate.notEmpty(command, &quot;Parameter &gt;command&lt; must not be null or empty!&quot;);</span>
-<span class="nc" id="L121">        initDescriptors();</span>
+<span class="nc" id="L121">        Validate.notEmpty(command, &quot;Parameter &gt;command&lt; must not be null or empty!&quot;);</span>
+<span class="nc" id="L122">        initDescriptors();</span>
 
-<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (DESCRIPTORS.containsKey(command)) {</span>
-<span class="nc" id="L124">            return DESCRIPTORS.get(command);</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (DESCRIPTORS.containsKey(command)) {</span>
+<span class="nc" id="L125">            return DESCRIPTORS.get(command);</span>
         }
 
-<span class="nc" id="L127">        throw new IllegalArgumentException(&quot;Doesnot knwo command &gt;&quot; + command + &quot;&lt;!&quot;);</span>
+<span class="nc" id="L128">        throw new IllegalArgumentException(&quot;Doesnot knwo command &gt;&quot; + command + &quot;&lt;!&quot;);</span>
     }
 
     /**
@@ -141,16 +142,16 @@ public final class CommandFactory {
      * CHECKSTYLE:ON
      */
     public Command newCommand(final ShellCommand shellCmd) throws InstantiationException, IllegalAccessException {
-<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (classLookup.containsKey(shellCmd.getCommand())) {</span>
-<span class="nc" id="L145">            final Class&lt;?&gt; comamndClass = classLookup.get(shellCmd.getCommand());</span>
-<span class="nc" id="L146">            final Command cmd = (Command) comamndClass.newInstance();</span>
-<span class="nc" id="L147">            cmd.setSubCommandType(shellCmd.getSubCommand());</span>
-<span class="nc" id="L148">            cmd.setApplication(app);</span>
-<span class="nc" id="L149">            cmd.setArguments(shellCmd.getArguments());</span>
-<span class="nc" id="L150">            return cmd;</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (classLookup.containsKey(shellCmd.getCommand())) {</span>
+<span class="nc" id="L146">            final Class&lt;?&gt; comamndClass = classLookup.get(shellCmd.getCommand());</span>
+<span class="nc" id="L147">            final Command cmd = (Command) comamndClass.newInstance();</span>
+<span class="nc" id="L148">            cmd.setSubCommandType(shellCmd.getSubCommand());</span>
+<span class="nc" id="L149">            cmd.setApplication(app);</span>
+<span class="nc" id="L150">            cmd.setArguments(shellCmd.getArguments());</span>
+<span class="nc" id="L151">            return cmd;</span>
         }
 
-<span class="nc" id="L153">        throw new IllegalArgumentException(String.format(&quot;Unsupported main command type '%s'!&quot;, shellCmd.getCommand()));</span>
+<span class="nc" id="L154">        throw new IllegalArgumentException(String.format(&quot;Unsupported main command type '%s'!&quot;, shellCmd.getCommand()));</span>
     }
 
 

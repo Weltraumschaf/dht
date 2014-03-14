@@ -24,12 +24,17 @@ import de.weltraumschaf.commons.shell.SubCommandType;
      * No sub command.
      */
 <span class="fc" id="L26">    NONE(&quot;&quot;),</span>
-    
-<span class="fc" id="L28">    EXIT(CommandMainType.EXIT.toString()),</span>
-<span class="fc" id="L29">    SEND(CommandMainType.SEND.toString()),</span>
-<span class="fc" id="L30">    START(CommandMainType.START.toString()),</span>
-<span class="fc" id="L31">    STOP(CommandMainType.STOP.toString()),</span>
-<span class="fc" id="L32">    STATUS(CommandMainType.STATUS.toString());</span>
+
+<span class="fc" id="L28">    HELP_EXIT(CommandMainType.EXIT.toString()),</span>
+<span class="fc" id="L29">    HELP_INBOX(CommandMainType.INBOX.toString()),</span>
+<span class="fc" id="L30">    HELP_SEND(CommandMainType.SEND.toString()),</span>
+<span class="fc" id="L31">    HELP_START(CommandMainType.START.toString()),</span>
+<span class="fc" id="L32">    HELP_STOP(CommandMainType.STOP.toString()),</span>
+<span class="fc" id="L33">    HELP_STATUS(CommandMainType.STATUS.toString()),</span>
+
+<span class="fc" id="L35">    INBOX_REMOVE(&quot;remove&quot;),</span>
+<span class="fc" id="L36">    INBOX_SHOW(&quot;show&quot;),</span>
+<span class="fc" id="L37">    INBOX_ANSWER(&quot;answer&quot;);</span>
 
     /**
      * Literal sub command string used in shell.
@@ -41,13 +46,13 @@ import de.weltraumschaf.commons.shell.SubCommandType;
      *
      * @param name literal shell command string
      */
-<span class="fc" id="L44">    private CommandSubType(final String name) {</span>
-<span class="fc" id="L45">        this.name = name;</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L49">    private CommandSubType(final String name) {</span>
+<span class="fc" id="L50">        this.name = name;</span>
+<span class="fc" id="L51">    }</span>
 
     @Override
     public String toString() {
-<span class="fc" id="L50">        return name;</span>
+<span class="fc" id="L55">        return name;</span>
     }
 
 }

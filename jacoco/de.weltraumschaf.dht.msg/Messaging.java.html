@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Messaging.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.msg</a> &gt; <span class="el_source">Messaging.java</span></div><h1>Messaging.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.msg;
+
+import de.weltraumschaf.dht.net.NetworkAddress;
+
+/**
+ * Factory to get messaging implementations.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+public final class Messaging {
+
+    /**
+     * Factory to create protocol messages.
+     */
+<span class="fc" id="L26">    private static final ProcollMessages PROTOCOLL = new ProcollMessages();</span>
+
+    /**
+     * Private for pure static factory.
+     */
+    private Messaging() {
+<span class="nc" id="L32">        super();</span>
+<span class="nc" id="L33">    }</span>
+
+    /**
+     * Create a new text message.
+     *
+     * @param from must not be {@code null}
+     * @param to must not be {@code null}
+     * @param body must not be {@code null}
+     * @return never {@code null}, always new instance
+     */
+    public static Message newTextMessage(final NetworkAddress from, final NetworkAddress to, final String body) {
+<span class="fc" id="L44">        return new TextMessage(from, to, body);</span>
+    }
+
+    /**
+     * Create a new protocol message.
+     *
+     * @param type type of message
+     * @param from must not be {@code null}
+     * @param to must not be {@code null}
+     * @param body must not be {@code null}
+     * @return never {@code null}, always new instance
+     */
+    public static Message newProtocollMessage(final MessageType type, final NetworkAddress from, final NetworkAddress to, final Void body) {
+<span class="nc bnc" id="L57" title="All 5 branches missed.">        switch (type) {</span>
+            case PING:
+<span class="nc" id="L59">                return PROTOCOLL.newPingMessage(from, to, body);</span>
+            case STORE:
+<span class="nc" id="L61">                return PROTOCOLL.newStoreMessage(from, to, body);</span>
+            case FIND_NODE:
+<span class="nc" id="L63">                return PROTOCOLL.newFindNodeMessage(from, to, body);</span>
+            case FIND_VALUE:
+<span class="nc" id="L65">                return PROTOCOLL.newFindValueMessage(from, to, body);</span>
+            default:
+<span class="nc" id="L67">                throw new IllegalArgumentException(String.format(&quot;Unsupported type &gt;%s&lt;!&quot;, type));</span>
+        }
+    }
+
+    /**
+     * Create a new message box.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public static MessageBox newMessageBox() {
+<span class="nc" id="L77">        return new DefaultMessageBox();</span>
+    }
+
+    /**
+     * Creates a new sender.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public static MessageSender newSender() {
+<span class="nc" id="L86">        return new DefaultMessageSender();</span>
+    }
+
+    /**
+     * Factory to create protocol message with an unique id.
+     */
+<span class="fc" id="L92">    private static final class ProcollMessages {</span>
+
+        /**
+         * Used to generate unique request id.
+         */
+<span class="fc" id="L97">        private int requestId = 0;</span>
+
+        /**
+         * Get the next unique request id.
+         *
+         * @return not negative
+         */
+        private int nextId() {
+<span class="nc" id="L105">            return ++requestId;</span>
+        }
+
+        /**
+         * Creates a new PING message.
+         *
+         * @param from must not be {@code null}
+         * @param to must not be {@code null}
+         * @param body must not be {@code null}
+         * @return never {@code null}, always new instance
+         */
+        public ProtocollMessage newPingMessage(final NetworkAddress from, final NetworkAddress to, final Void body) {
+<span class="nc" id="L117">            return new ProtocollMessage.PingMessage(nextId(), from, to, body);</span>
+        }
+
+        /**
+         * Creates a new STORE message.
+         *
+         * @param from must not be {@code null}
+         * @param to must not be {@code null}
+         * @param body must not be {@code null}
+         * @return never {@code null}, always new instance
+         */
+        public ProtocollMessage newStoreMessage(final NetworkAddress from, final NetworkAddress to, final Void body) {
+<span class="nc" id="L129">            return new ProtocollMessage.StoreMessage(nextId(), from, to, body);</span>
+        }
+
+        /**
+         * Creates a new FIND_NODE message.
+         *
+         * @param from must not be {@code null}
+         * @param to must not be {@code null}
+         * @param body must not be {@code null}
+         * @return never {@code null}, always new instance
+         */
+        public ProtocollMessage newFindNodeMessage(final NetworkAddress from, final NetworkAddress to, final Void body) {
+<span class="nc" id="L141">            return new ProtocollMessage.FindNodeMessage(nextId(), from, to, body);</span>
+        }
+
+        /**
+         * Creates a new FIND_VALUE message.
+         *
+         * @param from must not be {@code null}
+         * @param to must not be {@code null}
+         * @param body must not be {@code null}
+         * @return never {@code null}, always new instance
+         */
+        public ProtocollMessage newFindValueMessage(final NetworkAddress from, final NetworkAddress to, final Void body) {
+<span class="nc" id="L153">            return new ProtocollMessage.FindValueMessage(nextId(), from, to, body);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

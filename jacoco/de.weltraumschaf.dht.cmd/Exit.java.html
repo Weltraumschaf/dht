@@ -23,42 +23,42 @@ import java.io.IOException;
 <span class="nc" id="L23">final class Exit extends BaseCommand {</span>
 
     @Override
-    public void execute() {
-        try {
-<span class="nc bnc" id="L28" title="All 2 branches missed.">            if (getApplication().getServer().isRunning()) {</span>
-<span class="nc" id="L29">                getApplication().getServer().stop();</span>
-            }
-<span class="nc" id="L31">        } catch (final IOException | InterruptedException ex) {</span>
-<span class="nc" id="L32">            errorln(&quot;Error: &quot; + ex.getMessage());</span>
-
-<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (isDebug()) {</span>
-<span class="nc" id="L35">                printStackTrace(ex);</span>
-            }
-<span class="nc" id="L37">        }</span>
-
-<span class="nc" id="L39">        println(&quot;Bye bye &amp; HAND!&quot;);</span>
-<span class="nc" id="L40">    }</span>
-
-    @Override
     public Descriptor getDescriptor() {
-<span class="nc" id="L44">        return new BaseDescriptor() {</span>
+<span class="nc" id="L27">        return new BaseDescriptor() {</span>
 
             @Override
             public CommandMainType getCommand() {
-<span class="nc" id="L48">                return EXIT;</span>
+<span class="nc" id="L31">                return EXIT;</span>
             }
 
             @Override
             public String getUsage() {
-<span class="nc" id="L53">                return &quot;exit&quot;;</span>
+<span class="nc" id="L36">                return EXIT.toString();</span>
             }
 
             @Override
             public String getHelpDescription() {
-<span class="nc" id="L58">                return &quot;Exit the interactive shell.&quot;;</span>
+<span class="nc" id="L41">                return &quot;Exit the interactive shell.&quot;;</span>
             }
         };
     }
+
+    @Override
+    public void execute() {
+        try {
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            if (getApplication().getServer().isRunning()) {</span>
+<span class="nc" id="L50">                getApplication().getServer().stop();</span>
+            }
+<span class="nc" id="L52">        } catch (final IOException | InterruptedException ex) {</span>
+<span class="nc" id="L53">            errorln(&quot;Error: &quot; + ex.getMessage());</span>
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">            if (isDebug()) {</span>
+<span class="nc" id="L56">                printStackTrace(ex);</span>
+            }
+<span class="nc" id="L58">        }</span>
+
+<span class="nc" id="L60">        println(&quot;Bye bye &amp; HAND!&quot;);</span>
+<span class="nc" id="L61">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

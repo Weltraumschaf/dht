@@ -11,8 +11,8 @@
  */
 package de.weltraumschaf.dht;
 
-import de.weltraumschaf.dht.id.DataKey;
-import de.weltraumschaf.dht.id.Identity;
+import de.weltraumschaf.dht.id.NodeId;
+import java.math.BigInteger;
 
 /**
  * http://www.linuxjournal.com/article/6797
@@ -32,8 +32,8 @@ import de.weltraumschaf.dht.id.Identity;
      * @param b
      * @return
      */
-    public static byte[] distance(final Identity a, final Identity b) {
-<span class="nc" id="L36">        return Bits.xor(a.getId(), b.getId());</span>
+    public static BigInteger distance(final NodeId a, final NodeId b) {
+<span class="nc" id="L36">        return a.asInteger().xor(b.asInteger());</span>
     }
 
     /**
@@ -44,15 +44,14 @@ import de.weltraumschaf.dht.id.Identity;
      * @param key
      * @return
      */
-    public static &lt;T&gt; Node&lt;T&gt; findNode(final Node&lt;T&gt; start, final DataKey key) {
+    public static &lt;T&gt; Node&lt;T&gt; findNode(final Node&lt;T&gt; start, final NodeId key) {
 <span class="nc" id="L48">        Node&lt;T&gt; current = start;</span>
 
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        while (Bits.CompareResult.GREATER == Bits.compare(distance(current.getId(), key),</span>
-                                                           distance(current.getNext().getId(), key))) {
-<span class="nc" id="L52">            current = current.getNext();</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        while (1 == distance(current.getId(), key).compareTo(distance(current.getNext().getId(), key))) {</span>
+<span class="nc" id="L51">            current = current.getNext();</span>
         }
 
-<span class="nc" id="L55">        return current;</span>
+<span class="nc" id="L54">        return current;</span>
     }
 
     /**
@@ -63,9 +62,9 @@ import de.weltraumschaf.dht.id.Identity;
      * @param key
      * @return
      */
-    public static &lt;T&gt; T lookup(final Node&lt;T&gt; start, final DataKey key) {
-<span class="nc" id="L67">        final Node&lt;T&gt; node = findNode(start, key);</span>
-<span class="nc" id="L68">        return node.get(key);</span>
+    public static &lt;T&gt; T lookup(final Node&lt;T&gt; start, final NodeId key) {
+<span class="nc" id="L66">        final Node&lt;T&gt; node = findNode(start, key);</span>
+<span class="nc" id="L67">        return node.get(key);</span>
     }
 
     /**
@@ -76,9 +75,9 @@ import de.weltraumschaf.dht.id.Identity;
      * @param key
      * @param value
      */
-    public static &lt;T&gt; void store(final Node&lt;T&gt; start, final DataKey key, final T value) {
-<span class="nc" id="L80">        final Node&lt;T&gt; node = findNode(start, key);</span>
-<span class="nc" id="L81">        node.put(key, value);</span>
-<span class="nc" id="L82">    }</span>
+    public static &lt;T&gt; void store(final Node&lt;T&gt; start, final NodeId key, final T value) {
+<span class="nc" id="L79">        final Node&lt;T&gt; node = findNode(start, key);</span>
+<span class="nc" id="L80">        node.put(key, value);</span>
+<span class="nc" id="L81">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package de.weltraumschaf.dht;
 
+import de.weltraumschaf.dht.id.NodeId;
 import com.beust.jcommander.JCommander;
 import de.weltraumschaf.commons.ApplicationException;
 import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
+import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.Server;
 import de.weltraumschaf.dht.shell.InteractiveShell;
 import java.io.IOException;
@@ -16,7 +19,7 @@ public final class Main extends InvokableAdapter implements Application {
     /**
      * Logging facility.
      */
-<span class="nc" id="L19">    private static final Logger LOG = Log.getLogger(Main.class);</span>
+<span class="nc" id="L22">    private static final Logger LOG = Log.getLogger(Main.class);</span>
     /**
      * JAR relative path to version property file.
      */
@@ -25,11 +28,15 @@ public final class Main extends InvokableAdapter implements Application {
     /**
      * Version of the application.
      */
-<span class="nc" id="L28">    private final Version version = new Version(VERSION_FILE);</span>
+<span class="nc" id="L31">    private final Version version = new Version(VERSION_FILE);</span>
 
-<span class="nc" id="L30">    private final CliOptions options = new CliOptions();</span>
-<span class="nc" id="L31">    private final JCommander cliOptionsParser = new JCommander();</span>
-<span class="nc" id="L32">    private final InteractiveShell shell = new InteractiveShell(this);</span>
+<span class="nc" id="L33">    private final CliOptions options = new CliOptions();</span>
+<span class="nc" id="L34">    private final JCommander cliOptionsParser = new JCommander();</span>
+<span class="nc" id="L35">    private final InteractiveShell shell = new InteractiveShell(this);</span>
+<span class="nc" id="L36">    private final MessageBox inbox = Messaging.newMessageBox();</span>
+<span class="nc" id="L37">    private final MessageBox outbox = Messaging.newMessageBox();</span>
+<span class="nc" id="L38">    private final NodeId nodeId = NodeId.newRandom();</span>
+<span class="nc" id="L39">    private final Clock clock = new Clock().start();</span>
     private Server server;
 
     /**
@@ -40,44 +47,44 @@ public final class Main extends InvokableAdapter implements Application {
      * @throws ClassNotFoundException if command classes can't be found
      */
     public Main(final String[] args) throws ApplicationException, ClassNotFoundException {
-<span class="nc" id="L43">        super(args);</span>
-<span class="nc" id="L44">    }</span>
+<span class="nc" id="L50">        super(args);</span>
+<span class="nc" id="L51">    }</span>
 
     public void initEnvironment() throws ApplicationException {
-<span class="nc" id="L47">        cliOptionsParser.setProgramName(NAME);</span>
-<span class="nc" id="L48">        cliOptionsParser.addObject(options);</span>
-<span class="nc" id="L49">        cliOptionsParser.parse(getArgs());</span>
+<span class="nc" id="L54">        cliOptionsParser.setProgramName(NAME);</span>
+<span class="nc" id="L55">        cliOptionsParser.addObject(options);</span>
+<span class="nc" id="L56">        cliOptionsParser.parse(getArgs());</span>
 
         try {
-<span class="nc" id="L52">            version.load();</span>
-<span class="nc" id="L53">        } catch (final IOException ex) {</span>
-<span class="nc" id="L54">            throw new ApplicationException(ExitCodeImpl.FATAL, &quot;Can't load version file!&quot;, ex);</span>
-<span class="nc" id="L55">        }</span>
+<span class="nc" id="L59">            version.load();</span>
+<span class="nc" id="L60">        } catch (final IOException ex) {</span>
+<span class="nc" id="L61">            throw new ApplicationException(ExitCodeImpl.FATAL, &quot;Can't load version file!&quot;, ex);</span>
+<span class="nc" id="L62">        }</span>
 
-<span class="nc" id="L57">        server = new Server(getIoStreams());</span>
-<span class="nc" id="L58">        server.setHost(options.getHost());</span>
-<span class="nc" id="L59">        server.setPort(options.getPort());</span>
+<span class="nc" id="L64">        server = new Server(getIoStreams(), inbox);</span>
+<span class="nc" id="L65">        server.setHost(options.getHost());</span>
+<span class="nc" id="L66">        server.setPort(options.getPort());</span>
 
-<span class="nc" id="L61">        registerShutdownHook(new Runnable() {</span>
+<span class="nc" id="L68">        registerShutdownHook(new Runnable() {</span>
 
             @Override
             public void run() {
-<span class="nc bnc" id="L65" title="All 2 branches missed.">                if (server.isRunning()) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                if (server.isRunning()) {</span>
                     try {
-<span class="nc" id="L67">                        server.stop();</span>
-<span class="nc" id="L68">                    } catch (final IOException | InterruptedException ex) {</span>
-<span class="nc" id="L69">                        getIoStreams().println(&quot;Error: &quot; + ex);</span>
+<span class="nc" id="L74">                        server.stop();</span>
+<span class="nc" id="L75">                    } catch (final IOException | InterruptedException ex) {</span>
+<span class="nc" id="L76">                        getIoStreams().println(&quot;Error: &quot; + ex);</span>
 
-<span class="nc bnc" id="L71" title="All 2 branches missed.">                        if (options.isDebug()) {</span>
-<span class="nc" id="L72">                            getIoStreams().printStackTrace(ex);</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                        if (options.isDebug()) {</span>
+<span class="nc" id="L79">                            getIoStreams().printStackTrace(ex);</span>
                         }
 
-<span class="nc" id="L75">                        LOG.error(ex.getMessage(), ex);</span>
-<span class="nc" id="L76">                    }</span>
+<span class="nc" id="L82">                        LOG.error(ex.getMessage(), ex);</span>
+<span class="nc" id="L83">                    }</span>
                 }
-<span class="nc" id="L78">            }</span>
+<span class="nc" id="L85">            }</span>
         });
-<span class="nc" id="L80">    }</span>
+<span class="nc" id="L87">    }</span>
 
     /**
      * Main entry point of application invoked by JVM.
@@ -86,8 +93,8 @@ public final class Main extends InvokableAdapter implements Application {
      * @throws ApplicationException if errors occurs while creating report processor
      */
     public static void main(final String[] args) throws ApplicationException, ClassNotFoundException {
-<span class="nc" id="L89">        main(new Main(args));</span>
-<span class="nc" id="L90">    }</span>
+<span class="nc" id="L96">        main(new Main(args));</span>
+<span class="nc" id="L97">    }</span>
 
     /**
      * Setup and invokes the application.
@@ -96,73 +103,94 @@ public final class Main extends InvokableAdapter implements Application {
      * @throws ApplicationException if errors occurs while creating report processor
      */
     static void main(final Main app) throws ApplicationException {
-<span class="nc" id="L99">        Validate.notNull(app);</span>
-<span class="nc" id="L100">        InvokableAdapter.main(app);</span>
-<span class="nc" id="L101">    }</span>
+<span class="nc" id="L106">        Validate.notNull(app);</span>
+<span class="nc" id="L107">        InvokableAdapter.main(app);</span>
+<span class="nc" id="L108">    }</span>
 
     @Override
     public Version getVersion() {
-<span class="nc" id="L105">        return version;</span>
+<span class="nc" id="L112">        return version;</span>
     }
 
     @Override
     public CliOptions getOptions() {
-<span class="nc" id="L110">        return options;</span>
+<span class="nc" id="L117">        return options;</span>
+    }
+
+
+    @Override
+    public Server getServer() {
+<span class="nc" id="L123">        return server;</span>
+    }
+
+    @Override
+    public MessageBox getInbox() {
+<span class="nc" id="L128">        return inbox;</span>
+    }
+
+    @Override
+    public MessageBox getOutbox() {
+<span class="nc" id="L133">        return outbox;</span>
+    }
+
+    @Override
+    public NodeId getNodeId() {
+<span class="nc" id="L138">        return nodeId;</span>
+    }
+
+    @Override
+    public Clock getClock() {
+<span class="nc" id="L143">        return clock;</span>
     }
 
     @Override
     public void execute() throws Exception {
-<span class="nc" id="L115">        initEnvironment();</span>
+<span class="nc" id="L148">        initEnvironment();</span>
 
-<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (options.isHelp()) {</span>
-<span class="nc" id="L118">            showHelpMessage();</span>
-<span class="nc" id="L119">            return;</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (options.isHelp()) {</span>
+<span class="nc" id="L151">            showHelpMessage();</span>
+<span class="nc" id="L152">            return;</span>
         }
 
-<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (options.isVersion()) {</span>
-<span class="nc" id="L123">            showVersionMessage();</span>
-<span class="nc" id="L124">            return;</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (options.isVersion()) {</span>
+<span class="nc" id="L156">            showVersionMessage();</span>
+<span class="nc" id="L157">            return;</span>
         }
 
-<span class="nc" id="L127">        run();</span>
-<span class="nc" id="L128">    }</span>
+<span class="nc" id="L160">        run();</span>
+<span class="nc" id="L161">    }</span>
 
     /**
      * Prints version information on STDOUT.
      */
     void showVersionMessage() {
-<span class="nc" id="L134">        getIoStreams().println(String.format(&quot;Version: %s&quot;, version.getVersion()));</span>
-<span class="nc" id="L135">    }</span>
+<span class="nc" id="L167">        getIoStreams().println(String.format(&quot;Version: %s&quot;, version.getVersion()));</span>
+<span class="nc" id="L168">    }</span>
 
     private void showHelpMessage() {
-<span class="nc" id="L138">        final StringBuilder buffer = new StringBuilder();</span>
-<span class="nc" id="L139">        buffer.append(&quot;DHT is an interactive shell to play around with distributed hash table technology.&quot;)</span>
+<span class="nc" id="L171">        final StringBuilder buffer = new StringBuilder();</span>
+<span class="nc" id="L172">        buffer.append(&quot;DHT is an interactive shell to play around with distributed hash table technology.&quot;)</span>
               .append(NL).append(NL);
-<span class="nc" id="L141">        cliOptionsParser.usage(buffer);</span>
-<span class="nc" id="L142">        buffer.append(NL);</span>
-<span class="nc" id="L143">        buffer.append(&quot;Developed by Sven Strittmatter &lt;ich@weltraumschaf.de&gt;&quot;).append(NL);</span>
-<span class="nc" id="L144">        buffer.append(&quot;https://github.com/Weltraumschaf/dht&quot;).append(NL).append(NL);</span>
-<span class="nc" id="L145">        getIoStreams().print(buffer.toString());</span>
-<span class="nc" id="L146">    }</span>
+<span class="nc" id="L174">        cliOptionsParser.usage(buffer);</span>
+<span class="nc" id="L175">        buffer.append(NL);</span>
+<span class="nc" id="L176">        buffer.append(&quot;Developed by Sven Strittmatter &lt;ich@weltraumschaf.de&gt;&quot;).append(NL);</span>
+<span class="nc" id="L177">        buffer.append(&quot;https://github.com/Weltraumschaf/dht&quot;).append(NL).append(NL);</span>
+<span class="nc" id="L178">        getIoStreams().print(buffer.toString());</span>
+<span class="nc" id="L179">    }</span>
 
     private void run() {
         try {
-<span class="nc" id="L150">            shell.start();</span>
-<span class="nc" id="L151">        } catch (final Exception ex) {</span>
-<span class="nc" id="L152">            getIoStreams().errorln(ex.getMessage());</span>
+<span class="nc" id="L183">            shell.start();</span>
+<span class="nc" id="L184">        } catch (final Exception ex) {</span>
+<span class="nc" id="L185">            getIoStreams().errorln(ex.getMessage());</span>
 
-<span class="nc bnc" id="L154" title="All 2 branches missed.">            if (options.isDebug()) {</span>
-<span class="nc" id="L155">                getIoStreams().printStackTrace(ex);</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">            if (options.isDebug()) {</span>
+<span class="nc" id="L188">                getIoStreams().printStackTrace(ex);</span>
             }
 
-<span class="nc" id="L158">            LOG.error(ex.getMessage(), ex);</span>
-<span class="nc" id="L159">        }</span>
-<span class="nc" id="L160">    }</span>
-
-    @Override
-    public Server getServer() {
-<span class="nc" id="L164">        return server;</span>
-    }
+<span class="nc" id="L191">            LOG.error(ex.getMessage(), ex);</span>
+<span class="nc" id="L192">        }</span>
+<span class="nc" id="L193">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

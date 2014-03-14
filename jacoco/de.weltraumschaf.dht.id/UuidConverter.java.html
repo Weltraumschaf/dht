@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>UuidConverter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.id</a> &gt; <span class="el_source">UuidConverter.java</span></div><h1>UuidConverter.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+
+package de.weltraumschaf.dht.id;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.UUID;
+
+/**
+ * Provides utility function for UUIDs.
+ *
+ * From http://dev-svn.seasr.org/WebSVN/filedetails.php?repname=Components&amp;path=%2FCommons%2FSEASR-Commons%2Ftrunk%2Fsrc%2Forg%2Fseasr%2Fmeandre%2Fsupport%2Fgeneric%2Futil%2FUUIDUtils.java&amp;rev=1844&amp;sc=1
+ *
+ * @author Boris Capitanu
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+public final class UuidConverter {
+
+    /**
+     * Hidden for pure static utility class.
+     */
+    private UuidConverter() {
+<span class="nc" id="L37">        super();</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * Converts a UUID to a byte array
+     *
+     * @param uuid The UUID
+     * @return The byte array representing the UUID provided, or null if it can't be computed
+     * @throws IOException should never happen
+     */
+    public static byte[] toByteArray(final UUID uuid) throws IOException {
+<span class="pc" id="L48">        try (</span>
+<span class="fc" id="L49">            ByteArrayOutputStream baos = new ByteArrayOutputStream();</span>
+<span class="fc" id="L50">            DataOutputStream outputStream = new DataOutputStream(baos);</span>
+        ) {
+<span class="fc" id="L52">            outputStream.writeLong(uuid.getMostSignificantBits());</span>
+<span class="fc" id="L53">            outputStream.writeLong(uuid.getLeastSignificantBits());</span>
+<span class="fc" id="L54">            return baos.toByteArray();</span>
+<span class="pc bpc" id="L55" title="12 of 16 branches missed.">        }</span>
+    }
+
+    /**
+     * Reconstructs a UUID from a byte array
+     *
+     * @param bytes The byte array (will be automatically padded left if size &lt; 16)
+     * @return The UUID
+     * @throws IOException should never happen
+     */
+    public static UUID fromByteArray(final byte[] bytes) throws IOException {
+<span class="fc" id="L66">        int usableBytes = Math.min(bytes.length, 16);</span>
+
+        // Need exactly 16 bytes - pad the input if not enough bytes are provided
+        // Use provided bytes in the least significant position; if more than 16 bytes are given,
+        // then use the first 16 bytes from the array;
+<span class="fc" id="L71">        byte[] barr = new byte[16];</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for (int i = 15, j = usableBytes-1; j &gt;= 0; i--, j--) {</span>
+<span class="fc" id="L73">            barr[i] = bytes[j];</span>
+        }
+
+<span class="pc" id="L76">        try (</span>
+<span class="fc" id="L77">            ByteArrayInputStream bais = new ByteArrayInputStream(barr);</span>
+<span class="fc" id="L78">            DataInputStream inputStream = new DataInputStream(bais);</span>
+        ) {
+<span class="fc" id="L80">            long msb = inputStream.readLong();</span>
+<span class="fc" id="L81">            long lsb = inputStream.readLong();</span>
+<span class="fc" id="L82">            return new UUID(msb, lsb);</span>
+<span class="pc bpc" id="L83" title="12 of 16 branches missed.">        }</span>
+    }
+
+    /**
+     * Converts a UUID to a BigInteger
+     *
+     * @param uuid The UUID
+     * @return The BigInteger
+     * @throws IOException should never happen
+     */
+    public static BigInteger toBigInteger(final UUID uuid) throws IOException {
+<span class="fc" id="L94">        return new BigInteger(toByteArray(uuid));</span>
+    }
+
+    /**
+     * Reconstructs a UUID from a BigInteger
+     *
+     * @param bigInteger The big integer
+     * @return The UUID
+     * @throws IOException should never happen
+     */
+    public static UUID fromBigInteger(final BigInteger bigInteger) throws IOException {
+<span class="fc" id="L105">        return fromByteArray(bigInteger.toByteArray());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

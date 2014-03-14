@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Inbox.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.cmd</a> &gt; <span class="el_source">Inbox.java</span></div><h1>Inbox.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.cmd;
+
+import de.weltraumschaf.commons.shell.Token;
+import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.dht.msg.Message;
+import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.msg.Messaging;
+import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
+import de.weltraumschaf.dht.shell.CommandMainType;
+import static de.weltraumschaf.dht.shell.CommandMainType.INBOX;
+import de.weltraumschaf.dht.shell.CommandRuntimeException;
+import de.weltraumschaf.dht.shell.CommandSubType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * Executes `inbox` command.
+ *
+ * Sub commands: - remve ID - show ID - answer ID
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+<span class="nc" id="L39">final class Inbox extends BaseCommand {</span>
+
+    private static final int FIRST_COLUMN_PAD = 4;
+    private static final int SECOND_COLUMN_PAD = 12;
+    private static final int THIRD_COLUMN_PAD = 20;
+
+    @Override
+    public Descriptor getDescriptor() {
+<span class="nc" id="L47">        return new BaseDescriptor() {</span>
+
+            @Override
+            public CommandMainType getCommand() {
+<span class="nc" id="L51">                return INBOX;</span>
+            }
+
+            @Override
+            public String getUsage() {
+<span class="nc" id="L56">                return INBOX.toString();</span>
+            }
+
+            @Override
+            public String getHelpDescription() {
+<span class="nc" id="L61">                return &quot;Give sacces to the message inbox.&quot;;</span>
+            }
+        };
+    }
+
+    @Override
+    public void execute() {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (getSubCommand() == CommandSubType.NONE) {</span>
+<span class="nc" id="L69">            showList();</span>
+<span class="nc" id="L70">            return;</span>
+        }
+
+<span class="nc" id="L73">        dispatchSubCommand();</span>
+<span class="nc" id="L74">    }</span>
+
+    private boolean showList() {
+<span class="nc" id="L77">        println(String.format(&quot;Your incomming messages for %s:&quot;, formatLocalAddress()));</span>
+<span class="nc" id="L78">        println();</span>
+<span class="nc" id="L79">        final MessageBox inbox = getInbox();</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (inbox.isEmpty()) {</span>
+<span class="nc" id="L81">            println(&quot;Your inbox is empty.&quot;);</span>
+<span class="nc" id="L82">            println();</span>
+<span class="nc" id="L83">            return true;</span>
+        }
+<span class="nc" id="L85">        print(StringUtils.rightPad(&quot;Id&quot;, FIRST_COLUMN_PAD));</span>
+<span class="nc" id="L86">        print(StringUtils.rightPad(String.format(&quot;Unread (%d)&quot;, inbox.countUnread()), SECOND_COLUMN_PAD));</span>
+<span class="nc" id="L87">        print(StringUtils.rightPad(&quot;From&quot;, THIRD_COLUMN_PAD));</span>
+<span class="nc" id="L88">        println(&quot;Body&quot;);</span>
+<span class="nc" id="L89">        final Collection&lt;Message&gt; messages = inbox.getAll();</span>
+<span class="nc" id="L90">        int id = 0;</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (final Message message : messages) {</span>
+<span class="nc" id="L92">            println(formatMessage(message, id++));</span>
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">        println();</span>
+<span class="nc" id="L95">        return false;</span>
+    }
+
+    private String formatMessage(final Message message, final int id) {
+<span class="nc" id="L99">        final StringBuilder buffer = new StringBuilder();</span>
+<span class="nc" id="L100">        buffer.append(formatId(id));</span>
+<span class="nc" id="L101">        buffer.append(formatUnread(message));</span>
+<span class="nc" id="L102">        buffer.append(formatFrom(message));</span>
+<span class="nc" id="L103">        buffer.append(message.getBody());</span>
+<span class="nc" id="L104">        return buffer.toString();</span>
+    }
+
+    private Object formatId(final int id) {
+<span class="nc" id="L108">        return StringUtils.leftPad(String.valueOf(id) + &quot; &quot;, FIRST_COLUMN_PAD);</span>
+    }
+
+    private String formatUnread(final Message message) {
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        final String unread = message.isUnread() ? &quot;yes&quot; : &quot;no&quot;;</span>
+<span class="nc" id="L113">        return StringUtils.rightPad(unread, SECOND_COLUMN_PAD);</span>
+    }
+
+    private String formatFrom(Message message) {
+<span class="nc" id="L117">        return StringUtils.rightPad(message.getFrom().toString(), THIRD_COLUMN_PAD);</span>
+    }
+
+    private void dispatchSubCommand() {
+<span class="nc bnc" id="L121" title="All 4 branches missed.">        switch ((CommandSubType) getSubCommand()) {</span>
+            case INBOX_ANSWER:
+<span class="nc" id="L123">                answerMessage();</span>
+<span class="nc" id="L124">                break;</span>
+            case INBOX_REMOVE:
+<span class="nc" id="L126">                removeMessage();</span>
+<span class="nc" id="L127">                break;</span>
+            case INBOX_SHOW:
+<span class="nc" id="L129">                showMessage();</span>
+<span class="nc" id="L130">                break;</span>
+            default:
+<span class="nc" id="L132">                throw new CommandArgumentExcpetion(&quot;Unsupport subcommand &gt;&quot; + getSubCommand().toString() + &quot;&lt;&quot;);</span>
+        }
+<span class="nc" id="L134">    }</span>
+
+    private void answerMessage() {
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L138">        final Token&lt;Integer&gt; idToken = getArguments().get(0);</span>
+<span class="nc" id="L139">        final int id = validateId(idToken);</span>
+<span class="nc" id="L140">        final Message message = getInbox().get(id);</span>
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L142">        final Token&lt;String&gt; messageBodyToken = getArguments().get(1);</span>
+<span class="nc" id="L143">        final Message answer = Messaging.newTextMessage(</span>
+                newLocalAddress(),
+                message.getFrom(),
+                messageBodyToken.getValue());
+
+        try {
+<span class="nc" id="L149">            Messaging.newSender().send(answer);</span>
+<span class="nc" id="L150">        } catch (IOException ex) {</span>
+<span class="nc" id="L151">            throw new CommandRuntimeException(String.format(&quot;Can't send message to %s!&quot;, message.getFrom()), ex);</span>
+<span class="nc" id="L152">        }</span>
+
+<span class="nc" id="L154">        answer.markAsRead();</span>
+<span class="nc" id="L155">        getApplication().getOutbox().put(answer);</span>
+<span class="nc" id="L156">    }</span>
+
+    private void removeMessage() {
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L160">        final Token&lt;Integer&gt; idToken = getArguments().get(0);</span>
+<span class="nc" id="L161">        final int id = validateId(idToken);</span>
+<span class="nc" id="L162">        getInbox().remove(id);</span>
+<span class="nc" id="L163">        println(String.format(&quot;Message with id %d removed.&quot;, id));</span>
+<span class="nc" id="L164">        println();</span>
+<span class="nc" id="L165">    }</span>
+
+    private void showMessage() {
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L169">        final Token&lt;Integer&gt; idToken = getArguments().get(0);</span>
+<span class="nc" id="L170">        final int id = validateId(idToken);</span>
+<span class="nc" id="L171">        final Message message = getInbox().get(id);</span>
+<span class="nc" id="L172">        println(String.format(&quot;Id: %d&quot;, id));</span>
+<span class="nc" id="L173">        println(String.format(&quot;From: %s&quot;, message.getFrom().toString()));</span>
+<span class="nc" id="L174">        println(String.format(&quot;Body: %s&quot;, message.getBody()));</span>
+<span class="nc" id="L175">        println();</span>
+<span class="nc" id="L176">        message.markAsRead();</span>
+<span class="nc" id="L177">    }</span>
+
+    private MessageBox getInbox() {
+<span class="nc" id="L180">        return getApplication().getInbox();</span>
+    }
+
+    private int validateId(final Token&lt;Integer&gt; idToken) {
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (idToken.getType() != TokenType.NUMBER) {</span>
+<span class="nc" id="L185">            throw new CommandArgumentExcpetion(&quot;Id must be a number!&quot;);</span>
+        }
+
+<span class="nc" id="L188">        final Integer id = idToken.getValue();</span>
+
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (id &lt; 0) {</span>
+<span class="nc" id="L191">            throw new CommandArgumentExcpetion(&quot;Id must not be negative!&quot;);</span>
+        }
+
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        if (id &gt; getInbox().count() - 1) {</span>
+<span class="nc" id="L195">            throw new CommandArgumentExcpetion(String.format(&quot;Id must not be less than %d!&quot;, getInbox().count()));</span>
+        }
+
+<span class="nc" id="L198">        return id;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

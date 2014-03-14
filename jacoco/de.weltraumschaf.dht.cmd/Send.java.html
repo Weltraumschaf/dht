@@ -13,14 +13,14 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.dht.msg.Message;
+import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.PortValidator;
 import de.weltraumschaf.dht.shell.CommandRuntimeException;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.SEND;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.net.Socket;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
 
@@ -34,76 +34,76 @@ import org.apache.commons.lang3.Validate;
 <span class="nc" id="L34">final class Send extends BaseCommand {</span>
 
     @Override
-    public void execute() {
-<span class="nc" id="L38">        final Arguments args = validateArguments();</span>
-
-<span class="nc" id="L40">        try (</span>
-<span class="nc" id="L41">            final Socket client = new Socket(args.getHost(), args.getPort());</span>
-<span class="nc" id="L42">            final PrintStream output = new PrintStream(client.getOutputStream());</span>
-        ) {
-<span class="nc" id="L44">            output.println(args.getMessage());</span>
-<span class="nc" id="L45">            output.flush();</span>
-<span class="nc" id="L46">            println(String.format(&quot;Sent (%s:%d): %s&quot;, args.getHost(), args.getPort(), args.getMessage()));</span>
-<span class="nc bnc" id="L47" title="All 16 branches missed.">        } catch (final IOException ex) {</span>
-<span class="nc" id="L48">            throw new CommandRuntimeException(</span>
-                    String.format(&quot;Can't open client conection to %s:%s!&quot;, args.getHost(), args.getPort()), ex);
-<span class="nc" id="L50">        }</span>
-<span class="nc" id="L51">    }</span>
-
-    private Arguments validateArguments() throws CommandArgumentExcpetion {
-<span class="nc" id="L54">        final List&lt;Token&gt; args = getArguments();</span>
-
-        @SuppressWarnings(&quot;unchecked&quot;)
-<span class="nc" id="L57">        final Token&lt;String&gt; hostToken = args.get(0);</span>
-
-<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (hostToken.getType() != TokenType.LITERAL) {</span>
-<span class="nc" id="L60">            throw new CommandArgumentExcpetion(&quot;Host must be a literal!&quot;);</span>
-        }
-
-        @SuppressWarnings(&quot;unchecked&quot;)
-<span class="nc" id="L64">        final Token&lt;Integer&gt; portToken = args.get(1);</span>
-
-<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (portToken.getType() != TokenType.NUMBER) {</span>
-<span class="nc" id="L67">            throw new CommandArgumentExcpetion(&quot;Port must be a number!&quot;);</span>
-        }
-
-<span class="nc" id="L70">        final Integer port = portToken.getValue();</span>
-
-<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (!PortValidator.isValid(port)) {</span>
-<span class="nc" id="L73">            throw new CommandArgumentExcpetion(</span>
-                    String.format(&quot;Parameter &gt;port&lt; must be in range %s!&quot;, PortValidator.range()));
-        }
-
-        @SuppressWarnings(&quot;unchecked&quot;)
-<span class="nc" id="L78">        final Token&lt;String&gt; messageToken = args.get(2);</span>
-
-<span class="nc bnc" id="L80" title="All 4 branches missed.">        if (messageToken.getType() != TokenType.STRING &amp;&amp; messageToken.getType() != TokenType.LITERAL) {</span>
-<span class="nc" id="L81">            throw new CommandArgumentExcpetion(&quot;Message must be a string or literal!&quot;);</span>
-        }
-
-<span class="nc" id="L84">        return new Arguments(hostToken.getValue(), port, messageToken.getValue());</span>
-    }
-
-    @Override
     public Descriptor getDescriptor() {
-<span class="nc" id="L89">        return new BaseDescriptor() {</span>
+<span class="nc" id="L38">        return new BaseDescriptor() {</span>
 
             @Override
             public CommandMainType getCommand() {
-<span class="nc" id="L93">                return SEND;</span>
+<span class="nc" id="L42">                return SEND;</span>
             }
 
             @Override
             public String getUsage() {
-<span class="nc" id="L98">                return &quot;send &lt;host&gt; &lt;port&gt; &lt;message&gt;&quot;;</span>
+<span class="nc" id="L47">                return &quot;send &lt;host&gt; &lt;port&gt; &lt;message&gt;&quot;;</span>
             }
 
             @Override
             public String getHelpDescription() {
-<span class="nc" id="L103">                return String.format(&quot;Sends &lt;message&gt; to &lt;host:port&gt;. The message must be encapsulated in quotes if it &quot;</span>
+<span class="nc" id="L52">                return String.format(&quot;Sends &lt;message&gt; to &lt;host:port&gt;. The message must be encapsulated in quotes if it &quot;</span>
                         + &quot;has more than one word. Port must be in range of %s.&quot;, PortValidator.range());
             }
         };
+    }
+
+    @Override
+    public void execute() {
+<span class="nc" id="L60">        final Arguments args = validateArguments();</span>
+<span class="nc" id="L61">        final Message message = Messaging.newTextMessage(</span>
+                newLocalAddress(),
+                newAddress(args.getHost(), args.getPort()),
+                args.getMessage());
+
+        try {
+<span class="nc" id="L67">            Messaging.newSender().send(message);</span>
+<span class="nc" id="L68">            println(String.format(&quot;Message sent to %s:%d.&quot;, args.getHost(), args.getPort()));</span>
+<span class="nc" id="L69">        } catch (final IOException ex) {</span>
+<span class="nc" id="L70">            throw new CommandRuntimeException(</span>
+                    String.format(&quot;Can't open client conection to %s:%s!&quot;, args.getHost(), args.getPort()), ex);
+<span class="nc" id="L72">        }</span>
+<span class="nc" id="L73">    }</span>
+
+    private Arguments validateArguments() throws CommandArgumentExcpetion {
+<span class="nc" id="L76">        final List&lt;Token&gt; args = getArguments();</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L79">        final Token&lt;String&gt; hostToken = args.get(0);</span>
+
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (hostToken.getType() != TokenType.LITERAL) {</span>
+<span class="nc" id="L82">            throw new CommandArgumentExcpetion(&quot;Host must be a literal!&quot;);</span>
+        }
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L86">        final Token&lt;Integer&gt; portToken = args.get(1);</span>
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (portToken.getType() != TokenType.NUMBER) {</span>
+<span class="nc" id="L89">            throw new CommandArgumentExcpetion(&quot;Port must be a number!&quot;);</span>
+        }
+
+<span class="nc" id="L92">        final Integer port = portToken.getValue();</span>
+
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (!PortValidator.isValid(port)) {</span>
+<span class="nc" id="L95">            throw new CommandArgumentExcpetion(</span>
+                    String.format(&quot;Parameter &gt;port&lt; must be in range %s!&quot;, PortValidator.range()));
+        }
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L100">        final Token&lt;String&gt; messageToken = args.get(2);</span>
+
+<span class="nc bnc" id="L102" title="All 4 branches missed.">        if (messageToken.getType() != TokenType.STRING &amp;&amp; messageToken.getType() != TokenType.LITERAL) {</span>
+<span class="nc" id="L103">            throw new CommandArgumentExcpetion(&quot;Message must be a string or literal!&quot;);</span>
+        }
+
+<span class="nc" id="L106">        return new Arguments(hostToken.getValue(), port, messageToken.getValue());</span>
     }
 
     /**

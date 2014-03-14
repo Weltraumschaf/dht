@@ -35,7 +35,7 @@ import java.io.IOException;
 <span class="nc" id="L35">            getApplication().getServer().stop();</span>
 <span class="nc" id="L36">        } catch (final IOException | InterruptedException ex) {</span>
 <span class="nc" id="L37">            println(String.format(</span>
-                &quot;Exception caught when trying to stop listen on %s.&quot;, formatListenedAddress()));
+                &quot;Exception caught when trying to stop listen on %s.&quot;, formatLocalAddress()));
 
 <span class="nc bnc" id="L40" title="All 2 branches missed.">            if (isDebug()) {</span>
 <span class="nc" id="L41">                printStackTrace(ex);</span>

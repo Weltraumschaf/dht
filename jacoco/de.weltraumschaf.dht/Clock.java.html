@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Clock.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht</a> &gt; <span class="el_source">Clock.java</span></div><h1>Clock.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht;
+
+import org.apache.commons.lang3.Validate;
+
+/**
+ * Counts seconds from starting point.
+ *
+ * Provides time thread safe. {@link #start()} must be called very first. Before the clack can be used.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+public final class Clock {
+
+    /**
+     * Error message if not started.
+     */
+    private static final String NOT_STARTED_ERROR = &quot;Clock not started yet! Invoke #start() first.&quot;;
+    /**
+     * Default source.
+     */
+<span class="fc" id="L32">    private static final TimeSource DEFAULT_SOURCE = new SystemTimeSource();</span>
+    /**
+     * Time source provider.
+     */
+    private final TimeSource source;
+    /**
+     * Whether the clock was started or not.
+     */
+    private boolean started;
+    /**
+     * Start time.
+     */
+    private long startTime;
+
+    /**
+     * Creates clock with a default time source.
+     */
+    public Clock() {
+<span class="fc" id="L50">        this(DEFAULT_SOURCE);</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Dedicated constructor.
+     *
+     * @param source must not be {@code null}
+     */
+    public Clock(final TimeSource source) {
+<span class="fc" id="L59">        super();</span>
+<span class="fc" id="L60">        this.source = Validate.notNull(source);</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Starts the clock.
+     *
+     * Subsequent calls has no effect. Must be called first before using {@link #now()} or {@link #elapsed()}.
+     *
+     * @return self for chaining
+     */
+    public synchronized Clock start() {
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (started) {</span>
+<span class="nc" id="L72">            return this;</span>
+        }
+
+<span class="fc" id="L75">        startTime = source.nanoTime();</span>
+<span class="fc" id="L76">        started = true;</span>
+<span class="fc" id="L77">        return this;</span>
+    }
+
+    /**
+     * Returns the current time.
+     *
+     * @return current time in nanoseconds
+     */
+    public synchronized long now() {
+<span class="fc" id="L86">        Validate.validState(started, NOT_STARTED_ERROR);</span>
+<span class="fc" id="L87">        return source.nanoTime();</span>
+    }
+
+    /**
+     * Returns the elapsed time since {@link #start()} was called first.
+     *
+     * @return elapsed time in nanoseconds
+     */
+    public synchronized long elapsed() {
+<span class="fc" id="L96">        Validate.validState(started, NOT_STARTED_ERROR);</span>
+<span class="fc" id="L97">        return source.nanoTime() - startTime;</span>
+    }
+
+    /**
+     * Provides time in nanoseconds.
+     */
+    public static interface TimeSource {
+
+        /**
+         * Current time in nanoseconds.
+         *
+         * @return the current value of the time source, in nanoseconds
+         */
+        public long nanoTime();
+    }
+
+    /**
+     * Uses {@link System#nanoTime()} as source.
+     */
+<span class="fc" id="L116">    private static final class SystemTimeSource implements TimeSource {</span>
+
+        @Override
+        public long nanoTime() {
+<span class="nc" id="L120">            return System.nanoTime();</span>
+        }
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

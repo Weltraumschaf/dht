@@ -29,18 +29,50 @@ import com.beust.jcommander.Parameter;
     /**
      * Default port to listen on, if not given as CLI option.
      */
-    private static final int DEFAULT_PORT = 8888;
+    public static final int DEFAULT_PORT = 8888;
+    /**
+     * A small number representing the degree of parallelism in network calls, usually 3.
+     */
+    public static final int DEFAULT_ALPHA = 3;
+    /**
+     * The size in bits of the keys used to identify nodes and store and retrieve data; in basic Kademlia this is 160,
+     * the length of a SHA-1 digest (hash).
+     *
+     * In DHT it is 128 bits, the length of an UUID.
+     */
+    private static final int DEFAULT_B = 128;
+    /**
+     * k is the maximum number f contacts stored in a bucket this is normally 20.
+     */
+    private static final int DEFAULT_K = 20;
+    /**
+     * The time in seconds after which a key/value pair expires, this is a time-to-live (TTL) from the original
+     * publication date.
+     */
+    private static final int DEFAULT_T_EXPIRES = 86_400;
+    /**
+     * Time in seconds after which an otherwise unaccessed bucket must be refreshed.
+     */
+    private static final int DEFAULT_T_REFRESH = 3_600;
+    /**
+     * Interval in seconds between Kademlia replication events,when a node is required to publish the entire database.
+     */
+    private static final int DEFAULT_T_REPLICATION = 3_600;
+    /**
+     * The time in seconds after which the original publisher must republish a key/value pair.
+     */
+    private static final int DEFAULT_T_REPUBLISH = 86_400;
 
     /**
      * Port to listen on.
      */
-<span class="nc" id="L37">    @Parameter(names = &quot;-p&quot;, description = &quot;Port to listen on.&quot;)</span>
+<span class="nc" id="L69">    @Parameter(names = &quot;-p&quot;, description = &quot;Port to listen on.&quot;)</span>
     private int port = DEFAULT_PORT;
 
     /**
      * Host name to listen on.
      */
-<span class="nc" id="L43">    @Parameter(names = &quot;-h&quot;, description = &quot;Host address to bind socket on.&quot;)</span>
+<span class="nc" id="L75">    @Parameter(names = &quot;-h&quot;, description = &quot;Host address to bind socket on.&quot;)</span>
     private String host = DEFAULT_HOST;
 
     /**
@@ -62,23 +94,51 @@ import com.beust.jcommander.Parameter;
     private boolean help;
 
     public int getPort() {
-<span class="nc" id="L65">        return port;</span>
+<span class="nc" id="L97">        return port;</span>
     }
 
     public String getHost() {
-<span class="nc" id="L69">        return host;</span>
+<span class="nc" id="L101">        return host;</span>
     }
 
     public boolean isHelp() {
-<span class="nc" id="L73">        return help;</span>
+<span class="nc" id="L105">        return help;</span>
     }
 
     public boolean isVersion() {
-<span class="nc" id="L77">        return version;</span>
+<span class="nc" id="L109">        return version;</span>
     }
 
     public boolean isDebug() {
-<span class="nc" id="L81">        return debug;</span>
+<span class="nc" id="L113">        return debug;</span>
+    }
+
+    public int getAlpha() {
+<span class="nc" id="L117">        return DEFAULT_ALPHA;</span>
+    }
+
+    public int getB() {
+<span class="nc" id="L121">        return DEFAULT_B;</span>
+    }
+
+    public int getK() {
+<span class="nc" id="L125">        return DEFAULT_K;</span>
+    }
+
+    public int getTExpires() {
+<span class="nc" id="L129">        return DEFAULT_T_EXPIRES;</span>
+    }
+
+    public int getTRefresh() {
+<span class="nc" id="L133">        return DEFAULT_T_REFRESH;</span>
+    }
+
+    public int getTReplication() {
+<span class="nc" id="L137">        return DEFAULT_T_REPLICATION;</span>
+    }
+
+    public int getTRepublish() {
+<span class="nc" id="L141">        return DEFAULT_T_REPUBLISH;</span>
     }
 
 }

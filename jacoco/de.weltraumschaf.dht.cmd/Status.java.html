@@ -9,50 +9,95 @@
  *
  * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
  */
-
 package de.weltraumschaf.dht.cmd;
 
+import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.server.Server;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.STATUS;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Executes `status` command.
  *
  * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
  */
-<span class="nc" id="L23">final class Status extends BaseCommand {</span>
+<span class="nc" id="L25">final class Status extends BaseCommand {</span>
 
-    @Override
-    public void execute() {
-<span class="nc" id="L27">        final StringBuilder buffer = new StringBuilder();</span>
-
-<span class="nc" id="L29">        buffer.append(&quot;Server:&quot;).append(nl());</span>
-<span class="nc" id="L30">        buffer.append(&quot;  State:   &quot;).append(getApplication().getServer().getState()).append(nl());</span>
-<span class="nc" id="L31">        buffer.append(&quot;  Address: &quot;).append(formatListenedAddress()).append(nl());</span>
-<span class="nc" id="L32">        buffer.append(&quot;  Queue:   &quot;).append(getApplication().getServer().countQueue()).append(nl());</span>
-
-<span class="nc" id="L34">        println(buffer.toString());</span>
-<span class="nc" id="L35">    }</span>
+    private static final String LEFT_PAD = &quot;  &quot;;
+    private static final int RIGHT_PAD = 10;
 
     @Override
     public Descriptor getDescriptor() {
-<span class="nc" id="L39">        return new BaseDescriptor() {</span>
+<span class="nc" id="L32">        return new BaseDescriptor() {</span>
 
             @Override
             public CommandMainType getCommand() {
-<span class="nc" id="L43">                return STATUS;</span>
+<span class="nc" id="L36">                return STATUS;</span>
             }
 
             @Override
             public String getUsage() {
-<span class="nc" id="L48">                return &quot;status&quot;;</span>
+<span class="nc" id="L41">                return STATUS.toString();</span>
             }
 
             @Override
             public String getHelpDescription() {
-<span class="nc" id="L53">                return &quot;Show application status information.&quot;;</span>
+<span class="nc" id="L46">                return &quot;Show application status information.&quot;;</span>
             }
         };
+    }
+
+    @Override
+    public void execute() {
+<span class="nc" id="L53">        final StringBuilder buffer = new StringBuilder();</span>
+<span class="nc" id="L54">        nodeInfo(buffer);</span>
+<span class="nc" id="L55">        serverInfo(buffer);</span>
+<span class="nc" id="L56">        messageInfos(buffer);</span>
+<span class="nc" id="L57">        println(buffer.toString());</span>
+<span class="nc" id="L58">    }</span>
+
+    private String rightPad(final String input) {
+<span class="nc" id="L61">        return StringUtils.rightPad(input, RIGHT_PAD);</span>
+    }
+
+    private String getNodeId() {
+<span class="nc" id="L65">        return getApplication().getNodeId().asString();</span>
+    }
+
+    private Server getServer() {
+<span class="nc" id="L69">        return getApplication().getServer();</span>
+    }
+
+    private MessageBox getOutbox() {
+<span class="nc" id="L73">        return getApplication().getOutbox();</span>
+    }
+
+    private MessageBox getInbox() {
+<span class="nc" id="L77">        return getApplication().getInbox();</span>
+    }
+
+    private void nodeInfo(final StringBuilder buffer) {
+<span class="nc" id="L81">        buffer.append(&quot;Node:&quot;).append(nl());</span>
+<span class="nc" id="L82">        buffer.append(LEFT_PAD).append(rightPad(&quot;Id:&quot;)).append(getNodeId()).append(nl());</span>
+<span class="nc" id="L83">    }</span>
+
+    private void serverInfo(final StringBuilder buffer) {
+<span class="nc" id="L86">        buffer.append(&quot;Server:&quot;).append(nl());</span>
+<span class="nc" id="L87">        buffer.append(LEFT_PAD).append(rightPad(&quot;State:&quot;)).append(getServer().getState()).append(nl());</span>
+<span class="nc" id="L88">        buffer.append(LEFT_PAD).append(rightPad(&quot;Address:&quot;)).append(formatLocalAddress()).append(nl());</span>
+<span class="nc" id="L89">        buffer.append(LEFT_PAD).append(rightPad(&quot;Queue:&quot;)).append(getServer().countQueue()).append(nl());</span>
+<span class="nc" id="L90">    }</span>
+
+    private void messageInfos(final StringBuilder buffer) {
+<span class="nc" id="L93">        buffer.append(&quot;Message:&quot;).append(nl());</span>
+<span class="nc" id="L94">        buffer.append(LEFT_PAD).append(rightPad(&quot;Inbox:&quot;)).append(formatInbox()).append(nl());</span>
+<span class="nc" id="L95">        buffer.append(LEFT_PAD).append(rightPad(&quot;Outbox:&quot;)).append(getOutbox().count()).append(nl());</span>
+<span class="nc" id="L96">    }</span>
+
+    private String formatInbox() {
+<span class="nc" id="L99">        final MessageBox inbox = getInbox();</span>
+<span class="nc" id="L100">        return String.format(&quot;%d (%d unread)&quot;, inbox.count(), inbox.countUnread());</span>
     }
 
 }

@@ -25,7 +25,7 @@ import java.io.IOException;
     @Override
     public void execute() {
 <span class="nc bnc" id="L27" title="All 2 branches missed.">        if (getApplication().getServer().isRunning()) {</span>
-<span class="nc" id="L28">            println(String.format(&quot;Server already listening on %s.&quot;, formatListenedAddress()));</span>
+<span class="nc" id="L28">            println(String.format(&quot;Server already listening on %s.&quot;, formatLocalAddress()));</span>
 <span class="nc" id="L29">            return;</span>
         }
 
@@ -35,33 +35,34 @@ import java.io.IOException;
 <span class="nc" id="L35">            getApplication().getServer().start();</span>
 <span class="nc" id="L36">        } catch (final IOException ex) {</span>
 <span class="nc" id="L37">            println(String.format(</span>
-                    &quot;Exception caught when trying to listen on %s or listening for a connection&quot;, formatListenedAddress()));
+                    &quot;Exception caught when trying to listen on %s or listening for a connection&quot;,
+                    formatLocalAddress()));
 
-<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (isDebug()) {</span>
-<span class="nc" id="L41">                printStackTrace(ex);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">            if (isDebug()) {</span>
+<span class="nc" id="L42">                printStackTrace(ex);</span>
             }
-<span class="nc" id="L43">        }</span>
+<span class="nc" id="L44">        }</span>
 
-<span class="nc" id="L45">        println(String.format(&quot;Server listening on %s.&quot;, formatListenedAddress()));</span>
-<span class="nc" id="L46">    }</span>
+<span class="nc" id="L46">        println(String.format(&quot;Server listening on %s.&quot;, formatLocalAddress()));</span>
+<span class="nc" id="L47">    }</span>
 
     @Override
     public Descriptor getDescriptor() {
-<span class="nc" id="L50">        return new BaseDescriptor() {</span>
+<span class="nc" id="L51">        return new BaseDescriptor() {</span>
 
             @Override
             public CommandMainType getCommand() {
-<span class="nc" id="L54">                return START;</span>
+<span class="nc" id="L55">                return START;</span>
             }
 
             @Override
             public String getUsage() {
-<span class="nc" id="L59">                return &quot;start&quot;;</span>
+<span class="nc" id="L60">                return &quot;start&quot;;</span>
             }
 
             @Override
             public String getHelpDescription() {
-<span class="nc" id="L64">                return &quot;Starts the server.&quot;;</span>
+<span class="nc" id="L65">                return &quot;Starts the server.&quot;;</span>
             }
         };
     }

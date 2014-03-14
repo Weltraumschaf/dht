@@ -13,7 +13,6 @@
 package de.weltraumschaf.dht;
 
 import com.beust.jcommander.internal.Maps;
-import de.weltraumschaf.dht.id.DataKey;
 import de.weltraumschaf.dht.id.NodeId;
 import java.util.Map;
 import org.apache.commons.lang3.Validate;
@@ -26,33 +25,33 @@ public class Node&lt;T&gt; {
 
     private final NodeId id;
     private final Node&lt;T&gt; next;
-<span class="nc" id="L29">    private final Map&lt;DataKey, T&gt; data = Maps.newHashMap();</span>
+<span class="nc" id="L28">    private final Map&lt;NodeId, T&gt; data = Maps.newHashMap();</span>
 
     public Node(final NodeId id, final Node&lt;T&gt; next) {
-<span class="nc" id="L32">        super();</span>
-<span class="nc" id="L33">        this.id = Validate.notNull(id);</span>
-<span class="nc" id="L34">        this.next = Validate.notNull(next);</span>
-<span class="nc" id="L35">    }</span>
+<span class="nc" id="L31">        super();</span>
+<span class="nc" id="L32">        this.id = Validate.notNull(id);</span>
+<span class="nc" id="L33">        this.next = Validate.notNull(next);</span>
+<span class="nc" id="L34">    }</span>
 
     public NodeId getId() {
-<span class="nc" id="L38">        return id;</span>
+<span class="nc" id="L37">        return id;</span>
     }
 
     public Node&lt;T&gt; getNext() {
-<span class="nc" id="L42">        return next;</span>
+<span class="nc" id="L41">        return next;</span>
     }
 
-    public void put(final DataKey key, final T date) {
-<span class="nc" id="L46">        data.put(key, date);</span>
-<span class="nc" id="L47">    }</span>
+    public void put(final NodeId key, final T date) {
+<span class="nc" id="L45">        data.put(key, date);</span>
+<span class="nc" id="L46">    }</span>
 
-    public T get(final DataKey key) {
-<span class="nc" id="L50">        Validate.isTrue(has(key), &quot;Does not have key: &quot; + key.toString());</span>
-<span class="nc" id="L51">        return data.get(key);</span>
+    public T get(final NodeId key) {
+<span class="nc" id="L49">        Validate.isTrue(has(key), &quot;Does not have key: &quot; + key.toString());</span>
+<span class="nc" id="L50">        return data.get(key);</span>
     }
 
-    public boolean has(final DataKey key) {
-<span class="nc" id="L55">        return data.containsKey(key);</span>
+    public boolean has(final NodeId key) {
+<span class="nc" id="L54">        return data.containsKey(key);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

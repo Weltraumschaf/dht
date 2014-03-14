@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultObservable.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.event</a> &gt; <span class="el_source">DefaultObservable.java</span></div><h1>DefaultObservable.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.event;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Set;
+import org.apache.commons.lang3.Validate;
+
+/**
+ * This class represents an observable object.
+ *
+ * It can be subclassed to represent an object that the application wants to have observed.
+ *
+ * An observable object can have one or more observers. An observer may be any object that
+ * implements interface {@link Observer}. After an observable instance changes, an  application
+ * calling the {@link Observable#notifyObservers} method causes all of its observers to be notified
+ * of the change by a call to their {@link Observer#update(de.weltraumschaf.neuron.event.Event)} method.
+ *
+ * The order in which notifications will be delivered is unspecified. The default implementation
+ * provided in the {@link DefaultObservable} class will notify {@link Observer observers} in the order in
+ * which they registered interest, but subclasses may change this order, use no guaranteed order,
+ * deliver notifications on separate threads, or may guarantee that their subclass follows this order,
+ * as they choose.
+ *
+ * Note that this notification mechanism is has nothing to do with threads and is completely separate
+ * from the {@link java.lang.Object#wait()} and {@link java.lang.Object#notify()} mechanism of class {@link Object}.
+ *
+ * When an observable object is newly created, its set of observers is empty. Two observers are considered the same
+ * if and only if the {@link java.lang.Object#equals(java.lang.Object)} method returns true for them.
+ *
+ * This is a copy of {@link java.util.Observable} with customizations.
+ *
+ * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
+ */
+public class DefaultObservable implements Observable {
+
+    /**
+     * Indicates changed state of the observable.
+     */
+    private boolean changed;
+
+    /**
+     * List of observers.
+     *
+     * Use copy on write version.
+     */
+<span class="nc" id="L58">    private final Set&lt;Observer&gt; observers = Sets.newHashSet();</span>
+
+    /**
+     * Construct an DefaultObservable with zero Observers.
+     */
+    public DefaultObservable() {
+<span class="nc" id="L64">        super();</span>
+<span class="nc" id="L65">    }</span>
+
+    @Override
+    public void addObserver(final Observer observer) {
+<span class="nc" id="L69">        Validate.notNull(observer, &quot;Parameter &gt;observer&lt; must not be null!&quot;);</span>
+
+<span class="nc" id="L71">        synchronized (observers) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (!observers.contains(observer)) {</span>
+<span class="nc" id="L73">                observers.add(observer);</span>
+            }
+<span class="nc" id="L75">        }</span>
+<span class="nc" id="L76">    }</span>
+
+    @Override
+    public void deleteObserver(final Observer observer) {
+<span class="nc" id="L80">        Validate.notNull(observer, &quot;Parameter &gt;observer&lt; must not be null!&quot;);</span>
+
+<span class="nc" id="L82">        synchronized (observers) {</span>
+<span class="nc" id="L83">            observers.remove(observer);</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc" id="L85">    }</span>
+
+    /**
+     * If this object has changed, as indicated by the {@link #hasChanged()} method, then notify all of its observers
+     * and then call the {@link #clearChanged()} method to indicate that this object has no longer changed.
+     *
+     * @param event observed event, must not be {@code null}
+     * @see DefaultObservable#clearChanged()
+     * @see Observable#hasChanged()
+     * @see Observer#update(de.weltraumschaf.dht.event.Event)
+     */
+    @Override
+    public void notifyObservers(final Event event) {
+<span class="nc" id="L98">        Validate.notNull(event, &quot;Parameter &gt;event&lt; must not be null!&quot;);</span>
+        /*
+         * A temporary buffer, used as a snapshot of the state of
+         * current Observers.
+         */
+        final List&lt;Observer&gt; localCopy;
+
+<span class="nc" id="L105">        synchronized (this) {</span>
+            /* We don't want the Observer doing callbacks into
+             * arbitrary code while holding its own Monitor.
+             * The code where we extract each DefaultObservable from
+             * the List and store the state of the Observer
+             * needs synchronization, but notifying observers
+             * does not (should not).  The worst result of any
+             * potential race-condition here is that:
+             * 1) a newly-added Observer will miss a
+             *   notification in progress
+             * 2) a recently unregistered Observer will be
+             *   wrongly notified when it doesn't care
+             */
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            if (! changed) {</span>
+<span class="nc" id="L119">                return;</span>
+            }
+<span class="nc" id="L121">            localCopy = Lists.newArrayList(observers);</span>
+<span class="nc" id="L122">            clearChanged();</span>
+<span class="nc" id="L123">        }</span>
+
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        for (final Observer observer : localCopy) {</span>
+<span class="nc" id="L126">            observer.update(event);</span>
+<span class="nc" id="L127">        }</span>
+<span class="nc" id="L128">    }</span>
+
+    @Override
+    public void deleteObservers() {
+<span class="nc" id="L132">        synchronized (observers) {</span>
+<span class="nc" id="L133">            observers.clear();</span>
+<span class="nc" id="L134">        }</span>
+<span class="nc" id="L135">    }</span>
+
+    /**
+     * Tests if this object has changed.
+     *
+     * @return  &lt;code&gt;true&lt;/code&gt; if and only if the {@link DefaultObservable#setChanged()} method
+     * has been called more recently than the {@link Observable#countObservers()} method on this
+     * object; &lt;code&gt;false&lt;/code&gt; otherwise.
+     *
+     * @see DefaultObservable#clearChanged()
+     * @see DefaultObservable#setChanged()
+     */
+    @Override
+    public boolean hasChanged() {
+<span class="nc" id="L149">        synchronized (this) {</span>
+<span class="nc" id="L150">            return changed;</span>
+<span class="nc" id="L151">        }</span>
+    }
+
+    @Override
+    public int countObservers() {
+<span class="nc" id="L156">        synchronized (observers) {</span>
+<span class="nc" id="L157">            return observers.size();</span>
+<span class="nc" id="L158">        }</span>
+    }
+
+    /**
+     * Marks this &lt;tt&gt;DefaultObservable&lt;/tt&gt; object as having been changed; the {@link #hasChanged()}
+     * method will now return &lt;tt&gt;true&lt;/tt&gt;.
+     */
+    protected void setChanged() {
+<span class="nc" id="L166">        synchronized (this) {</span>
+<span class="nc" id="L167">            changed = true;</span>
+<span class="nc" id="L168">        }</span>
+<span class="nc" id="L169">    }</span>
+
+    /**
+     * Indicates that this object has no longer changed, or that it has already notified all of its observers of its
+     * most recent change, so that the {@link #hasChanged()} method will now return &lt;tt&gt;false&lt;/tt&gt;.
+     *
+     * This method is called automatically by the {@link #notifyObservers()} methods.
+     *
+     * @see Observable#notifyObservers()
+     * @see Observable#notifyObservers(Event event)
+     */
+    protected void clearChanged() {
+<span class="nc" id="L181">        synchronized (this) {</span>
+<span class="nc" id="L182">            changed = false;</span>
+<span class="nc" id="L183">        }</span>
+<span class="nc" id="L184">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>

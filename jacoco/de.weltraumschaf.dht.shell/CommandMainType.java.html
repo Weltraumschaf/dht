@@ -24,29 +24,37 @@ import java.util.List;
 <span class="pc" id="L24">public enum CommandMainType implements MainCommandType {</span>
 
     /**
+     * Bootstrap command.
+     */
+<span class="fc" id="L29">    BOOTSTRAP(&quot;bootstrap&quot;),</span>
+    /**
      * Help command.
      */
-<span class="fc" id="L29">    HELP(&quot;help&quot;),</span>
+<span class="fc" id="L33">    HELP(&quot;help&quot;),</span>
     /**
      * Exit command.
      */
-<span class="fc" id="L33">    EXIT(&quot;exit&quot;),</span>
+<span class="fc" id="L37">    EXIT(&quot;exit&quot;),</span>
+    /**
+     * Inbox command.
+     */
+<span class="fc" id="L41">    INBOX(&quot;inbox&quot;),</span>
     /**
      * Send message command.
      */
-<span class="fc" id="L37">    SEND(&quot;send&quot;),</span>
+<span class="fc" id="L45">    SEND(&quot;send&quot;),</span>
     /**
      * Start server command.
      */
-<span class="fc" id="L41">    START(&quot;start&quot;),</span>
+<span class="fc" id="L49">    START(&quot;start&quot;),</span>
     /**
      * Stop server command.
      */
-<span class="fc" id="L45">    STOP(&quot;stop&quot;),</span>
+<span class="fc" id="L53">    STOP(&quot;stop&quot;),</span>
     /**
      * Current status command.
      */
-<span class="fc" id="L49">    STATUS(&quot;status&quot;);</span>
+<span class="fc" id="L57">    STATUS(&quot;status&quot;);</span>
 
     /**
      * Literal command string used in shell.
@@ -58,13 +66,13 @@ import java.util.List;
      *
      * @param name literal shell command string
      */
-<span class="fc" id="L61">    private CommandMainType(final String name) {</span>
-<span class="fc" id="L62">        this.literal = name;</span>
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L69">    private CommandMainType(final String name) {</span>
+<span class="fc" id="L70">        this.literal = name;</span>
+<span class="fc" id="L71">    }</span>
 
     @Override
     public String toString() {
-<span class="fc" id="L67">        return literal;</span>
+<span class="fc" id="L75">        return literal;</span>
     }
 
     /**
@@ -77,21 +85,29 @@ import java.util.List;
     List&lt;CommandSubType&gt; subCommands() {
         final List&lt;CommandSubType&gt; subCommands;
 
-<span class="nc bnc" id="L80" title="All 2 branches missed.">        switch (this) {</span>
+<span class="nc bnc" id="L88" title="All 3 branches missed.">        switch (this) {</span>
             case HELP:
-<span class="nc" id="L82">                subCommands = Lists.newArrayList(</span>
-                    CommandSubType.EXIT,
-                    CommandSubType.SEND,
-                    CommandSubType.START,
-                    CommandSubType.STOP,
-                    CommandSubType.STATUS
+<span class="nc" id="L90">                subCommands = Lists.newArrayList(</span>
+                        CommandSubType.HELP_EXIT,
+                        CommandSubType.HELP_INBOX,
+                        CommandSubType.HELP_SEND,
+                        CommandSubType.HELP_START,
+                        CommandSubType.HELP_STOP,
+                        CommandSubType.HELP_STATUS
                 );
-<span class="nc" id="L89">                break;</span>
+<span class="nc" id="L98">                break;</span>
+            case INBOX:
+<span class="nc" id="L100">                subCommands = Lists.newArrayList(</span>
+                        CommandSubType.INBOX_ANSWER,
+                        CommandSubType.INBOX_REMOVE,
+                        CommandSubType.INBOX_SHOW
+                );
+<span class="nc" id="L105">                break;</span>
             default:
-<span class="nc" id="L91">                subCommands = Collections.emptyList();</span>
+<span class="nc" id="L107">                subCommands = Collections.emptyList();</span>
         }
 
-<span class="nc" id="L94">        return Collections.unmodifiableList(subCommands);</span>
+<span class="nc" id="L110">        return Collections.unmodifiableList(subCommands);</span>
     }
 
 }

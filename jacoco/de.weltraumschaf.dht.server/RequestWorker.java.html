@@ -14,12 +14,23 @@ package de.weltraumschaf.dht.server;
 import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
+import de.weltraumschaf.dht.msg.Message;
+import de.weltraumschaf.dht.net.NetworkAddress;
+import de.weltraumschaf.dht.msg.MessageBox;
+import de.weltraumschaf.dht.msg.MessageSerializer;
+import de.weltraumschaf.dht.msg.Messaging;
+import de.weltraumschaf.dht.msg.RawMessage;
+import de.weltraumschaf.dht.msg.StreamIo;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.Channels;
 import org.apache.commons.lang3.Validate;
 
 /**
+ * Processes the incoming requests.
  *
  * @author Sven Strittmatter &lt;weltraumschaf@googlemail.com&gt;
  */
@@ -28,66 +39,109 @@ final class RequestWorker implements Task {
     /**
      * Logging facility.
      */
-<span class="nc" id="L31">    private static final Logger LOG = Log.getLogger(RequestWorker.class);</span>
-    private final RequestHandler requestHandler;
+<span class="nc" id="L42">    private static final Logger LOG = Log.getLogger(RequestWorker.class);</span>
+<span class="nc" id="L43">    private final MessageSerializer serializer = new MessageSerializer();</span>
+    /**
+     * To obtain requests to process from.
+     */
     private final ConnectionQueue&lt;AsynchronousSocketChannel&gt; queue;
+    /**
+     * Used for I/O.
+     *
+     * TODO Decouple from I/O by using events.
+     */
     private final IO io;
+    /**
+     * Used to store incoming messages.
+     */
+    private final MessageBox inbox;
+    /**
+     * Indicates the worker to empty the queue and then stops.
+     */
     private volatile boolean stop;
+    /**
+     * Signals that the worker as stopped.
+     */
     private volatile boolean ready;
 
-    public RequestWorker(final ConnectionQueue&lt;AsynchronousSocketChannel&gt; queue, final IO io) {
-<span class="nc" id="L39">        super();</span>
-<span class="nc" id="L40">        this.queue = Validate.notNull(queue, &quot;Parameter &gt;queue&lt; must not be null!&quot;);</span>
-<span class="nc" id="L41">        this.io = Validate.notNull(io, &quot;Parameter &gt;io&lt; must not be null!&quot;);</span>
-<span class="nc" id="L42">        requestHandler = new RequestHandler(io);</span>
-<span class="nc" id="L43">    }</span>
+    public RequestWorker(final ConnectionQueue&lt;AsynchronousSocketChannel&gt; queue, final IO io, final MessageBox inbox) {
+<span class="nc" id="L68">        super();</span>
+<span class="nc" id="L69">        this.queue = Validate.notNull(queue, &quot;Parameter &gt;queue&lt; must not be null!&quot;);</span>
+<span class="nc" id="L70">        this.io = Validate.notNull(io, &quot;Parameter &gt;io&lt; must not be null!&quot;);</span>
+<span class="nc" id="L71">        this.inbox = Validate.notNull(inbox, &quot;Parameter &gt;inbox&lt; must not be null!&quot;);</span>
+<span class="nc" id="L72">    }</span>
 
     @Override
     public void run() {
         while (true) {
-<span class="nc bnc" id="L48" title="All 2 branches missed.">            if (!queue.isEmpty()) {</span>
-<span class="nc" id="L49">                handleRequset(queue.get());</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">            if (queue.isEmpty()) {</span>
+                try {
+<span class="nc" id="L79">                    Thread.sleep(1); // Prevent 100 % CPU usage.</span>
+<span class="nc" id="L80">                } catch (final InterruptedException ex) {</span>
+<span class="nc" id="L81">                    LOG.error(&quot;Can't sleep request worker llop!&quot;, ex);</span>
+<span class="nc" id="L82">                }</span>
+            } else {
+<span class="nc" id="L84">                handleRequset(queue.get());</span>
             }
 
-<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (stop) {</span>
-<span class="nc bnc" id="L53" title="All 2 branches missed.">                if (queue.isEmpty()) {</span>
-<span class="nc" id="L54">                    io.println(&quot;Request worker task &quot; + hashCode() + &quot; stopped.&quot;);</span>
-<span class="nc" id="L55">                    ready = true;</span>
-<span class="nc" id="L56">                    break;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">            if (stop) {</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                if (queue.isEmpty()) {</span>
+<span class="nc" id="L89">                    io.println(&quot;Request worker task &quot; + hashCode() + &quot; stopped.&quot;);</span>
+<span class="nc" id="L90">                    ready = true;</span>
+<span class="nc" id="L91">                    break;</span>
                 } else {
-<span class="nc" id="L58">                    io.println(String.format(&quot;Queue not empty yet (%d) ... &quot;, queue.size()));</span>
+<span class="nc" id="L93">                    io.println(String.format(&quot;Queue not empty yet (%d) ... &quot;, queue.size()));</span>
                 }
             }
         }
-<span class="nc" id="L62">    }</span>
+<span class="nc" id="L97">    }</span>
 
     @Override
     public void stop() {
-<span class="nc" id="L66">        io.println(&quot;Got stop signal for request worker task &quot; + hashCode() + &quot;.&quot;);</span>
-<span class="nc" id="L67">        stop = true;</span>
-<span class="nc" id="L68">    }</span>
+<span class="nc" id="L101">        io.println(&quot;Got stop signal for request worker task &quot; + hashCode() + &quot;.&quot;);</span>
+<span class="nc" id="L102">        stop = true;</span>
+<span class="nc" id="L103">    }</span>
 
     @Override
     public boolean isReady() {
-<span class="nc" id="L72">        return ready;</span>
+<span class="nc" id="L107">        return ready;</span>
     }
 
+    /**
+     * Process an incoming request.
+     *
+     * @param client must not be {@code null}
+     */
     private void handleRequset(final AsynchronousSocketChannel client) {
-<span class="nc" id="L76">        LOG.debug(&quot;Opened connection from &quot; + formatAddress(client));</span>
+<span class="nc" id="L116">        LOG.debug(&quot;Opened connection from &quot; + formatAddress(client));</span>
 
-        try {
-<span class="nc" id="L79">            requestHandler.execute(client);</span>
-<span class="nc" id="L80">        } catch (final Exception ex) {</span>
-<span class="nc" id="L81">            LOG.debug(&quot;Error while talking with client&quot; + formatAddress(client) + &quot;: &quot; + ex.getMessage());</span>
-<span class="nc" id="L82">        }</span>
-<span class="nc" id="L83">    }</span>
+<span class="nc" id="L118">        try (</span>
+<span class="nc" id="L119">            final DataInputStream input = new DataInputStream(Channels.newInputStream(client));</span>
+<span class="nc" id="L120">            final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);</span>
+        ) {
+<span class="nc" id="L122">            final Message incomming = serializer.deserialize(StreamIo.read(input));</span>
+<span class="nc" id="L123">            inbox.put(incomming);</span>
+<span class="nc" id="L124">            io.println(&quot;&quot;);</span>
+<span class="nc" id="L125">            io.println(&quot;Message received.&quot;);</span>
+<span class="nc" id="L126">            output.println(&quot;re: &quot; + incomming.getBody());</span>
+<span class="nc" id="L127">            output.flush();</span>
+<span class="nc bnc" id="L128" title="All 16 branches missed.">        } catch (final IOException ex) {</span>
+<span class="nc" id="L129">            LOG.debug(&quot;Error while talking with client&quot; + formatAddress(client) + &quot;: &quot; + ex.getMessage());</span>
+<span class="nc" id="L130">        }</span>
+<span class="nc" id="L131">    }</span>
 
-    static String formatAddress(final AsynchronousSocketChannel client) {
+    /**
+     * Formats the remote address (host:port) of incoming request.
+     *
+     * @param client must not be {@code null}
+     * @return never {@code null}
+     */
+    private static String formatAddress(final AsynchronousSocketChannel client) {
         try {
-<span class="nc" id="L87">            final InetSocketAddress address = (InetSocketAddress) client.getRemoteAddress();</span>
-<span class="nc" id="L88">            return String.format(&quot;%s:%d&quot;, address.getHostString(), address.getPort());</span>
-<span class="nc" id="L89">        } catch (final IOException ex) {</span>
-<span class="nc" id="L90">            return &quot;unknown&quot;;</span>
+<span class="nc" id="L141">            final InetSocketAddress address = (InetSocketAddress) client.getRemoteAddress();</span>
+<span class="nc" id="L142">            return String.format(&quot;%s:%d&quot;, address.getHostString(), address.getPort());</span>
+<span class="nc" id="L143">        } catch (final IOException ex) {</span>
+<span class="nc" id="L144">            return &quot;unknown&quot;;</span>
         }
     }
 }

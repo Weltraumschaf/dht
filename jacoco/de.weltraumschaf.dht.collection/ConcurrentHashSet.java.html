@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ConcurrentHashSet.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DHT</a> &gt; <a href="index.source.html" class="el_package">de.weltraumschaf.dht.collection</a> &gt; <span class="el_source">ConcurrentHashSet.java</span></div><h1>ConcurrentHashSet.java</h1><pre class="source lang-java linenums">/*
+ *  LICENSE
+ *
+ * &quot;THE BEER-WARE LICENSE&quot; (Revision 43):
+ * &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt; wrote this file.
+ * As long as you retain this notice you can do whatever you want with
+ * this stuff. If we meet some day, and you think this stuff is worth it,
+ * you can buy me a non alcohol-free beer in return.
+ *
+ * Copyright (C) 2012 &quot;Sven Strittmatter&quot; &lt;weltraumschaf@googlemail.com&gt;
+ */
+package de.weltraumschaf.dht.collection;
+
+import java.util.AbstractSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Implement on top of a ConcurrentHashMap with a dummy value.
+ *
+ * @author zzz
+ */
+public class ConcurrentHashSet&lt;E&gt; extends AbstractSet&lt;E&gt; implements Set&lt;E&gt; {
+
+    private static final int INITIAL_DEFAULT_CAPACITY = 16;
+<span class="nc" id="L29">    private static final Object DUMMY = new Object();</span>
+    private final Map&lt;E, Object&gt; map;
+
+    public ConcurrentHashSet() {
+<span class="nc" id="L33">        this(INITIAL_DEFAULT_CAPACITY);</span>
+<span class="nc" id="L34">    }</span>
+
+<span class="nc" id="L36">    public ConcurrentHashSet(final int capacity) {</span>
+<span class="nc" id="L37">        map = new ConcurrentHashMap&lt;E, Object&gt;(capacity);</span>
+<span class="nc" id="L38">    }</span>
+
+    @Override
+    public boolean add(final E o) {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        return map.put(o, DUMMY) == null;</span>
+    }
+
+    @Override
+    public void clear() {
+<span class="nc" id="L47">        map.clear();</span>
+<span class="nc" id="L48">    }</span>
+
+    @Override
+    public boolean contains(final Object o) {
+<span class="nc" id="L52">        return map.containsKey(o);</span>
+    }
+
+    @Override
+    public boolean isEmpty() {
+<span class="nc" id="L57">        return map.isEmpty();</span>
+    }
+
+    @Override
+    public boolean remove(final Object o) {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        return map.remove(o) != null;</span>
+    }
+
+    public int size() {
+<span class="nc" id="L66">        return map.size();</span>
+    }
+
+    public Iterator&lt;E&gt; iterator() {
+<span class="nc" id="L70">        return map.keySet().iterator();</span>
+    }
+
+    @Override
+    public boolean addAll(final Collection&lt;? extends E&gt; c) {
+<span class="nc" id="L75">        boolean rv = false;</span>
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        for (E e : c) {</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            rv |= map.put(e, DUMMY) == null;</span>
+<span class="nc" id="L79">        }</span>
+
+<span class="nc" id="L81">        return rv;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.5.201403032054</span></div></body></html>
