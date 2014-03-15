@@ -10,12 +10,14 @@
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
 
-package de.weltraumschaf.dht.collection;
+package de.weltraumschaf.dht.data;
 
 /**
- * Visit kbuckets, gathering matches
- * @since 0.9.2 in i2psnark, moved to core in 0.9.10
+ *
+ * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public interface SelectionCollector<T> {
-    public void add(T entry);
+public interface KBucketKey {
+
+    byte[] data();
+
 }
