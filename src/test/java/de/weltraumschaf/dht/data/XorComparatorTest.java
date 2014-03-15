@@ -12,22 +12,21 @@
 
 package de.weltraumschaf.dht.data;
 
-import java.util.Set;
+import org.junit.Test;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
+import org.junit.Ignore;
 
 /**
+ * Tests for {@link XorComparator}.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public interface KBucket<T extends KBucketKey> extends KBucketKey {
+public class XorComparatorTest {
 
-    boolean add(final T entry);
-
-    boolean remove(final T entry);
-
-    int size();
-
-    void clear();
-
-    Set<T> getEntries();
+    @Test
+    @Ignore
+    public void compare() {
+    }
 
 }

@@ -12,22 +12,19 @@
 
 package de.weltraumschaf.dht.data;
 
-import java.util.Set;
+import org.junit.Test;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 /**
+ * Tests for {@link KBucketImpl}.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public interface KBucket<T extends KBucketKey> extends KBucketKey {
+public class KBucketImplTest {
 
-    boolean add(final T entry);
-
-    boolean remove(final T entry);
-
-    int size();
-
-    void clear();
-
-    Set<T> getEntries();
+    @Test
+    public void testSomeMethod() {
+    }
 
 }

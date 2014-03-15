@@ -9,8 +9,9 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.data;
+
+import java.util.Arrays;
 
 /**
  * Implementors can be used as key.
@@ -26,4 +27,18 @@ public interface KBucketKey {
      */
     byte[] data();
 
+    public static final class IsEqual {
+
+        public static boolean isEqual(final KBucketKey lhs, final KBucketKey rhs) {
+            if (lhs == null && rhs == null) {
+                return false;
+            }
+
+            if (lhs == rhs) {
+                return true;
+            }
+
+            return Arrays.equals(lhs.data(), rhs.data());
+        }
+    }
 }

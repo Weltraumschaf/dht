@@ -12,6 +12,7 @@
 
 package de.weltraumschaf.dht.data;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +28,9 @@ public interface KBucketSet<T extends KBucketKey> {
     Set<T> getAll();
     Set<T> getAll(Set<T> toIgnore);
     List<T> getClosest(int max);
+    List<T> getClosest(int max, Collection<T> toIgnore);
     List<T> getClosest(T key, int max);
+    List<T> getClosest(T key, int max, Collection<T> toIgnore);
     boolean remove(T entry);
     int size();
 
