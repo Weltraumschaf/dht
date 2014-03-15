@@ -46,8 +46,8 @@ final class Exit extends BaseCommand {
     @Override
     public void execute() {
         try {
-            if (getApplication().getServer().isRunning()) {
-                getApplication().getServer().stop();
+            if (getApplicationContext().getServer().isRunning()) {
+                getApplicationContext().getServer().stop();
             }
         } catch (final IOException | InterruptedException ex) {
             errorln("Error: " + ex.getMessage());

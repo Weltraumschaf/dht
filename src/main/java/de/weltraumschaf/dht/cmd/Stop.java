@@ -24,7 +24,7 @@ final class Stop extends BaseCommand {
 
     @Override
     public void execute() {
-        if (!getApplication().getServer().isRunning()) {
+        if (!getApplicationContext().getServer().isRunning()) {
             println("Server not running.");
             return;
         }
@@ -32,7 +32,7 @@ final class Stop extends BaseCommand {
         println("Stopping server ...");
 
         try {
-            getApplication().getServer().stop();
+            getApplicationContext().getServer().stop();
         } catch (final IOException | InterruptedException ex) {
             println(String.format(
                 "Exception caught when trying to stop listen on %s.", formatLocalAddress()));
@@ -43,8 +43,8 @@ final class Stop extends BaseCommand {
         }
 
         println(String.format("Stopped listening on %s:%d.",
-            getApplication().getOptions().getHost(),
-            getApplication().getOptions().getPort()));
+            getApplicationContext().getOptions().getHost(),
+            getApplicationContext().getOptions().getPort()));
     }
 
     @Override

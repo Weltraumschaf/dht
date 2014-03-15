@@ -62,19 +62,19 @@ final class Status extends BaseCommand {
     }
 
     private String getNodeId() {
-        return getApplication().getNodeId().asString();
+        return getApplicationContext().getNodeId().asString();
     }
 
     private Server getServer() {
-        return getApplication().getServer();
+        return getApplicationContext().getServer();
     }
 
     private MessageBox getOutbox() {
-        return getApplication().getOutbox();
+        return getApplicationContext().getOutbox();
     }
 
     private MessageBox getInbox() {
-        return getApplication().getInbox();
+        return getApplicationContext().getInbox();
     }
 
     private void nodeInfo(final StringBuilder buffer) {

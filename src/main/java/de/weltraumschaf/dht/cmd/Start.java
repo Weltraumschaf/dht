@@ -24,7 +24,7 @@ final class Start extends BaseCommand {
 
     @Override
     public void execute() {
-        if (getApplication().getServer().isRunning()) {
+        if (getApplicationContext().getServer().isRunning()) {
             println(String.format("Server already listening on %s.", formatLocalAddress()));
             return;
         }
@@ -32,7 +32,7 @@ final class Start extends BaseCommand {
         println("Starting server ...");
 
         try {
-            getApplication().getServer().start();
+            getApplicationContext().getServer().start();
         } catch (final IOException ex) {
             println(String.format(
                     "Exception caught when trying to listen on %s or listening for a connection",

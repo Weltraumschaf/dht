@@ -14,6 +14,7 @@ package de.weltraumschaf.dht.cmd;
 import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.ApplicationContext;
 import de.weltraumschaf.dht.net.NetworkAddress;
 import de.weltraumschaf.dht.shell.CommandSubType;
 import java.util.Collections;
@@ -35,7 +36,7 @@ abstract class BaseCommand implements Command {
     /**
      * Invoking application.
      */
-    private Application application;
+    private ApplicationContext application;
     /**
      * Holds the subcommand.
      *
@@ -48,7 +49,7 @@ abstract class BaseCommand implements Command {
      *
      * @return shellI/O
      */
-    Application getApplication() {
+    ApplicationContext getApplicationContext() {
         return application;
     }
 
@@ -71,7 +72,7 @@ abstract class BaseCommand implements Command {
     }
 
     @Override
-    public void setApplication(final Application applocation) {
+    public void setApplicationContext(final ApplicationContext applocation) {
         this.application = Validate.notNull(applocation, "Parameter >applocation< must not be null!");
     }
 
@@ -87,8 +88,8 @@ abstract class BaseCommand implements Command {
 
     NetworkAddress newLocalAddress() {
         return newAddress(
-                getApplication().getOptions().getHost(),
-                getApplication().getOptions().getPort());
+                getApplicationContext().getOptions().getHost(),
+                getApplicationContext().getOptions().getPort());
     }
 
     /**
@@ -98,8 +99,8 @@ abstract class BaseCommand implements Command {
      */
     String formatLocalAddress() {
         return String.format("%s:%d",
-                getApplication().getOptions().getHost(),
-                getApplication().getOptions().getPort());
+                getApplicationContext().getOptions().getHost(),
+                getApplicationContext().getOptions().getPort());
     }
 
     /**
@@ -108,7 +109,7 @@ abstract class BaseCommand implements Command {
      * @param msg may be {@code null} or empty
      */
     void println(final String msg) {
-        getApplication().getIoStreams().println(msg);
+        getApplicationContext().getIoStreams().println(msg);
     }
 
     /**
@@ -124,7 +125,7 @@ abstract class BaseCommand implements Command {
      * @param msg may be {@code null} or empty
      */
     void print(final String msg) {
-        getApplication().getIoStreams().print(msg);
+        getApplicationContext().getIoStreams().print(msg);
     }
 
     /**
@@ -142,7 +143,7 @@ abstract class BaseCommand implements Command {
      * @param msg may be {@code null} or empty
      */
     void printStackTrace(final Throwable ex) {
-        getApplication().getIoStreams().printStackTrace(ex);
+        getApplicationContext().getIoStreams().printStackTrace(ex);
     }
 
     /**
@@ -151,7 +152,7 @@ abstract class BaseCommand implements Command {
      * @return {@code true} if debug is enabled, else {@code false}
      */
     boolean isDebug() {
-        return getApplication().getOptions().isDebug();
+        return getApplicationContext().getOptions().isDebug();
     }
 
     /**
@@ -160,6 +161,6 @@ abstract class BaseCommand implements Command {
      * @return never {@code null} or empty
      */
     String nl() {
-        return Application.NL;
+        return ApplicationContext.NL;
     }
 }

@@ -11,12 +11,6 @@
  */
 package de.weltraumschaf.dht;
 
-import de.weltraumschaf.dht.id.NodeId;
-import de.weltraumschaf.commons.IOStreams;
-import de.weltraumschaf.commons.Version;
-import de.weltraumschaf.dht.msg.MessageBox;
-import de.weltraumschaf.dht.server.Server;
-
 /**
  * Interface of the application.
  *
@@ -24,47 +18,6 @@ import de.weltraumschaf.dht.server.Server;
  */
 public interface Application {
 
-    /**
-     * Name of application.
-     */
-    public static final String NAME = "dht";
-    /**
-     * Used new line character.
-     */
-    public static final String NL = "\n";
-    /**
-     * The encoding used by this application for any I/O.
-     */
-    public static final String ENCODING = "utf-8";
+    ApplicationContext getContext();
 
-    /**
-     * Get the applications I/O streams.
-     *
-     * @return never {@code null}
-     */
-    IOStreams getIoStreams();
-
-    /**
-     * Get the applications version.
-     *
-     * @return never {@code null}
-     */
-    Version getVersion();
-
-    /**
-     * Get the applications command line options.
-     *
-     * @return never {@code null}
-     */
-    CliOptions getOptions();
-
-    Server getServer();
-
-    MessageBox getInbox();
-
-    MessageBox getOutbox();
-
-    NodeId getNodeId();
-
-    Clock getClock();
 }

@@ -15,6 +15,7 @@ import com.beust.jcommander.internal.Maps;
 import de.weltraumschaf.commons.shell.MainCommandType;
 import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.ApplicationContext;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,7 +43,7 @@ public final class CommandFactory {
     /**
      * Invoking application.
      */
-    private final Application app;
+    private final ApplicationContext context;
     /**
      * Holds a map of command type and command classes.
      */
@@ -51,12 +52,12 @@ public final class CommandFactory {
     /**
      * Dedicated constructor.
      *
-     * @param app the invoking application
+     * @param context the invoking application
      * @throws ClassNotFoundException if a command class is not found
      */
-    public CommandFactory(final Application app) throws ClassNotFoundException {
+    public CommandFactory(final ApplicationContext context) throws ClassNotFoundException {
         super();
-        this.app = Validate.notNull(app, "Parameter >app< must not be null!");
+        this.context = Validate.notNull(context, "Parameter >app< must not be null!");
         classLookup = createClassLookup();
     }
 
@@ -146,7 +147,7 @@ public final class CommandFactory {
             final Class<?> comamndClass = classLookup.get(shellCmd.getCommand());
             final Command cmd = (Command) comamndClass.newInstance();
             cmd.setSubCommandType(shellCmd.getSubCommand());
-            cmd.setApplication(app);
+            cmd.setApplicationContext(context);
             cmd.setArguments(shellCmd.getArguments());
             return cmd;
         }

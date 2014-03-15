@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.ApplicationContext;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.HELP;
@@ -43,7 +43,7 @@ final class Help extends BaseCommand {
     /**
      * Used new line character.
      */
-    private static final String NL = Application.NL;
+    private static final String NL = ApplicationContext.NL;
     /**
      * First line of help.
      */
@@ -60,7 +60,7 @@ final class Help extends BaseCommand {
 
     private void completeHelp() throws RuntimeException {
         final StringBuilder buffer = new StringBuilder();
-        buffer.append(String.format(HEADLINE_FORMAT, Application.NAME, getApplication().getVersion()))
+        buffer.append(String.format(HEADLINE_FORMAT, ApplicationContext.NAME, getApplicationContext().getVersion()))
                 .append(NL).append(NL);
         buffer.append("Available commands:").append(NL).append(NL);
 

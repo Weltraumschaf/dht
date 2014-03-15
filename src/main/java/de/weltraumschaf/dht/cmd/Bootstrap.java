@@ -97,7 +97,7 @@ public class Bootstrap extends BaseCommand {
     }
 
     private void insertBootstrappingNodeInKBucket() {
-        final Contact self = new Contact(getApplication().getNodeId(), newLocalAddress());
+        final Contact self = new Contact(getApplicationContext().getNodeId(), newLocalAddress());
     }
 
     /**

@@ -18,7 +18,7 @@ import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.SyntaxException;
 import de.weltraumschaf.dht.Application;
-import de.weltraumschaf.dht.Main;
+import de.weltraumschaf.dht.ApplicationContext;
 import de.weltraumschaf.dht.cmd.Command;
 import de.weltraumschaf.dht.cmd.CommandFactory;
 import de.weltraumschaf.dht.log.Log;
@@ -50,12 +50,12 @@ public class InteractiveShell {
     /**
      * String used as shell prompt.
      */
-    private static final String PROMPT = Main.NAME + "> ";
+    private static final String PROMPT = ApplicationContext.NAME + "> ";
 
     /**
      * ShellCommand line I/O.
      */
-    private final Application app;
+    private final ApplicationContext context;
 
     /**
      * Shell user input parser.
@@ -75,13 +75,13 @@ public class InteractiveShell {
     /**
      * Default constructor.
      *
-     * @param app the invoking application
+     * @param context the invoking application
      * @throws ClassNotFoundException if command classes can't be found
      */
-    public InteractiveShell(final Application app) throws ClassNotFoundException {
+    public InteractiveShell(final ApplicationContext context) throws ClassNotFoundException {
         super();
-        this.app = Validate.notNull(app, "Parameter >app< must not be null!");
-        factory = new CommandFactory(this.app);
+        this.context = Validate.notNull(context, "Parameter >app< must not be null!");
+        factory = new CommandFactory(this.context);
     }
 
     /**
@@ -92,7 +92,7 @@ public class InteractiveShell {
     public void start() throws IOException {
         showWelcome();
 
-        final ConsoleReader reader = new ConsoleReader(app.getIoStreams().getStdin(), app.getIoStreams().getStdout());
+        final ConsoleReader reader = new ConsoleReader(context.getIoStreams().getStdin(), context.getIoStreams().getStdout());
         reader.addCompleter(createCompletionHints());
         reader.setPrompt(PROMPT);
 
@@ -107,14 +107,14 @@ public class InteractiveShell {
                 final ShellCommand cmd = parser.parse(inputLine);
                 execute(cmd);
             } catch (final SyntaxException ex) {
-                app.getIoStreams().println(ex.getMessage());
-                app.getIoStreams().println("Try the command `help` to get description for all commands.");
+                context.getIoStreams().println(ex.getMessage());
+                context.getIoStreams().println("Try the command `help` to get description for all commands.");
 
-                if (app.getOptions().isDebug()) {
-                    app.getIoStreams().printStackTrace(ex);
+                if (context.getOptions().isDebug()) {
+                    context.getIoStreams().printStackTrace(ex);
                 }
             } catch (final IllegalArgumentException ex) {
-                app.getIoStreams().println(ex.getMessage());
+                context.getIoStreams().println(ex.getMessage());
             } catch (final CommandRuntimeException ex) {
                 handleException("Error: ", ex);
             } catch (final InstantiationException | IllegalAccessException ex) {
@@ -128,15 +128,15 @@ public class InteractiveShell {
     }
 
     private void showWelcome() {
-        app.getIoStreams().println(String.format(WELCOME_FORMAT, Application.NAME.toUpperCase()));
-        app.getIoStreams().println(String.format("Your node id is: %s%n", app.getNodeId().asString()));
+        context.getIoStreams().println(String.format(WELCOME_FORMAT, ApplicationContext.NAME.toUpperCase()));
+        context.getIoStreams().println(String.format("Your node id is: %s%n", context.getNodeId().asString()));
     }
 
     private void handleException(final String prefix, final Exception ex) {
-        app.getIoStreams().println(prefix + ex.getMessage());
+        context.getIoStreams().println(prefix + ex.getMessage());
 
-        if (app.getOptions().isDebug()) {
-            app.getIoStreams().printStackTrace(ex);
+        if (context.getOptions().isDebug()) {
+            context.getIoStreams().printStackTrace(ex);
         }
 
         LOG.error(ex.getMessage(), ex);

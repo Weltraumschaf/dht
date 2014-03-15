@@ -152,7 +152,7 @@ final class Inbox extends BaseCommand {
         }
 
         answer.markAsRead();
-        getApplication().getOutbox().put(answer);
+        getApplicationContext().getOutbox().put(answer);
     }
 
     private void removeMessage() {
@@ -177,7 +177,7 @@ final class Inbox extends BaseCommand {
     }
 
     private MessageBox getInbox() {
-        return getApplication().getInbox();
+        return getApplicationContext().getInbox();
     }
 
     private int validateId(final Token<Integer> idToken) {

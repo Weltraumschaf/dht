@@ -13,7 +13,7 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.Token;
-import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.dht.ApplicationContext;
 import java.util.List;
 
 /**
@@ -44,7 +44,7 @@ public interface Command extends Describable {
      *
      * @param app must not be {@code null}
      */
-    void setApplication(final Application app);
+    void setApplicationContext(final ApplicationContext app);
 
     void setSubCommandType(SubCommandType subCommand);
 }

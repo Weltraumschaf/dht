@@ -7,7 +7,6 @@ import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
-import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.Server;
 import de.weltraumschaf.dht.shell.InteractiveShell;
@@ -25,19 +24,9 @@ public final class Main extends InvokableAdapter implements Application {
      */
     private static final String VERSION_FILE = "/de/weltraumschaf/dht/version.properties";
 
-    /**
-     * Version of the application.
-     */
-    private final Version version = new Version(VERSION_FILE);
-
-    private final CliOptions options = new CliOptions();
+    private final ApplicationContext context = new ApplicationContext();
     private final JCommander cliOptionsParser = new JCommander();
-    private final InteractiveShell shell = new InteractiveShell(this);
-    private final MessageBox inbox = Messaging.newMessageBox();
-    private final MessageBox outbox = Messaging.newMessageBox();
-    private final NodeId nodeId = NodeId.newRandom();
-    private final Clock clock = new Clock().start();
-    private Server server;
+    private final InteractiveShell shell = new InteractiveShell(context);
 
     /**
      * Dedicated constructor.
@@ -51,19 +40,29 @@ public final class Main extends InvokableAdapter implements Application {
     }
 
     public void initEnvironment() throws ApplicationException {
-        cliOptionsParser.setProgramName(NAME);
+        context.setIo(getIoStreams());
+        context.setInbox(Messaging.newMessageBox());
+        context.setOutbox(Messaging.newMessageBox());
+        context.setNodeId(NodeId.newRandom());
+        context.setClock(new Clock().start());
+
+        cliOptionsParser.setProgramName(ApplicationContext.NAME);
+        final CliOptions options = new CliOptions();
         cliOptionsParser.addObject(options);
         cliOptionsParser.parse(getArgs());
+        context.setOptions(options);
 
         try {
+            final Version version = new Version(VERSION_FILE);
             version.load();
         } catch (final IOException ex) {
             throw new ApplicationException(ExitCodeImpl.FATAL, "Can't load version file!", ex);
         }
 
-        server = new Server(getIoStreams(), inbox);
+        final Server server = new Server(getIoStreams(), context.getInbox());
         server.setHost(options.getHost());
         server.setPort(options.getPort());
+        context.setServer(server);
 
         registerShutdownHook(new Runnable() {
 
@@ -108,51 +107,15 @@ public final class Main extends InvokableAdapter implements Application {
     }
 
     @Override
-    public Version getVersion() {
-        return version;
-    }
-
-    @Override
-    public CliOptions getOptions() {
-        return options;
-    }
-
-
-    @Override
-    public Server getServer() {
-        return server;
-    }
-
-    @Override
-    public MessageBox getInbox() {
-        return inbox;
-    }
-
-    @Override
-    public MessageBox getOutbox() {
-        return outbox;
-    }
-
-    @Override
-    public NodeId getNodeId() {
-        return nodeId;
-    }
-
-    @Override
-    public Clock getClock() {
-        return clock;
-    }
-
-    @Override
     public void execute() throws Exception {
         initEnvironment();
 
-        if (options.isHelp()) {
+        if (context.getOptions().isHelp()) {
             showHelpMessage();
             return;
         }
 
-        if (options.isVersion()) {
+        if (context.getOptions().isVersion()) {
             showVersionMessage();
             return;
         }
@@ -164,17 +127,17 @@ public final class Main extends InvokableAdapter implements Application {
      * Prints version information on STDOUT.
      */
     void showVersionMessage() {
-        getIoStreams().println(String.format("Version: %s", version.getVersion()));
+        getIoStreams().println(String.format("Version: %s", context.getVersion()));
     }
 
     private void showHelpMessage() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append("DHT is an interactive shell to play around with distributed hash table technology.")
-              .append(NL).append(NL);
+              .append(ApplicationContext.NL).append(ApplicationContext.NL);
         cliOptionsParser.usage(buffer);
-        buffer.append(NL);
-        buffer.append("Developed by Sven Strittmatter <ich@weltraumschaf.de>").append(NL);
-        buffer.append("https://github.com/Weltraumschaf/dht").append(NL).append(NL);
+        buffer.append(ApplicationContext.NL);
+        buffer.append("Developed by Sven Strittmatter <ich@weltraumschaf.de>").append(ApplicationContext.NL);
+        buffer.append("https://github.com/Weltraumschaf/dht").append(ApplicationContext.NL).append(ApplicationContext.NL);
         getIoStreams().print(buffer.toString());
     }
 
@@ -184,12 +147,17 @@ public final class Main extends InvokableAdapter implements Application {
         } catch (final Exception ex) {
             getIoStreams().errorln(ex.getMessage());
 
-            if (options.isDebug()) {
+            if (context.getOptions().isDebug()) {
                 getIoStreams().printStackTrace(ex);
             }
 
             LOG.error(ex.getMessage(), ex);
         }
+    }
+
+    @Override
+    public ApplicationContext getContext() {
+        return context;
     }
 
 }
