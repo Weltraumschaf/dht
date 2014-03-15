@@ -11,11 +11,13 @@
  */
 package de.weltraumschaf.dht.id;
 
-import de.weltraumschaf.dht.id.UuidConverter;
+import de.weltraumschaf.dht.data.KBucketKey;
 import java.io.IOError;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -25,7 +27,7 @@ import org.apache.commons.lang3.Validate;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public final class NodeId {
+public final class NodeId implements KBucketKey {
 
     /**
      * Holds the UUID.
@@ -94,6 +96,16 @@ public final class NodeId {
      */
     public static NodeId newRandom() {
         return new NodeId(UUID.randomUUID());
+    }
+
+    @Override
+    public byte[] data() {
+        try {
+            return UuidConverter.toByteArray(id);
+        } catch (final IOException ex) {
+            // Should not happen: No file or network I/O here. Only streams to buffer bytes used.
+            throw new IOError(ex);
+        }
     }
 
 }

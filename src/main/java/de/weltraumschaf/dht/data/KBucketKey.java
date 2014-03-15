@@ -13,11 +13,17 @@
 package de.weltraumschaf.dht.data;
 
 /**
+ * Implementors can be used as key.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public interface KBucketKey {
 
+    /**
+     * Returns binary key representation of the implementing type.
+     *
+     * @return never {@code null}, never empty empty
+     */
     byte[] data();
 
 }
