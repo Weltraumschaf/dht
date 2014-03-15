@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Has only one single bucket.
@@ -36,9 +37,9 @@ final class KSingleBucketSet<T extends KBucketKey> implements KBucketSet<T> {
      *
      * @param k bucket size
      */
-    public KSingleBucketSet(final int k) {
+    public KSingleBucketSet(final KBucket<T> bucket) {
         super();
-        bucket = DataStructures.newBucket(k);
+        this.bucket = Validate.notNull(bucket);
     }
 
     @Override

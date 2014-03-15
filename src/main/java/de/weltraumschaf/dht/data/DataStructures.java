@@ -23,12 +23,12 @@ public final class DataStructures {
         throw new UnsupportedOperationException("Do not call via refletction!");
     }
 
-    public static <T extends KBucketKey> KBucketSet<T> newBucketSet(final int k) {
-        return new KSingleBucketSet<T>(k);
+    public static <T extends KBucketKey> KBucketSet<T> newBucketSet(final int begin, final int end, final int max, final KBucketTrimmer<T> trimmer) {
+        return new KSingleBucketSet<T>(newBucket(begin, end, max, trimmer));
     }
 
-    public static <T extends KBucketKey> KBucket<T> newBucket(final int k) {
-        return new KBucketImpl<T>(k);
+    public static <T extends KBucketKey> KBucket<T> newBucket(final int begin, final int end, final int max, final KBucketTrimmer<T> trimmer) {
+        return new KBucketImpl<T>(begin, end, max, trimmer);
     }
 
 }
