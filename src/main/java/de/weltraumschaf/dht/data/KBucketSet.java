@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Holds and organizes one or more buckets.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */

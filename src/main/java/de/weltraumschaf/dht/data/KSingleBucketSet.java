@@ -16,13 +16,22 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Has only one single bucket.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-final class KBucketSetImpl<T extends KBucketKey> implements KBucketSet {
+final class KSingleBucketSet<T extends KBucketKey> implements KBucketSet<T> {
+
+    private final KBucket<T> bucket;
+
+    public KSingleBucketSet(final int k) {
+        super();
+        bucket = DataStructures.newBucket(k);
+    }
+
 
     @Override
-    public boolean add(KBucketKey peer) {
+    public boolean add(final KBucketKey peer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -37,22 +46,22 @@ final class KBucketSetImpl<T extends KBucketKey> implements KBucketSet {
     }
 
     @Override
-    public Set getAll(Set toIgnore) {
+    public Set getAll(final Set<T> toIgnore) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List getClosest(int max) {
+    public List getClosest(final int max) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List getClosest(KBucketKey key, int max) {
+    public List getClosest(final KBucketKey key, int max) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean remove(KBucketKey entry) {
+    public boolean remove(final KBucketKey entry) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

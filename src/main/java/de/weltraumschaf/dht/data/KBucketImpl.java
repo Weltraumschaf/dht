@@ -9,7 +9,6 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.data;
 
 /**
@@ -17,5 +16,9 @@ package de.weltraumschaf.dht.data;
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 final class KBucketImpl<T extends KBucketKey> implements KBucket<T> {
+
+    public KBucketImpl(final int k) {
+        super();
+    }
 
 }
