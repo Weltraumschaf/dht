@@ -20,9 +20,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Implement on top of a ConcurrentHashMap with a dummy value.
- *
- * From net.i2p.util
+ * Implement on top of a {@link ConcurrentHashMap} with a dummy value.
+ * <p>
+ * This implementation does not allow {@code null} values
+ * {@link #add(java.lang.Object) to be added}, {@link #contains(java.lang.Object) to be contained}, and hence
+ * {@link #remove(java.lang.Object) removed}.
+ * </p>
+ * <p>
+ * Copied from {@code net.i2p.util} and refactored a bit.
+ * </p>
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
@@ -65,7 +71,7 @@ final class ConcurrentHashSet<E> extends AbstractSet<E> implements Set<E> {
 
     @Override
     public boolean add(final E o) {
-        return data.put(o, DUMMY_VALUE) == null;
+        return data.put(Validate.notNull(o), DUMMY_VALUE) == null;
     }
 
     @Override
@@ -75,7 +81,7 @@ final class ConcurrentHashSet<E> extends AbstractSet<E> implements Set<E> {
 
     @Override
     public boolean contains(final Object o) {
-        return data.containsKey(o);
+        return data.containsKey(Validate.notNull(o));
     }
 
     @Override
@@ -85,7 +91,7 @@ final class ConcurrentHashSet<E> extends AbstractSet<E> implements Set<E> {
 
     @Override
     public boolean remove(final Object o) {
-        return data.remove(o) != null;
+        return data.remove(Validate.notNull(o)) != null;
     }
 
     @Override

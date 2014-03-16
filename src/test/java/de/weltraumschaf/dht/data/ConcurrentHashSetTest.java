@@ -12,11 +12,15 @@
 package de.weltraumschaf.dht.data;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests for {@link ConcurrentHashSet}.
@@ -25,12 +29,23 @@ import org.junit.Ignore;
  */
 public class ConcurrentHashSetTest {
 
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
     private final Set<String> sut = new ConcurrentHashSet<String>();
+
+    @Before
+    public void assertThatSutIsEmpty() {
+        assertThat(sut.isEmpty(), is(true));
+    }
+
+    @Test
+    public void add_throwsExceptionIfNullAdded() {
+        thrown.expect(NullPointerException.class);
+        sut.add(null);
+    }
 
     @Test
     public void add() {
-        assertThat(sut.isEmpty(), is(true));
-
         sut.add("foo");
         assertThat(sut.size(), is(1));
 
@@ -46,44 +61,88 @@ public class ConcurrentHashSetTest {
 
     @Test
     public void addAll() {
-        assertThat(sut.isEmpty(), is(true));
-
         sut.addAll(Arrays.asList("foo", "bar", "baz", "foo"));
         assertThat(sut.size(), is(3));
     }
 
     @Test
-    @Ignore
     public void clear() {
+        sut.add("foo");
+        sut.add("bar");
+        assertThat(sut.size(), is(2));
+
+        sut.clear();
+        assertThat(sut.isEmpty(), is(true));
     }
 
     @Test
-    @Ignore
     public void contains() {
+        sut.addAll(Arrays.asList("foo", "bar", "baz"));
+
+        assertThat(sut.contains("foo"), is(true));
+        assertThat(sut.contains("bar"), is(true));
+        assertThat(sut.contains("baz"), is(true));
+        assertThat(sut.contains("snafu"), is(false));
     }
 
     @Test
-    @Ignore
+    public void contains_throwsExceptionIfNullAdded() {
+        thrown.expect(NullPointerException.class);
+        sut.contains(null);
+    }
+
+    @Test
     public void isEmpty() {
+        assertThat(sut.isEmpty(), is(true));
+        sut.add("foo");
+        assertThat(sut.isEmpty(), is(false));
+        sut.add("bar");
+        assertThat(sut.isEmpty(), is(false));
     }
 
     @Test
-    @Ignore
     public void size() {
+        assertThat(sut.size(), is(0));
+        sut.add("foo");
+        assertThat(sut.size(), is(1));
+        sut.add("bar");
+        assertThat(sut.size(), is(2));
     }
 
     @Test
-    @Ignore
     public void remove() {
+        sut.addAll(Arrays.asList("foo", "bar", "baz"));
+        sut.remove("bar");
+
+        assertThat(sut.contains("foo"), is(true));
+        assertThat(sut.contains("bar"), is(false));
+        assertThat(sut.contains("baz"), is(true));
     }
 
     @Test
-    @Ignore
+    public void remove_throwsExceptionIfNullAdded() {
+        thrown.expect(NullPointerException.class);
+        sut.remove(null);
+    }
+
+    @Test
     public void iterator() {
+        sut.addAll(Arrays.asList("foo", "bar", "baz"));
+        final Iterator<String> iterator = sut.iterator();
+
+        assertThat(iterator.hasNext(), is(true));
+        assertThat(iterator.next(), is(equalTo("baz")));
+        assertThat(iterator.hasNext(), is(true));
+        assertThat(iterator.next(), is(equalTo("foo")));
+        assertThat(iterator.hasNext(), is(true));
+        assertThat(iterator.next(), is(equalTo("bar")));
+        assertThat(iterator.hasNext(), is(false));
     }
 
     @Test
-    @Ignore
     public void testToString() {
+        assertThat(sut.toString(), is(equalTo("ConcurrentHashSet{data=[]}")));
+        sut.addAll(Arrays.asList("foo", "bar", "baz"));
+        assertThat(sut.toString(), is(equalTo("ConcurrentHashSet{data=[baz, foo, bar]}")));
     }
 }
