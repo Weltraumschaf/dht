@@ -48,7 +48,7 @@ final class ConnectionQueue<T> {
     /**
      * Whether the queue is empty or not.
      *
-     * @return {@link true} if empty, else {@link false}
+     * @return {@code true} if empty, else {@code false}
      */
     public boolean isEmpty() {
         return sockets.isEmpty();

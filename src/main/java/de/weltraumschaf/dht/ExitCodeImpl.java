@@ -14,7 +14,7 @@ package de.weltraumschaf.dht;
 import de.weltraumschaf.commons.system.ExitCode;
 
 /**
- * Exit codes for {@link GroundZero CLI application}.
+ * Exit codes for {@link Main CLI application}.
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
