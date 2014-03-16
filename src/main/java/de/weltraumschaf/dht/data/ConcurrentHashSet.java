@@ -20,6 +20,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Implement on top of a ConcurrentHashMap with a dummy value.
+ *
+ * From net.i2p.util
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
