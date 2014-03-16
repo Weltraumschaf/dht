@@ -9,12 +9,14 @@
  *
  * Copyright (C) 2012 "Sven Strittmatter" <weltraumschaf@googlemail.com>
  */
-
 package de.weltraumschaf.dht.data;
 
+import java.util.Arrays;
+import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
+import org.junit.Ignore;
 
 /**
  * Tests for {@link ConcurrentHashSet}.
@@ -23,8 +25,65 @@ import static org.hamcrest.Matchers.*;
  */
 public class ConcurrentHashSetTest {
 
+    private final Set<String> sut = new ConcurrentHashSet<String>();
+
     @Test
-    public void testSomeMethod() {
+    public void add() {
+        assertThat(sut.isEmpty(), is(true));
+
+        sut.add("foo");
+        assertThat(sut.size(), is(1));
+
+        sut.add("bar");
+        assertThat(sut.size(), is(2));
+
+        sut.add("baz");
+        assertThat(sut.size(), is(3));
+
+        sut.add("foo");
+        assertThat(sut.size(), is(3));
     }
 
+    @Test
+    public void addAll() {
+        assertThat(sut.isEmpty(), is(true));
+
+        sut.addAll(Arrays.asList("foo", "bar", "baz", "foo"));
+        assertThat(sut.size(), is(3));
+    }
+
+    @Test
+    @Ignore
+    public void clear() {
+    }
+
+    @Test
+    @Ignore
+    public void contains() {
+    }
+
+    @Test
+    @Ignore
+    public void isEmpty() {
+    }
+
+    @Test
+    @Ignore
+    public void size() {
+    }
+
+    @Test
+    @Ignore
+    public void remove() {
+    }
+
+    @Test
+    @Ignore
+    public void iterator() {
+    }
+
+    @Test
+    @Ignore
+    public void testToString() {
+    }
 }
