@@ -13,20 +13,49 @@
 package de.weltraumschaf.dht.data;
 
 /**
+ * Factory to provide data structures.
+ *
+ * <ul>
+ * <li>{@link KBucketSet}</li>
+ * <li>{@link KBucket}</li>
+ * </ul>
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public final class DataStructures {
 
+    /**
+     * Hidden for pure static factory.
+     */
     private DataStructures() {
         super();
         throw new UnsupportedOperationException("Do not call via refletction!");
     }
 
+    /**
+     * Creates a new k-bucket set.
+     *
+     * @param <T> type of keys stored in bucket
+     * @param begin
+     * @param end
+     * @param max
+     * @param trimmer must not be {@code null}
+     * @return never {@code null}, always new instance
+     */
     public static <T extends KBucketKey> KBucketSet<T> newBucketSet(final int begin, final int end, final int max, final KBucketTrimmer<T> trimmer) {
         return new KSingleBucketSet<T>(newBucket(begin, end, max, trimmer));
     }
 
+    /**
+     * Creates a new k-bucket.
+     *
+     * @param <T> type of keys
+     * @param begin
+     * @param end
+     * @param max
+     * @param trimmer must not be {@code null}
+     * @return never {@code null}, always new instance
+     */
     public static <T extends KBucketKey> KBucket<T> newBucket(final int begin, final int end, final int max, final KBucketTrimmer<T> trimmer) {
         return new KBucketImpl<T>(begin, end, max, trimmer);
     }
