@@ -98,6 +98,10 @@ public class Logger {
         delegate.debug(message, t);
     }
 
+    public void debug(final TacoliMessage message) {
+        debug(message.toString());
+    }
+
     /**
      * Handle Message in format string style.
      *
@@ -128,6 +132,10 @@ public class Logger {
      */
     public void trace(final Object message, final Throwable t) {
         delegate.trace(message, t);
+    }
+
+    public void trace(final TacoliMessage message) {
+        debug(message.toString());
     }
 
     /**
@@ -162,6 +170,10 @@ public class Logger {
         delegate.info(message, t);
     }
 
+    public void info(final TacoliMessage message) {
+        debug(message.toString());
+    }
+
     /**
      * Handle Message in format string style.
      *
@@ -192,6 +204,10 @@ public class Logger {
      */
     public void warn(final Object message, final Throwable t) {
         delegate.warn(message, t);
+    }
+
+    public void warn(final TacoliMessage message) {
+        debug(message.toString());
     }
 
     /**
@@ -226,6 +242,10 @@ public class Logger {
         delegate.error(message, t);
     }
 
+    public void error(final TacoliMessage message) {
+        debug(message.toString());
+    }
+
     /**
      * Handle Message in format string style.
      *
@@ -257,4 +277,9 @@ public class Logger {
     public void fatal(final Object message, final Throwable t) {
         delegate.fatal(message, t);
     }
+
+    public void fatal(final TacoliMessage message) {
+        debug(message.toString());
+    }
+
 }
