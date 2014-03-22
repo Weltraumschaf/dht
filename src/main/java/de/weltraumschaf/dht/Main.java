@@ -40,6 +40,7 @@ public final class Main extends InvokableAdapter implements Application {
     }
 
     public void initEnvironment() throws ApplicationException {
+        LOG.debug("Initialize environment.");
         context.setIo(getIoStreams());
         context.setInbox(Messaging.newMessageBox());
         context.setOutbox(Messaging.newMessageBox());
@@ -64,10 +65,13 @@ public final class Main extends InvokableAdapter implements Application {
         server.setPort(options.getPort());
         context.setServer(server);
 
+        LOG.debug("Register shutdown hook.");
         registerShutdownHook(new Runnable() {
 
             @Override
             public void run() {
+                LOG.debug("Shutdown hook called.");
+
                 if (server.isRunning()) {
                     try {
                         server.stop();
@@ -108,6 +112,7 @@ public final class Main extends InvokableAdapter implements Application {
 
     @Override
     public void execute() throws Exception {
+        LOG.debug("Start DHT ...");
         initEnvironment();
 
         if (context.getOptions().isHelp()) {
@@ -127,10 +132,12 @@ public final class Main extends InvokableAdapter implements Application {
      * Prints version information on STDOUT.
      */
     void showVersionMessage() {
+        LOG.debug("Show version message.");
         getIoStreams().println(String.format("Version: %s", context.getVersion()));
     }
 
     private void showHelpMessage() {
+        LOG.debug("Show help message.");
         final StringBuilder buffer = new StringBuilder();
         buffer.append("DHT is an interactive shell to play around with distributed hash table technology.")
               .append(ApplicationContext.NL).append(ApplicationContext.NL);
@@ -143,6 +150,7 @@ public final class Main extends InvokableAdapter implements Application {
 
     private void run() {
         try {
+            LOG.debug("Start interactive shell.");
             shell.start();
         } catch (final Exception ex) {
             getIoStreams().errorln(ex.getMessage());
