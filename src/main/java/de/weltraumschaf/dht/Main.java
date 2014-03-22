@@ -5,6 +5,7 @@ import com.beust.jcommander.JCommander;
 import de.weltraumschaf.commons.ApplicationException;
 import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
+import de.weltraumschaf.dht.data.DataStructures;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
 import de.weltraumschaf.dht.msg.Messaging;
@@ -64,6 +65,8 @@ public final class Main extends InvokableAdapter implements Application {
         server.setHost(options.getHost());
         server.setPort(options.getPort());
         context.setServer(server);
+
+        context.setKBucket(DataStructures.<Contact>newBucketSet(0, 256, 20, null));
 
         LOG.debug("Register shutdown hook.");
         registerShutdownHook(new Runnable() {

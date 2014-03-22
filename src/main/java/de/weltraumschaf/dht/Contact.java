@@ -13,6 +13,7 @@
 package de.weltraumschaf.dht;
 
 import com.google.common.base.Objects;
+import de.weltraumschaf.dht.data.KBucketKey;
 import de.weltraumschaf.dht.id.NodeId;
 import de.weltraumschaf.dht.net.NetworkAddress;
 import org.apache.commons.lang3.Validate;
@@ -25,7 +26,7 @@ import org.apache.commons.lang3.Validate;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public final class Contact {
+public final class Contact implements KBucketKey {
 
     /**
      * Global unique user id.
@@ -35,6 +36,10 @@ public final class Contact {
      * Host on which the users client listen.
      */
     private final NetworkAddress networkAddress;
+
+    public Contact(final NetworkAddress networkAddress) {
+        this(NodeId.NULL, networkAddress);
+    }
 
     /**
      * Dedicated constructor.
@@ -85,6 +90,11 @@ public final class Contact {
         final Contact other = (Contact) obj;
         return Objects.equal(nodeId, other.getNodeId())
             && Objects.equal(networkAddress, other.getNetworkAddress());
+    }
+
+    @Override
+    public byte[] data() {
+        return nodeId.data();
     }
 
 

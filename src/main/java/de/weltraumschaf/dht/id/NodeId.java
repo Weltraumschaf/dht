@@ -16,8 +16,6 @@ import java.io.IOError;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -28,6 +26,8 @@ import org.apache.commons.lang3.Validate;
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
 public final class NodeId implements KBucketKey {
+
+    public static final NodeId NULL = new NodeId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
 
     /**
      * Holds the UUID.

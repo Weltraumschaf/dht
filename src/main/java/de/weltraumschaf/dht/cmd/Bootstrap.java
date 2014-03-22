@@ -62,7 +62,11 @@ public class Bootstrap extends BaseCommand {
 
     private void bootstrap() {
         final Arguments args = validateArguments();
-        insertBootstrappingNodeInKBucket();
+        Contact bootsrapNode = new Contact(newAddress(args.getHost(), args.getPort()));
+        final Contact self = new Contact(getApplicationContext().getNodeId(), newLocalAddress());
+
+        bootsrapNode = findNode(bootsrapNode, self);
+        insertInBucket(bootsrapNode);
     }
 
     private Arguments validateArguments() throws CommandArgumentExcpetion {
@@ -96,8 +100,12 @@ public class Bootstrap extends BaseCommand {
         return new Arguments(hostToken.getValue(), port);
     }
 
-    private void insertBootstrappingNodeInKBucket() {
-        final Contact self = new Contact(getApplicationContext().getNodeId(), newLocalAddress());
+    private Contact findNode(final Contact bootsrapNode, final Contact self) {
+        return null;
+    }
+
+    private void insertInBucket(final Contact bootsrapNode) {
+        getApplicationContext().getkBucket().add(bootsrapNode);
     }
 
     /**

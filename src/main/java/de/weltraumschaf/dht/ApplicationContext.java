@@ -13,6 +13,7 @@ package de.weltraumschaf.dht;
 
 import de.weltraumschaf.commons.IO;
 import de.weltraumschaf.commons.Version;
+import de.weltraumschaf.dht.data.KBucketSet;
 import de.weltraumschaf.dht.id.NodeId;
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.server.Server;
@@ -49,6 +50,7 @@ public final class ApplicationContext {
     private MessageBox outbox;
     private NodeId nodeId;
     private Clock clock;
+    private KBucketSet<Contact> kBucket;
 
     public void setIo(final IO io) {
         this.io = Validate.notNull(io);
@@ -128,4 +130,13 @@ public final class ApplicationContext {
     public Clock getClock() {
         return clock;
     }
+
+    public KBucketSet<Contact> getkBucket() {
+        return kBucket;
+    }
+
+    public void setKBucket(final KBucketSet<Contact> kBucket) {
+        this.kBucket = kBucket;
+    }
+
 }
