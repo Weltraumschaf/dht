@@ -2,6 +2,7 @@ package de.weltraumschaf.dht;
 
 import de.weltraumschaf.dht.id.NodeId;
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import de.weltraumschaf.commons.ApplicationException;
 import de.weltraumschaf.commons.InvokableAdapter;
 import de.weltraumschaf.commons.Version;
@@ -56,7 +57,13 @@ public final class Main extends InvokableAdapter implements Application {
         cliOptionsParser.setProgramName(ApplicationContext.NAME);
         final CliOptions options = new CliOptions();
         cliOptionsParser.addObject(options);
-        cliOptionsParser.parse(getArgs());
+
+        try {
+            cliOptionsParser.parse(getArgs());
+        } catch (final ParameterException ex) {
+            throw new ApplicationException(ExitCodeImpl.FATAL, "Bad options!", ex);
+        }
+
         LOG.debug("Add CLI options to context.");
         context.setOptions(options);
 
