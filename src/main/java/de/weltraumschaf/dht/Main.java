@@ -42,21 +42,29 @@ public final class Main extends InvokableAdapter implements Application {
 
     public void initEnvironment() throws ApplicationException {
         LOG.debug("Initialize environment.");
+        LOG.debug("Add I/O streams to context.");
         context.setIo(getIoStreams());
+        LOG.debug("Add inbox to context.");
         context.setInbox(Messaging.newMessageBox());
+        LOG.debug("Add outbox to context.");
         context.setOutbox(Messaging.newMessageBox());
+        LOG.debug("Add node ID to context.");
         context.setNodeId(NodeId.newRandom());
+        LOG.debug("Add clock context.");
         context.setClock(new Clock().start());
 
         cliOptionsParser.setProgramName(ApplicationContext.NAME);
         final CliOptions options = new CliOptions();
         cliOptionsParser.addObject(options);
         cliOptionsParser.parse(getArgs());
+        LOG.debug("Add CLI options to context.");
         context.setOptions(options);
 
         try {
             final Version version = new Version(VERSION_FILE);
             version.load();
+            LOG.debug("Add version to context.");
+            context.setVersion(version);
         } catch (final IOException ex) {
             throw new ApplicationException(ExitCodeImpl.FATAL, "Can't load version file!", ex);
         }
@@ -64,9 +72,11 @@ public final class Main extends InvokableAdapter implements Application {
         final Server server = new Server(getIoStreams(), context.getInbox());
         server.setHost(options.getHost());
         server.setPort(options.getPort());
+        LOG.debug("Add server to context.");
         context.setServer(server);
 
-        context.setKBucket(DataStructures.<Contact>newBucketSet(0, 256, 20, null));
+        LOG.debug("Add K-Bucket to context.");
+        context.setKBucket(DataStructures.<Contact>newBucketSet(0, 256, 20, DataStructures.<Contact>newBucketTrimmer()));
 
         LOG.debug("Register shutdown hook.");
         registerShutdownHook(new Runnable() {

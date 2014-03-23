@@ -16,11 +16,18 @@ import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
 import de.weltraumschaf.dht.CliOptions;
 import de.weltraumschaf.dht.Contact;
+import de.weltraumschaf.dht.msg.Message;
+import de.weltraumschaf.dht.msg.MessageType;
+import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.PortValidator;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
 import de.weltraumschaf.dht.shell.CommandMainType;
 import static de.weltraumschaf.dht.shell.CommandMainType.BOOTSTRAP;
+import de.weltraumschaf.dht.shell.CommandRuntimeException;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -56,11 +63,17 @@ public class Bootstrap extends BaseCommand {
     @Override
     public void execute() {
         println("Start bootstrapping...");
-        bootstrap();
+
+        try {
+            bootstrap();
+        } catch (IOException ex) {
+            throw new CommandRuntimeException("Can't bootstrap!", ex);
+        }
+
         println("Bootstrapping done.");
     }
 
-    private void bootstrap() {
+    private void bootstrap() throws IOException {
         final Arguments args = validateArguments();
         Contact bootsrapNode = new Contact(newAddress(args.getHost(), args.getPort()));
         final Contact self = new Contact(getApplicationContext().getNodeId(), newLocalAddress());
@@ -100,7 +113,10 @@ public class Bootstrap extends BaseCommand {
         return new Arguments(hostToken.getValue(), port);
     }
 
-    private Contact findNode(final Contact bootsrapNode, final Contact self) {
+    private Contact findNode(final Contact bootsrapNode, final Contact self) throws IOException {
+        final Message message = Messaging.newProtocollMessage(MessageType.FIND_NODE, self.getNetworkAddress(), bootsrapNode.getNetworkAddress(), null);
+        Messaging.newSender().send(message);
+        getApplicationContext().getOutbox().put(message);
         return null;
     }
 

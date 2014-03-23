@@ -68,7 +68,7 @@ final class KBucketImpl<T extends KBucketKey> implements KBucket<T> {
         this.begin = begin;
         this.end = end;
         this.max = max;
-        this.trimmer = Validate.notNull(trimmer);
+        this.trimmer = Validate.notNull(trimmer, "Parameter >trimmer< must not be null!");
     }
 
     @Override

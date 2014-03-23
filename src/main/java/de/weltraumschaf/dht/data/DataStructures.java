@@ -60,4 +60,15 @@ public final class DataStructures {
         return new KBucketImpl<T>(begin, end, max, trimmer);
     }
 
+    public static <T extends KBucketKey> KBucketTrimmer<T> newBucketTrimmer() {
+        return new KBucketTrimmerImpl<T>();
+    }
+
+    private static class KBucketTrimmerImpl<T extends KBucketKey> implements KBucketTrimmer<T> {
+
+        @Override
+        public boolean trim(final KBucket<T> kbucket, final T toAdd) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
 }
