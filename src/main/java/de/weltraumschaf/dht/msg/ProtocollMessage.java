@@ -35,7 +35,6 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
      */
     public ProtocollMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, final B body) {
         super(from, to, body);
-        Validate.isTrue(requestId > -1, "Parameter >requestId< must not be negative!");
         this.requestId = requestId;
     }
 
@@ -47,7 +46,14 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
     /**
      * PING message.
      */
-    final static class PingMessage extends ProtocollMessage<Void> {
+    final static class PingMessage<T> extends ProtocollMessage<T> {
+
+        /**
+         * For serialization.
+         */
+        public PingMessage() {
+            this(-1, new NetworkAddress(), new NetworkAddress(), null);
+        }
 
         /**
          * Dedicated constructor.
@@ -57,7 +63,7 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
          * @param to must not be {@code null}
          * @param body must not be {@code null}
          */
-        public PingMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, Void body) {
+        public PingMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, T body) {
             super(requestId, from, to, body);
         }
 
@@ -71,7 +77,14 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
     /**
      * STORE message.
      */
-    final static class StoreMessage extends ProtocollMessage<Void> {
+    final static class StoreMessage<T> extends ProtocollMessage<T> {
+
+        /**
+         * For serialization.
+         */
+        public StoreMessage() {
+            this(-1, new NetworkAddress(), new NetworkAddress(), null);
+        }
 
         /**
          * Dedicated constructor.
@@ -81,7 +94,7 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
          * @param to must not be {@code null}
          * @param body must not be {@code null}
          */
-        public StoreMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, Void body) {
+        public StoreMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, T body) {
             super(requestId, from, to, body);
         }
 
@@ -95,7 +108,14 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
     /**
      * FIND_NODE message.
      */
-    final static class FindNodeMessage extends ProtocollMessage<Void> {
+    final static class FindNodeMessage<T> extends ProtocollMessage<T> {
+
+        /**
+         * For serialization.
+         */
+        public FindNodeMessage() {
+            this(-1, new NetworkAddress(), new NetworkAddress(), null);
+        }
 
         /**
          * Dedicated constructor.
@@ -105,7 +125,7 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
          * @param to must not be {@code null}
          * @param body must not be {@code null}
          */
-        public FindNodeMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, Void body) {
+        public FindNodeMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, T body) {
             super(requestId, from, to, body);
         }
 
@@ -119,7 +139,14 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
     /**
      * FIND_VALUE message.
      */
-    final static class FindValueMessage extends ProtocollMessage<Void> {
+    final static class FindValueMessage<T> extends ProtocollMessage<T> {
+
+        /**
+         * For serialization.
+         */
+        public FindValueMessage() {
+            this(-1, new NetworkAddress(), new NetworkAddress(), null);
+        }
 
         /**
          * Dedicated constructor.
@@ -129,7 +156,7 @@ abstract class ProtocollMessage<B> extends BaseMessage<B> {
          * @param to must not be {@code null}
          * @param body must not be {@code null}
          */
-        public FindValueMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, Void body) {
+        public FindValueMessage(final int requestId, final NetworkAddress from, final NetworkAddress to, T body) {
             super(requestId, from, to, body);
         }
 

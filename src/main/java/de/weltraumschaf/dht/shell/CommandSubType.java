@@ -25,6 +25,7 @@ public enum CommandSubType implements SubCommandType {
      */
     NONE(""),
 
+    HELP_BOOTSTRAP(CommandMainType.BOOTSTRAP.toString()),
     HELP_EXIT(CommandMainType.EXIT.toString()),
     HELP_INBOX(CommandMainType.INBOX.toString()),
     HELP_SEND(CommandMainType.SEND.toString()),

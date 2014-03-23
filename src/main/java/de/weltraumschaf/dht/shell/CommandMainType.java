@@ -88,6 +88,7 @@ public enum CommandMainType implements MainCommandType {
         switch (this) {
             case HELP:
                 subCommands = Lists.newArrayList(
+                        CommandSubType.HELP_BOOTSTRAP,
                         CommandSubType.HELP_EXIT,
                         CommandSubType.HELP_INBOX,
                         CommandSubType.HELP_SEND,

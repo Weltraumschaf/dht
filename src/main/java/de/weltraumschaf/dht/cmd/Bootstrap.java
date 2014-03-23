@@ -87,8 +87,8 @@ public class Bootstrap extends BaseCommand {
         @SuppressWarnings("unchecked")
         final Token<String> nodeIdToken = args.get(0);
 
-        if (nodeIdToken.getType() != TokenType.LITERAL) {
-            throw new CommandArgumentExcpetion("NodeId must be a literal!");
+        if (nodeIdToken.getType() != TokenType.LITERAL && nodeIdToken.getType() != TokenType.STRING) {
+            throw new CommandArgumentExcpetion("NodeId must be a literal or string!");
         }
 
         final NodeId nodeId = NodeId.valueOf(nodeIdToken.getValue());
@@ -122,10 +122,10 @@ public class Bootstrap extends BaseCommand {
     }
 
     private void findNode(final Contact bootsrapNode, final Contact self) throws IOException {
-        final Message message = Messaging.newProtocollMessage(
+        final Message<String> message = Messaging.<String>newProtocollMessage(
             MessageType.FIND_NODE,
             self.getNetworkAddress(), bootsrapNode.getNetworkAddress(),
-            null);
+            self.getNodeId().asString());
         Messaging.newSender().send(message);
         getApplicationContext().getOutbox().put(message);
     }
