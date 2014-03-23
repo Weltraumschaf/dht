@@ -59,7 +59,7 @@ public class DhtCommandVerifier implements CommandVerifier {
                 break;
             // 1 or 2 arguments, w/o subcommand
             case BOOTSTRAP:
-                assertOneOrTwoArguments(cmd);
+                assertTwoOrThreeArguments(cmd);
                 break;
             // 3 arguments, w/o subcommand
             case SEND:
@@ -104,9 +104,9 @@ public class DhtCommandVerifier implements CommandVerifier {
         }
     }
 
-    private void assertOneOrTwoArguments(final ShellCommand cmd) throws SyntaxException {
+    private void assertTwoOrThreeArguments(final ShellCommand cmd) throws SyntaxException {
         try {
-            MatcherAssert.assertThat(cmd.getArguments(), either(hasSize(ARGS_1)).or(hasSize(ARGS_2)));
+            MatcherAssert.assertThat(cmd.getArguments(), either(hasSize(ARGS_2)).or(hasSize(ARGS_3)));
         } catch (final AssertionError err) {
             throw new SyntaxException(
                 String.format("Command '%s' expects one or two arguments!", cmd.getCommand()),

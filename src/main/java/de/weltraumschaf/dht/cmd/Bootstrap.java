@@ -16,6 +16,7 @@ import de.weltraumschaf.commons.shell.Token;
 import de.weltraumschaf.commons.shell.TokenType;
 import de.weltraumschaf.dht.CliOptions;
 import de.weltraumschaf.dht.Contact;
+import de.weltraumschaf.dht.id.NodeId;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageType;
 import de.weltraumschaf.dht.msg.Messaging;
@@ -26,8 +27,6 @@ import static de.weltraumschaf.dht.shell.CommandMainType.BOOTSTRAP;
 import de.weltraumschaf.dht.shell.CommandRuntimeException;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -48,7 +47,7 @@ public class Bootstrap extends BaseCommand {
 
             @Override
             public String getUsage() {
-                return String.format("%s <host> [ <port> ]", BOOTSTRAP.toString());
+                return String.format("%s <nodeId> <host> [ <port> ]", BOOTSTRAP.toString());
             }
 
             @Override
@@ -75,10 +74,10 @@ public class Bootstrap extends BaseCommand {
 
     private void bootstrap() throws IOException {
         final Arguments args = validateArguments();
-        Contact bootsrapNode = new Contact(newAddress(args.getHost(), args.getPort()));
+        final Contact bootsrapNode = new Contact(args.getNodeId(), newAddress(args.getHost(), args.getPort()));
         final Contact self = new Contact(getApplicationContext().getNodeId(), newLocalAddress());
 
-        bootsrapNode = findNode(bootsrapNode, self);
+        findNode(bootsrapNode, self);
         insertInBucket(bootsrapNode);
     }
 
@@ -86,18 +85,27 @@ public class Bootstrap extends BaseCommand {
         final List<Token> args = getArguments();
 
         @SuppressWarnings("unchecked")
-        final Token<String> hostToken = args.get(0);
+        final Token<String> nodeIdToken = args.get(0);
+
+        if (nodeIdToken.getType() != TokenType.LITERAL) {
+            throw new CommandArgumentExcpetion("NodeId must be a literal!");
+        }
+
+        final NodeId nodeId = NodeId.valueOf(nodeIdToken.getValue());
+
+        @SuppressWarnings("unchecked")
+        final Token<String> hostToken = args.get(1);
 
         if (hostToken.getType() != TokenType.LITERAL) {
             throw new CommandArgumentExcpetion("Host must be a literal!");
         }
 
         if (args.size() == 1) {
-            return new Arguments(hostToken.getValue(), CliOptions.DEFAULT_PORT);
+            return new Arguments(nodeId, hostToken.getValue(), CliOptions.DEFAULT_PORT);
         }
 
         @SuppressWarnings("unchecked")
-        final Token<Integer> portToken = args.get(1);
+        final Token<Integer> portToken = args.get(2);
 
         if (portToken.getType() != TokenType.NUMBER) {
             throw new CommandArgumentExcpetion("Port must be a number!");
@@ -110,14 +118,16 @@ public class Bootstrap extends BaseCommand {
                     String.format("Parameter >port< must be in range %s!", PortValidator.range()));
         }
 
-        return new Arguments(hostToken.getValue(), port);
+        return new Arguments(nodeId, hostToken.getValue(), port);
     }
 
-    private Contact findNode(final Contact bootsrapNode, final Contact self) throws IOException {
-        final Message message = Messaging.newProtocollMessage(MessageType.FIND_NODE, self.getNetworkAddress(), bootsrapNode.getNetworkAddress(), null);
+    private void findNode(final Contact bootsrapNode, final Contact self) throws IOException {
+        final Message message = Messaging.newProtocollMessage(
+            MessageType.FIND_NODE,
+            self.getNetworkAddress(), bootsrapNode.getNetworkAddress(),
+            null);
         Messaging.newSender().send(message);
         getApplicationContext().getOutbox().put(message);
-        return null;
     }
 
     private void insertInBucket(final Contact bootsrapNode) {
@@ -128,6 +138,7 @@ public class Bootstrap extends BaseCommand {
      * Container for the command arguments.
      */
     private static final class Arguments {
+        private final NodeId nodeId;
         /**
          * Host to send the message.
          */
@@ -139,15 +150,21 @@ public class Bootstrap extends BaseCommand {
         /**
          * Dedicated constructor.
          *
+         * @param nodeId must not be {@code null} or empty
          * @param host must not be {@code null} or empty
          * @param port must be in {@link PortValidator#range() specified range}
          */
-        public Arguments(final String host, final int port) {
+        public Arguments(final NodeId nodeId, final String host, final int port) {
             super();
+            this.nodeId = Validate.notNull(nodeId, "Parameter >nodeId< must not be null!");
             this.host = Validate.notEmpty(host, "Parameter >host< must not be null or empty!");
             Validate.isTrue(PortValidator.isValid(port),
                     String.format("Parameter >port< must be in range %s! Given >%d<.", PortValidator.range(), port));
             this.port = port;
+        }
+
+        public NodeId getNodeId() {
+            return nodeId;
         }
 
         /**

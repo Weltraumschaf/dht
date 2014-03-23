@@ -89,15 +89,6 @@ public final class NodeId implements KBucketKey {
         return id.equals(obj);
     }
 
-    /**
-     * Creates a new random id.
-     *
-     * @return never {@code null}, always new instance
-     */
-    public static NodeId newRandom() {
-        return new NodeId(UUID.randomUUID());
-    }
-
     @Override
     public byte[] data() {
         try {
@@ -108,4 +99,16 @@ public final class NodeId implements KBucketKey {
         }
     }
 
+    /**
+     * Creates a new random id.
+     *
+     * @return never {@code null}, always new instance
+     */
+    public static NodeId newRandom() {
+        return new NodeId(UUID.randomUUID());
+    }
+
+    public static NodeId valueOf(final String uuid) {
+        return new NodeId(UUID.fromString(Validate.notEmpty(uuid, "Parameter >uuid< must not be null or empty!")));
+    }
 }
