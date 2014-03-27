@@ -31,7 +31,7 @@ final class Help extends BaseCommand {
     /**
      * Usage strings (left column) width.
      */
-    private static final int USAGE_WIDTH = 34;
+    private static final int USAGE_WIDTH = 40;
     /**
      * Max width of help output.
      */
