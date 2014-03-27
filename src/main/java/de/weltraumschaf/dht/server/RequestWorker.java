@@ -17,6 +17,7 @@ import de.weltraumschaf.dht.log.Logger;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.msg.MessageSerializer;
+import de.weltraumschaf.dht.msg.MessageType;
 import de.weltraumschaf.dht.msg.StreamIo;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -25,6 +26,9 @@ import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.Channels;
 import org.apache.commons.lang3.Validate;
+import org.hamcrest.MatcherAssert;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Processes the incoming requests.
@@ -113,10 +117,15 @@ final class RequestWorker implements Task {
         LOG.debug("Opened connection from " + formatAddress(client));
 
         try (
-            final DataInputStream input = new DataInputStream(Channels.newInputStream(client));
-            final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);
-        ) {
+                final DataInputStream input = new DataInputStream(Channels.newInputStream(client));
+                final PrintWriter output = new PrintWriter(Channels.newOutputStream(client), true);) {
             final Message incomming = serializer.deserialize(StreamIo.read(input));
+
+            if (isProtocollMessage(incomming)) {
+                handleProtocollMessage(incomming);
+                return;
+            }
+
             inbox.put(incomming);
             io.println("");
             io.println("Message received.");
@@ -139,6 +148,42 @@ final class RequestWorker implements Task {
             return String.format("%s:%d", address.getHostString(), address.getPort());
         } catch (final IOException ex) {
             return "unknown";
+        }
+    }
+
+    private boolean isProtocollMessage(final Message incomming) {
+        try {
+            MatcherAssert.assertThat(
+                    incomming.getType(),
+                    anyOf(
+                            is(MessageType.FIND_NODE),
+                            is(MessageType.FIND_VALUE),
+                            is(MessageType.PING),
+                            is(MessageType.STORE)));
+            return true;
+        } catch (final AssertionError err) {
+            return false;
+        }
+    }
+
+    private void handleProtocollMessage(final Message incomming) {
+        LOG.debug("Handle protocoll message.");
+
+        switch (incomming.getType()) {
+            case FIND_NODE:
+                LOG.debug("Handle FIND_NODE request.");
+                break;
+            case FIND_VALUE:
+                LOG.debug("Handle FIND_VALUE request.");
+                break;
+            case PING:
+                LOG.debug("Handle PING request.");
+                break;
+            case STORE:
+                LOG.debug("Handle STORE request.");
+                break;
+            default:
+                throw new UnsupportedOperationException(String.format("Can't handle request %s!", incomming));
         }
     }
 }
