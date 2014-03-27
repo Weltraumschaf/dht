@@ -1,6 +1,9 @@
 package de.weltraumschaf.dht;
 
 import org.apache.commons.lang3.StringUtils;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -9,6 +12,7 @@ import org.junit.Test;
 public class MainTest {
 
     @Test
+    @Ignore("Play around with XOR")
     public void testApp() {
         final int end = 0x4;
         System.out.println("    a          b         xor   ");
@@ -24,4 +28,5 @@ public class MainTest {
             }
         }
     }
+
 }
