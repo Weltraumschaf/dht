@@ -30,6 +30,7 @@ public final class Messaging {
      */
     private Messaging() {
         super();
+        throw new UnsupportedOperationException("Don't call via reflection!");
     }
 
     /**
@@ -53,16 +54,16 @@ public final class Messaging {
      * @param body must not be {@code null}
      * @return never {@code null}, always new instance
      */
-    public static <T> Message<T> newProtocollMessage(final MessageType type, final NetworkAddress from, final NetworkAddress to, final T body) {
+    public static Message newProtocollMessage(final MessageType type, final NetworkAddress from, final NetworkAddress to, final String body) {
         switch (type) {
             case PING:
-                return PROTOCOLL.<T>newPingMessage(from, to, body);
+                return PROTOCOLL.newPingMessage(from, to, body);
             case STORE:
-                return PROTOCOLL.<T>newStoreMessage(from, to, body);
+                return PROTOCOLL.newStoreMessage(from, to, body);
             case FIND_NODE:
-                return PROTOCOLL.<T>newFindNodeMessage(from, to, body);
+                return PROTOCOLL.newFindNodeMessage(from, to, body);
             case FIND_VALUE:
-                return PROTOCOLL.<T>newFindValueMessage(from, to, body);
+                return PROTOCOLL.newFindValueMessage(from, to, body);
             default:
                 throw new IllegalArgumentException(String.format("Unsupported type >%s<!", type));
         }
@@ -113,8 +114,8 @@ public final class Messaging {
          * @param body must not be {@code null}
          * @return never {@code null}, always new instance
          */
-        public <T> ProtocollMessage<T> newPingMessage(final NetworkAddress from, final NetworkAddress to, final T body) {
-            return new ProtocollMessage.PingMessage<T>(nextId(), from, to, body);
+        public ProtocollMessage newPingMessage(final NetworkAddress from, final NetworkAddress to, final String body) {
+            return new ProtocollMessage(MessageType.PING, nextId(), from, to, body);
         }
 
         /**
@@ -125,8 +126,8 @@ public final class Messaging {
          * @param body must not be {@code null}
          * @return never {@code null}, always new instance
          */
-        public <T> ProtocollMessage<T> newStoreMessage(final NetworkAddress from, final NetworkAddress to, final T body) {
-            return new ProtocollMessage.StoreMessage<T>(nextId(), from, to, body);
+        public ProtocollMessage newStoreMessage(final NetworkAddress from, final NetworkAddress to, final String body) {
+            return new ProtocollMessage(MessageType.STORE, nextId(), from, to, body);
         }
 
         /**
@@ -137,8 +138,8 @@ public final class Messaging {
          * @param body must not be {@code null}
          * @return never {@code null}, always new instance
          */
-        public <T> ProtocollMessage<T> newFindNodeMessage(final NetworkAddress from, final NetworkAddress to, final T body) {
-            return new ProtocollMessage.FindNodeMessage<T>(nextId(), from, to, body);
+        public  ProtocollMessage newFindNodeMessage(final NetworkAddress from, final NetworkAddress to, final String body) {
+            return new ProtocollMessage(MessageType.FIND_NODE, nextId(), from, to, body);
         }
 
         /**
@@ -149,8 +150,8 @@ public final class Messaging {
          * @param body must not be {@code null}
          * @return never {@code null}, always new instance
          */
-        public <T> ProtocollMessage<T> newFindValueMessage(final NetworkAddress from, final NetworkAddress to, final T body) {
-            return new ProtocollMessage.FindValueMessage<T>(nextId(), from, to, body);
+        public  ProtocollMessage newFindValueMessage(final NetworkAddress from, final NetworkAddress to, final String body) {
+            return new ProtocollMessage(MessageType.FIND_VALUE, nextId(), from, to, body);
         }
     }
 }

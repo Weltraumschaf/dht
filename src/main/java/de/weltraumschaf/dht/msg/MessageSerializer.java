@@ -78,16 +78,10 @@ public final class MessageSerializer {
                 template = TextMessage.class;
                 break;
             case PING:
-                template = ProtocollMessage.PingMessage.class;
-                break;
             case STORE:
-                template = ProtocollMessage.StoreMessage.class;
-                break;
             case FIND_NODE:
-                template = ProtocollMessage.FindNodeMessage.class;
-                break;
             case FIND_VALUE:
-                template = ProtocollMessage.FindValueMessage.class;
+                template = ProtocollMessage.class;
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported type " + type + "!");
