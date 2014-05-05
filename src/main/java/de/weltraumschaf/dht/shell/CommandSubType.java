@@ -40,20 +40,20 @@ public enum CommandSubType implements SubCommandType {
     /**
      * Literal sub command string used in shell.
      */
-    private final String name;
+    private final String literal;
 
     /**
      * Initialize name.
      *
-     * @param name literal shell command string
+     * @param literal literal shell command string
      */
-    private CommandSubType(final String name) {
-        this.name = name;
+    private CommandSubType(final String literal) {
+        this.literal = literal;
     }
 
     @Override
     public String toString() {
-        return name;
+        return literal;
     }
 
 }
