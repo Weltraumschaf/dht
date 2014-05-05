@@ -17,7 +17,6 @@ import de.weltraumschaf.commons.shell.Parsers;
 import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.shell.SyntaxException;
-import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.ApplicationContext;
 import de.weltraumschaf.dht.cmd.Command;
 import de.weltraumschaf.dht.cmd.CommandFactory;
