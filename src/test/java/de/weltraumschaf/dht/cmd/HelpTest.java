@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.dht.shell.CommandMainType;
+import de.weltraumschaf.dht.shell.MainCommand;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -61,7 +61,7 @@ public class HelpTest {
             }
 
             @Override
-            public CommandMainType getCommand() {
+            public MainCommand getCommand() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 

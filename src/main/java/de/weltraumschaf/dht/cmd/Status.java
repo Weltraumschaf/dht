@@ -13,8 +13,8 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.server.Server;
-import de.weltraumschaf.dht.shell.CommandMainType;
-import static de.weltraumschaf.dht.shell.CommandMainType.STATUS;
+import de.weltraumschaf.dht.shell.MainCommand;
+import static de.weltraumschaf.dht.shell.MainCommand.STATUS;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -32,7 +32,7 @@ final class Status extends BaseCommand {
         return new BaseDescriptor() {
 
             @Override
-            public CommandMainType getCommand() {
+            public MainCommand getCommand() {
                 return STATUS;
             }
 

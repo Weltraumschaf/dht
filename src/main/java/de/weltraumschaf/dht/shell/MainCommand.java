@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public enum CommandMainType implements MainCommandType {
+public enum MainCommand implements MainCommandType {
 
     /**
      * Bootstrap command.
@@ -66,7 +66,7 @@ public enum CommandMainType implements MainCommandType {
      *
      * @param name literal shell command string
      */
-    private CommandMainType(final String name) {
+    private MainCommand(final String name) {
         this.literal = name;
     }
 
@@ -82,26 +82,26 @@ public enum CommandMainType implements MainCommandType {
      *
      * @return unmodifiable list of subtypes
      */
-    List<CommandSubType> subCommands() {
-        final List<CommandSubType> subCommands;
+    List<SubCommand> subCommands() {
+        final List<SubCommand> subCommands;
 
         switch (this) {
             case HELP:
                 subCommands = Lists.newArrayList(
-                        CommandSubType.HELP_BOOTSTRAP,
-                        CommandSubType.HELP_EXIT,
-                        CommandSubType.HELP_INBOX,
-                        CommandSubType.HELP_SEND,
-                        CommandSubType.HELP_START,
-                        CommandSubType.HELP_STOP,
-                        CommandSubType.HELP_STATUS
+                        SubCommand.HELP_BOOTSTRAP,
+                        SubCommand.HELP_EXIT,
+                        SubCommand.HELP_INBOX,
+                        SubCommand.HELP_SEND,
+                        SubCommand.HELP_START,
+                        SubCommand.HELP_STOP,
+                        SubCommand.HELP_STATUS
                 );
                 break;
             case INBOX:
                 subCommands = Lists.newArrayList(
-                        CommandSubType.INBOX_ANSWER,
-                        CommandSubType.INBOX_REMOVE,
-                        CommandSubType.INBOX_SHOW
+                        SubCommand.INBOX_ANSWER,
+                        SubCommand.INBOX_REMOVE,
+                        SubCommand.INBOX_SHOW
                 );
                 break;
             default:

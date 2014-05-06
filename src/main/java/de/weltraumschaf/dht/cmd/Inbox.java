@@ -17,10 +17,10 @@ import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
-import de.weltraumschaf.dht.shell.CommandMainType;
-import static de.weltraumschaf.dht.shell.CommandMainType.INBOX;
+import de.weltraumschaf.dht.shell.MainCommand;
+import static de.weltraumschaf.dht.shell.MainCommand.INBOX;
 import de.weltraumschaf.dht.shell.CommandRuntimeException;
-import de.weltraumschaf.dht.shell.CommandSubType;
+import de.weltraumschaf.dht.shell.SubCommand;
 import java.io.IOException;
 import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +43,7 @@ final class Inbox extends BaseCommand {
         return new BaseDescriptor() {
 
             @Override
-            public CommandMainType getCommand() {
+            public MainCommand getCommand() {
                 return INBOX;
             }
 
@@ -61,7 +61,7 @@ final class Inbox extends BaseCommand {
 
     @Override
     public void execute() {
-        if (getSubCommand() == CommandSubType.NONE) {
+        if (getSubCommand() == SubCommand.NONE) {
             showList();
             return;
         }
@@ -114,7 +114,7 @@ final class Inbox extends BaseCommand {
     }
 
     private void dispatchSubCommand() {
-        switch ((CommandSubType) getSubCommand()) {
+        switch ((SubCommand) getSubCommand()) {
             case INBOX_ANSWER:
                 answerMessage();
                 break;

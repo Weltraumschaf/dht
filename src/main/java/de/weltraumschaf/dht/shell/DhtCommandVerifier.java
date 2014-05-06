@@ -43,7 +43,7 @@ public class DhtCommandVerifier implements CommandVerifier {
      */
     @Override
     public void verifyCommand(final ShellCommand cmd) throws SyntaxException {
-        switch ((CommandMainType) cmd.getMainCommand()) {
+        switch ((MainCommand) cmd.getMainCommand()) {
             // No argument, no subcommand.
             case EXIT:
             case STATUS:
@@ -94,7 +94,7 @@ public class DhtCommandVerifier implements CommandVerifier {
 
     private void assertNoSubCommand(final ShellCommand cmd) throws SyntaxException {
         try {
-            MatcherAssert.assertThat(cmd.getSubCommand(), is(equalTo((SubCommandType) CommandSubType.NONE)));
+            MatcherAssert.assertThat(cmd.getSubCommand(), is(equalTo((SubCommandType) SubCommand.NONE)));
         } catch (final AssertionError err) {
             throw new SyntaxException(
                 String.format("Command '%s' does not support subcommand '%s'!", cmd.getMainCommand(), cmd.getSubCommand()),

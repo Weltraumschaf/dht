@@ -13,10 +13,10 @@ package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.dht.ApplicationContext;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
-import de.weltraumschaf.dht.shell.CommandMainType;
-import static de.weltraumschaf.dht.shell.CommandMainType.HELP;
+import de.weltraumschaf.dht.shell.MainCommand;
+import static de.weltraumschaf.dht.shell.MainCommand.HELP;
 import de.weltraumschaf.dht.shell.CommandRuntimeException;
-import de.weltraumschaf.dht.shell.CommandSubType;
+import de.weltraumschaf.dht.shell.SubCommand;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.text.WordUtils;
@@ -51,7 +51,7 @@ final class Help extends BaseCommand {
 
     @Override
     public void execute() {
-        if (getSubCommand() != CommandSubType.NONE) {
+        if (getSubCommand() != SubCommand.NONE) {
             commandHelp(getSubCommand().toString());
         } else {
             completeHelp();
@@ -80,7 +80,7 @@ final class Help extends BaseCommand {
         return new BaseDescriptor() {
 
             @Override
-            public CommandMainType getCommand() {
+            public MainCommand getCommand() {
                 return HELP;
             }
 

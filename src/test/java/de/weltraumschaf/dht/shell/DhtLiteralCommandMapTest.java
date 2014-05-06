@@ -74,8 +74,8 @@ public class DhtLiteralCommandMapTest {
 
     @Test
     public void isCommand() {
-        assertThat(sut.isCommand(CommandMainType.EXIT.toString()), is(true));
-        assertThat(sut.isCommand(CommandMainType.HELP.toString()), is(true));
+        assertThat(sut.isCommand(MainCommand.EXIT.toString()), is(true));
+        assertThat(sut.isCommand(MainCommand.HELP.toString()), is(true));
         assertThat(sut.isCommand(BadMainType.FOO.toString()), is(false));
         assertThat(sut.isCommand(BadMainType.BAR.toString()), is(false));
         assertThat(sut.isCommand(BadMainType.BAZ.toString()), is(false));
@@ -83,12 +83,12 @@ public class DhtLiteralCommandMapTest {
 
     @Test
     public void isSubCommand() {
-        assertThat(sut.isSubCommand(CommandSubType.HELP_EXIT.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.HELP_SEND.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.HELP_START.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.HELP_STATUS.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.HELP_STOP.toString()), is(true));
-        assertThat(sut.isSubCommand(CommandSubType.NONE.toString()), is(false));
+        assertThat(sut.isSubCommand(SubCommand.HELP_EXIT.toString()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.HELP_SEND.toString()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.HELP_START.toString()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.HELP_STATUS.toString()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.HELP_STOP.toString()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.NONE.toString()), is(false));
         assertThat(sut.isSubCommand(BadSubType.FOO.toString()), is(false));
         assertThat(sut.isSubCommand(BadSubType.BAR.toString()), is(false));
         assertThat(sut.isSubCommand(BadSubType.BAZ.toString()), is(false));

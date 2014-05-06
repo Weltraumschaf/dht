@@ -16,7 +16,7 @@ import de.weltraumschaf.commons.shell.MainCommandType;
 import de.weltraumschaf.commons.shell.ShellCommand;
 import de.weltraumschaf.dht.Application;
 import de.weltraumschaf.dht.ApplicationContext;
-import de.weltraumschaf.dht.shell.CommandMainType;
+import de.weltraumschaf.dht.shell.MainCommand;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -67,7 +67,7 @@ public final class CommandFactory {
      * @param type must not be {@code null}
      * @return never {@code null} or empty
      */
-    private static String generateClassName(final CommandMainType type) {
+    private static String generateClassName(final MainCommand type) {
         final String name = Validate.notNull(type).name().toLowerCase();
         return COMMAND_PACKAGE + "." + Character.toUpperCase(name.charAt(0)) + name.substring(1);
     }
@@ -83,7 +83,7 @@ public final class CommandFactory {
     private static Map<MainCommandType, Class<?>> createClassLookup() throws ClassNotFoundException {
         final Map<MainCommandType, Class<?>> temp = Maps.newHashMap();
 
-        for (final CommandMainType type : CommandMainType.values()) {
+        for (final MainCommand type : MainCommand.values()) {
             temp.put(type, Class.forName(generateClassName(type)));
         }
 

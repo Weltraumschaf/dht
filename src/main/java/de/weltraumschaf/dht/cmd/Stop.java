@@ -11,8 +11,8 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.dht.shell.CommandMainType;
-import static de.weltraumschaf.dht.shell.CommandMainType.STOP;
+import de.weltraumschaf.dht.shell.MainCommand;
+import static de.weltraumschaf.dht.shell.MainCommand.STOP;
 import java.io.IOException;
 
 /**
@@ -52,7 +52,7 @@ final class Stop extends BaseCommand {
         return new BaseDescriptor() {
 
             @Override
-            public CommandMainType getCommand() {
+            public MainCommand getCommand() {
                 return STOP;
             }
 

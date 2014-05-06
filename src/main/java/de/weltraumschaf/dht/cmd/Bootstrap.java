@@ -22,8 +22,8 @@ import de.weltraumschaf.dht.msg.MessageType;
 import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.PortValidator;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
-import de.weltraumschaf.dht.shell.CommandMainType;
-import static de.weltraumschaf.dht.shell.CommandMainType.BOOTSTRAP;
+import de.weltraumschaf.dht.shell.MainCommand;
+import static de.weltraumschaf.dht.shell.MainCommand.BOOTSTRAP;
 import de.weltraumschaf.dht.shell.CommandRuntimeException;
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +41,7 @@ public class Bootstrap extends BaseCommand {
         return new BaseDescriptor() {
 
             @Override
-            public CommandMainType getCommand() {
+            public MainCommand getCommand() {
                 return BOOTSTRAP;
             }
 

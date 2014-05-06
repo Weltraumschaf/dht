@@ -15,7 +15,7 @@ import de.weltraumschaf.commons.shell.SubCommandType;
 import de.weltraumschaf.commons.token.Token;
 import de.weltraumschaf.dht.ApplicationContext;
 import de.weltraumschaf.dht.net.NetworkAddress;
-import de.weltraumschaf.dht.shell.CommandSubType;
+import de.weltraumschaf.dht.shell.SubCommand;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
@@ -41,7 +41,7 @@ abstract class BaseCommand implements Command {
      *
      * Default is {@link CommandSubType#NONE}.
      */
-    private SubCommandType subCommand = CommandSubType.NONE;
+    private SubCommandType subCommand = SubCommand.NONE;
 
     /**
      * Getter for sub classes.

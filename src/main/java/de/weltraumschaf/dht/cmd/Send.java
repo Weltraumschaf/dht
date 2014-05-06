@@ -18,8 +18,8 @@ import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.PortValidator;
 import de.weltraumschaf.dht.shell.CommandRuntimeException;
 import de.weltraumschaf.dht.shell.CommandArgumentExcpetion;
-import de.weltraumschaf.dht.shell.CommandMainType;
-import static de.weltraumschaf.dht.shell.CommandMainType.SEND;
+import de.weltraumschaf.dht.shell.MainCommand;
+import static de.weltraumschaf.dht.shell.MainCommand.SEND;
 import java.io.IOException;
 import java.util.List;
 import org.apache.commons.lang3.Validate;
@@ -38,7 +38,7 @@ final class Send extends BaseCommand {
         return new BaseDescriptor() {
 
             @Override
-            public CommandMainType getCommand() {
+            public MainCommand getCommand() {
                 return SEND;
             }
 

@@ -18,20 +18,20 @@ import de.weltraumschaf.commons.shell.SubCommandType;
  *
  * @author Sven Strittmatter <weltraumschaf@googlemail.com>
  */
-public enum CommandSubType implements SubCommandType {
+public enum SubCommand implements SubCommandType {
 
     /**
      * No sub command.
      */
     NONE(""),
 
-    HELP_BOOTSTRAP(CommandMainType.BOOTSTRAP.toString()),
-    HELP_EXIT(CommandMainType.EXIT.toString()),
-    HELP_INBOX(CommandMainType.INBOX.toString()),
-    HELP_SEND(CommandMainType.SEND.toString()),
-    HELP_START(CommandMainType.START.toString()),
-    HELP_STOP(CommandMainType.STOP.toString()),
-    HELP_STATUS(CommandMainType.STATUS.toString()),
+    HELP_BOOTSTRAP(MainCommand.BOOTSTRAP.toString()),
+    HELP_EXIT(MainCommand.EXIT.toString()),
+    HELP_INBOX(MainCommand.INBOX.toString()),
+    HELP_SEND(MainCommand.SEND.toString()),
+    HELP_START(MainCommand.START.toString()),
+    HELP_STOP(MainCommand.STOP.toString()),
+    HELP_STATUS(MainCommand.STATUS.toString()),
 
     INBOX_REMOVE("remove"),
     INBOX_SHOW("show"),
@@ -47,7 +47,7 @@ public enum CommandSubType implements SubCommandType {
      *
      * @param literal literal shell command string
      */
-    private CommandSubType(final String literal) {
+    private SubCommand(final String literal) {
         this.literal = literal;
     }
 

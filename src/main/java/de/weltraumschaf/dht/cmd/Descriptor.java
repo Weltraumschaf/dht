@@ -12,7 +12,7 @@
 
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.dht.shell.CommandMainType;
+import de.weltraumschaf.dht.shell.MainCommand;
 
 /**
  * Describes a command.
@@ -26,7 +26,7 @@ public interface Descriptor extends Comparable<Descriptor> {
      *
      * @return never {@code null}
      */
-    CommandMainType getCommand();
+    MainCommand getCommand();
     /**
      * Get usage string for help.
      *

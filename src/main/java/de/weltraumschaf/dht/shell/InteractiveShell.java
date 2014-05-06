@@ -157,7 +157,7 @@ public class InteractiveShell {
         final Command cmd = factory.newCommand(shellCmd);
         cmd.execute();
 
-        if (shellCmd.getMainCommand() == CommandMainType.EXIT) {
+        if (shellCmd.getMainCommand() == MainCommand.EXIT) {
             exit();
         }
     }
@@ -171,8 +171,8 @@ public class InteractiveShell {
         final List<Completer> completers = Lists.newArrayList();
         final List<String> commandsWithoutSubCommand = Lists.newArrayList();
 
-        for (final CommandMainType t : CommandMainType.values()) {
-            final List<CommandSubType> subCommandTypes = t.subCommands();
+        for (final MainCommand t : MainCommand.values()) {
+            final List<SubCommand> subCommandTypes = t.subCommands();
 
             if (subCommandTypes.isEmpty()) {
                 commandsWithoutSubCommand.add(t.toString());
