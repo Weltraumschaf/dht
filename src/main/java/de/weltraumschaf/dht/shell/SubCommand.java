@@ -56,4 +56,9 @@ public enum SubCommand implements SubCommandType {
         return literal;
     }
 
+    @Override
+    public String toString() {
+        return getLiteral();
+    }
+
 }

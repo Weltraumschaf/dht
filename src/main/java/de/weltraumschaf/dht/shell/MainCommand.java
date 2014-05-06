@@ -75,6 +75,11 @@ public enum MainCommand implements MainCommandType {
         return literal;
     }
 
+    @Override
+    public String toString() {
+        return getLiteral();
+    }
+
     /**
      * Returns the list of available sub commands.
      *
