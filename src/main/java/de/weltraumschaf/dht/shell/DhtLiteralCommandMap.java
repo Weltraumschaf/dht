@@ -32,7 +32,7 @@ public class DhtLiteralCommandMap extends LiteralCommandMap {
     }
 
     @Override
-    protected void initCommandMap(final Map<String, MainCommandType> map) {
+    protected void initMainCommandMap(final Map<String, MainCommandType> map) {
         for (final CommandMainType t : CommandMainType.values()) {
             map.put(t.toString(), t);
         }

@@ -11,8 +11,9 @@
  */
 package de.weltraumschaf.dht;
 
-import de.weltraumschaf.commons.IO;
-import de.weltraumschaf.commons.Version;
+
+import de.weltraumschaf.commons.application.IO;
+import de.weltraumschaf.commons.application.Version;
 import de.weltraumschaf.dht.data.KBucketSet;
 import de.weltraumschaf.dht.id.NodeId;
 import de.weltraumschaf.dht.msg.MessageBox;

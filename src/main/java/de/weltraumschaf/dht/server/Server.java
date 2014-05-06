@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.server;
 
-import de.weltraumschaf.commons.IO;
+import de.weltraumschaf.commons.application.IO;
 import de.weltraumschaf.dht.msg.MessageBox;
 import java.io.IOException;
 import java.net.InetSocketAddress;

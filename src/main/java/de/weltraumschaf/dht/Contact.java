@@ -12,7 +12,7 @@
 
 package de.weltraumschaf.dht;
 
-import com.google.common.base.Objects;
+import de.weltraumschaf.commons.guava.Objects;
 import de.weltraumschaf.dht.data.KBucketKey;
 import de.weltraumschaf.dht.id.NodeId;
 import de.weltraumschaf.dht.net.NetworkAddress;

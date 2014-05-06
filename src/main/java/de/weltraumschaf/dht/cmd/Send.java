@@ -11,8 +11,8 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.shell.Token;
-import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.commons.token.Token;
+import de.weltraumschaf.commons.token.TokenType;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.Messaging;
 import de.weltraumschaf.dht.server.PortValidator;
@@ -73,19 +73,19 @@ final class Send extends BaseCommand {
     }
 
     private Arguments validateArguments() throws CommandArgumentExcpetion {
-        final List<Token> args = getArguments();
+        final List<Token<?>> args = getArguments();
 
         @SuppressWarnings("unchecked")
-        final Token<String> hostToken = args.get(0);
+        final Token<String> hostToken = (Token<String>) args.get(0);
 
         if (hostToken.getType() != TokenType.LITERAL) {
             throw new CommandArgumentExcpetion("Host must be a literal!");
         }
 
         @SuppressWarnings("unchecked")
-        final Token<Integer> portToken = args.get(1);
+        final Token<Integer> portToken = (Token<Integer>) args.get(1);
 
-        if (portToken.getType() != TokenType.NUMBER) {
+        if (portToken.getType() != TokenType.INTEGER) {
             throw new CommandArgumentExcpetion("Port must be a number!");
         }
 
@@ -97,7 +97,7 @@ final class Send extends BaseCommand {
         }
 
         @SuppressWarnings("unchecked")
-        final Token<String> messageToken = args.get(2);
+        final Token<String> messageToken = (Token<String>) args.get(2);
 
         if (messageToken.getType() != TokenType.STRING && messageToken.getType() != TokenType.LITERAL) {
             throw new CommandArgumentExcpetion("Message must be a string or literal!");

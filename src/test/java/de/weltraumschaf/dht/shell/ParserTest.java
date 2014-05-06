@@ -36,12 +36,12 @@ public class ParserTest {
     @Test
     public void parse_comand() throws SyntaxException {
         ShellCommand c = sut.parse("help");
-        assertThat((CommandMainType) c.getCommand(), is(CommandMainType.HELP));
+        assertThat((CommandMainType) c.getMainCommand(), is(CommandMainType.HELP));
         assertThat((CommandSubType) c.getSubCommand(), is(CommandSubType.NONE));
         assertThat(c.getArguments().size(), is(0));
 
         c = sut.parse("exit");
-        assertThat((CommandMainType) c.getCommand(), is(CommandMainType.EXIT));
+        assertThat((CommandMainType) c.getMainCommand(), is(CommandMainType.EXIT));
         assertThat((CommandSubType) c.getSubCommand(), is(CommandSubType.NONE));
         assertThat(c.getArguments().size(), is(0));
     }

@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.msg;
 
-import com.google.common.base.Objects;
+import de.weltraumschaf.commons.guava.Objects;
 import java.util.Arrays;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.Validate;

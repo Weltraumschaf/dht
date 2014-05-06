@@ -12,7 +12,7 @@
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.SubCommandType;
-import de.weltraumschaf.commons.shell.Token;
+import de.weltraumschaf.commons.token.Token;
 import de.weltraumschaf.dht.ApplicationContext;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public interface Command extends Describable {
      *
      * @param arguments must not be {@code null}
      */
-    void setArguments(List<Token> arguments);
+    void setArguments(List<Token<?>> arguments);
 
     /**
      * Injection point for invoking application.

@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.event;
 
-import de.weltraumschaf.commons.IO;
+import de.weltraumschaf.commons.application.IO;
 import org.apache.commons.lang3.Validate;
 
 /**

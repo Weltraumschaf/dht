@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.shell;
 
-import com.google.common.collect.Lists;
+import de.weltraumschaf.commons.guava.Lists;
 import de.weltraumschaf.commons.shell.MainCommandType;
 import java.util.Collections;
 import java.util.List;

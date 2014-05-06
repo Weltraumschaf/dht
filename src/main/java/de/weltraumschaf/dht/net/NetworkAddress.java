@@ -12,7 +12,7 @@
 
 package de.weltraumschaf.dht.net;
 
-import com.google.common.base.Objects;
+import de.weltraumschaf.commons.guava.Objects;
 import java.net.InetSocketAddress;
 import org.apache.commons.lang3.Validate;
 

@@ -143,8 +143,8 @@ public final class CommandFactory {
      * CHECKSTYLE:ON
      */
     public Command newCommand(final ShellCommand shellCmd) throws InstantiationException, IllegalAccessException {
-        if (classLookup.containsKey(shellCmd.getCommand())) {
-            final Class<?> comamndClass = classLookup.get(shellCmd.getCommand());
+        if (classLookup.containsKey(shellCmd.getMainCommand())) {
+            final Class<?> comamndClass = classLookup.get(shellCmd.getMainCommand());
             final Command cmd = (Command) comamndClass.newInstance();
             cmd.setSubCommandType(shellCmd.getSubCommand());
             cmd.setApplicationContext(context);
@@ -152,7 +152,7 @@ public final class CommandFactory {
             return cmd;
         }
 
-        throw new IllegalArgumentException(String.format("Unsupported main command type '%s'!", shellCmd.getCommand()));
+        throw new IllegalArgumentException(String.format("Unsupported main command type '%s'!", shellCmd.getMainCommand()));
     }
 
 

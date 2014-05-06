@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.msg;
 
-import com.google.common.collect.Lists;
+import de.weltraumschaf.commons.guava.Lists;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

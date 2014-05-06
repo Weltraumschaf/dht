@@ -12,8 +12,7 @@
 package de.weltraumschaf.dht.cmd;
 
 import de.weltraumschaf.commons.shell.SubCommandType;
-import de.weltraumschaf.commons.shell.Token;
-import de.weltraumschaf.dht.Application;
+import de.weltraumschaf.commons.token.Token;
 import de.weltraumschaf.dht.ApplicationContext;
 import de.weltraumschaf.dht.net.NetworkAddress;
 import de.weltraumschaf.dht.shell.CommandSubType;
@@ -31,7 +30,7 @@ abstract class BaseCommand implements Command {
     /**
      * Arguments for the command.
      */
-    private List<Token> arguments;
+    private List<Token<?>> arguments;
 
     /**
      * Invoking application.
@@ -58,7 +57,7 @@ abstract class BaseCommand implements Command {
      *
      * @return parsed shell arguments, may return empty list
      */
-    List<Token> getArguments() {
+    List<Token<?>> getArguments() {
         return arguments;
     }
 
@@ -67,7 +66,7 @@ abstract class BaseCommand implements Command {
     }
 
     @Override
-    public void setArguments(final List<Token> arguments) {
+    public void setArguments(final List<Token<?>> arguments) {
         this.arguments = Collections.unmodifiableList(Validate.notNull(arguments, "Parameter >arguments< must not be null!"));
     }
 

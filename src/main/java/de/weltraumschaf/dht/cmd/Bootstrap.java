@@ -12,8 +12,8 @@
 
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.shell.Token;
-import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.commons.token.Token;
+import de.weltraumschaf.commons.token.TokenType;
 import de.weltraumschaf.dht.CliOptions;
 import de.weltraumschaf.dht.Contact;
 import de.weltraumschaf.dht.id.NodeId;
@@ -82,10 +82,10 @@ public class Bootstrap extends BaseCommand {
     }
 
     private Arguments validateArguments() throws CommandArgumentExcpetion {
-        final List<Token> args = getArguments();
+        final List<Token<?>> args = getArguments();
 
         @SuppressWarnings("unchecked")
-        final Token<String> nodeIdToken = args.get(0);
+        final Token<String> nodeIdToken = (Token<String>) args.get(0);
 
         if (nodeIdToken.getType() != TokenType.LITERAL && nodeIdToken.getType() != TokenType.STRING) {
             throw new CommandArgumentExcpetion("NodeId must be a literal or string!");
@@ -94,7 +94,7 @@ public class Bootstrap extends BaseCommand {
         final NodeId nodeId = NodeId.valueOf(nodeIdToken.getValue());
 
         @SuppressWarnings("unchecked")
-        final Token<String> hostToken = args.get(1);
+        final Token<String> hostToken = (Token<String>) args.get(1);
 
         if (hostToken.getType() != TokenType.LITERAL) {
             throw new CommandArgumentExcpetion("Host must be a literal!");
@@ -105,9 +105,9 @@ public class Bootstrap extends BaseCommand {
         }
 
         @SuppressWarnings("unchecked")
-        final Token<Integer> portToken = args.get(2);
+        final Token<Integer> portToken = (Token<Integer>) args.get(2);
 
-        if (portToken.getType() != TokenType.NUMBER) {
+        if (portToken.getType() != TokenType.INTEGER) {
             throw new CommandArgumentExcpetion("Port must be a number!");
         }
 

@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.shell;
 
-import com.google.common.collect.Lists;
+import de.weltraumschaf.commons.guava.Lists;
 import de.weltraumschaf.commons.shell.Parser;
 import de.weltraumschaf.commons.shell.Parsers;
 import de.weltraumschaf.commons.shell.ShellCommand;
@@ -157,7 +157,7 @@ public class InteractiveShell {
         final Command cmd = factory.newCommand(shellCmd);
         cmd.execute();
 
-        if (shellCmd.getCommand() == CommandMainType.EXIT) {
+        if (shellCmd.getMainCommand() == CommandMainType.EXIT) {
             exit();
         }
     }

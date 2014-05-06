@@ -11,8 +11,8 @@
  */
 package de.weltraumschaf.dht.cmd;
 
-import de.weltraumschaf.commons.shell.Token;
-import de.weltraumschaf.commons.shell.TokenType;
+import de.weltraumschaf.commons.token.Token;
+import de.weltraumschaf.commons.token.TokenType;
 import de.weltraumschaf.dht.msg.Message;
 import de.weltraumschaf.dht.msg.MessageBox;
 import de.weltraumschaf.dht.msg.Messaging;
@@ -131,11 +131,11 @@ final class Inbox extends BaseCommand {
 
     private void answerMessage() {
         @SuppressWarnings("unchecked")
-        final Token<Integer> idToken = getArguments().get(0);
+        final Token<Integer> idToken = (Token<Integer>) getArguments().get(0);
         final int id = validateId(idToken);
         final Message message = getInbox().get(id);
         @SuppressWarnings("unchecked")
-        final Token<String> messageBodyToken = getArguments().get(1);
+        final Token<String> messageBodyToken = (Token<String>) getArguments().get(1);
         final Message answer = Messaging.newTextMessage(
                 newLocalAddress(),
                 message.getFrom(),
@@ -153,7 +153,7 @@ final class Inbox extends BaseCommand {
 
     private void removeMessage() {
         @SuppressWarnings("unchecked")
-        final Token<Integer> idToken = getArguments().get(0);
+        final Token<Integer> idToken = (Token<Integer>) getArguments().get(0);
         final int id = validateId(idToken);
         getInbox().remove(id);
         println(String.format("Message with id %d removed.", id));
@@ -162,7 +162,7 @@ final class Inbox extends BaseCommand {
 
     private void showMessage() {
         @SuppressWarnings("unchecked")
-        final Token<Integer> idToken = getArguments().get(0);
+        final Token<Integer> idToken = (Token<Integer>) getArguments().get(0);
         final int id = validateId(idToken);
         final Message message = getInbox().get(id);
         println(String.format("Id: %d", id));
@@ -177,7 +177,7 @@ final class Inbox extends BaseCommand {
     }
 
     private int validateId(final Token<Integer> idToken) {
-        if (idToken.getType() != TokenType.NUMBER) {
+        if (idToken.getType() != TokenType.INTEGER) {
             throw new CommandArgumentExcpetion("Id must be a number!");
         }
 

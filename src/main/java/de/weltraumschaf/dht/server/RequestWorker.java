@@ -11,7 +11,7 @@
  */
 package de.weltraumschaf.dht.server;
 
-import de.weltraumschaf.commons.IO;
+import de.weltraumschaf.commons.application.IO;
 import de.weltraumschaf.dht.log.Log;
 import de.weltraumschaf.dht.log.Logger;
 import de.weltraumschaf.dht.msg.Message;
