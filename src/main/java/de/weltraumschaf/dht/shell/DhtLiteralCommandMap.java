@@ -32,20 +32,13 @@ public class DhtLiteralCommandMap extends LiteralCommandMap {
     }
 
     @Override
-    protected void initMainCommandMap(final Map<String, MainCommandType> map) {
-        for (final MainCommand t : MainCommand.values()) {
-            map.put(t.toString(), t);
-        }
+    protected Class<MainCommand> getMainCommandType() {
+        return MainCommand.class;
     }
 
     @Override
-    protected void initSubCommandMap(final Map<String, SubCommandType> map) {
-        for (final SubCommand t : SubCommand.values()) {
-            if (t.toString().isEmpty()) {
-                continue; // Ignore to do not recognize empty strings as sub command.
-            }
-            map.put(t.toString(), t);
-        }
+    protected Class<SubCommand> getSubCommandType() {
+        return SubCommand.class;
     }
 
 }

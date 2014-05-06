@@ -42,7 +42,7 @@ public class DhtLiteralCommandMapTest {
         }
 
         @Override
-        public String toString() {
+        public String getLiteral() {
             return literal;
         }
     }
@@ -65,7 +65,7 @@ public class DhtLiteralCommandMapTest {
         }
 
         @Override
-        public String toString() {
+        public String getLiteral() {
             return literal;
         }
     }
@@ -74,24 +74,25 @@ public class DhtLiteralCommandMapTest {
 
     @Test
     public void isCommand() {
-        assertThat(sut.isCommand(MainCommand.EXIT.toString()), is(true));
-        assertThat(sut.isCommand(MainCommand.HELP.toString()), is(true));
-        assertThat(sut.isCommand(BadMainType.FOO.toString()), is(false));
-        assertThat(sut.isCommand(BadMainType.BAR.toString()), is(false));
-        assertThat(sut.isCommand(BadMainType.BAZ.toString()), is(false));
+        assertThat(sut.isCommand(MainCommand.EXIT.getLiteral()), is(true));
+        assertThat(sut.isCommand(MainCommand.HELP.getLiteral()), is(true));
+        assertThat(sut.isCommand(BadMainType.FOO.getLiteral()), is(false));
+        assertThat(sut.isCommand(BadMainType.BAR.getLiteral()), is(false));
+        assertThat(sut.isCommand(BadMainType.BAZ.getLiteral()), is(false));
     }
 
     @Test
     public void isSubCommand() {
-        assertThat(sut.isSubCommand(SubCommand.HELP_EXIT.toString()), is(true));
-        assertThat(sut.isSubCommand(SubCommand.HELP_SEND.toString()), is(true));
-        assertThat(sut.isSubCommand(SubCommand.HELP_START.toString()), is(true));
-        assertThat(sut.isSubCommand(SubCommand.HELP_STATUS.toString()), is(true));
-        assertThat(sut.isSubCommand(SubCommand.HELP_STOP.toString()), is(true));
-        assertThat(sut.isSubCommand(SubCommand.NONE.toString()), is(false));
-        assertThat(sut.isSubCommand(BadSubType.FOO.toString()), is(false));
-        assertThat(sut.isSubCommand(BadSubType.BAR.toString()), is(false));
-        assertThat(sut.isSubCommand(BadSubType.BAZ.toString()), is(false));
+        assertThat(sut.isSubCommand(SubCommand.HELP_EXIT.getLiteral()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.HELP_SEND.getLiteral()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.HELP_START.getLiteral()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.HELP_STATUS.getLiteral()), is(true));
+        assertThat(sut.isSubCommand(SubCommand.HELP_STOP.getLiteral()), is(true));
+        assertThat(sut.isSubCommand(""), is(false));
+        assertThat(sut.isSubCommand(SubCommand.NONE.getLiteral()), is(false));
+        assertThat(sut.isSubCommand(BadSubType.FOO.getLiteral()), is(false));
+        assertThat(sut.isSubCommand(BadSubType.BAR.getLiteral()), is(false));
+        assertThat(sut.isSubCommand(BadSubType.BAZ.getLiteral()), is(false));
     }
 
 }
