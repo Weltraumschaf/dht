@@ -71,7 +71,7 @@ public enum MainCommand implements MainCommandType {
     }
 
     @Override
-    public String toString() {
+    public String getLiteral() {
         return literal;
     }
 

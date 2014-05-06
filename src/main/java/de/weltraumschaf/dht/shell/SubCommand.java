@@ -52,7 +52,7 @@ public enum SubCommand implements SubCommandType {
     }
 
     @Override
-    public String toString() {
+    public String getLiteral() {
         return literal;
     }
 
