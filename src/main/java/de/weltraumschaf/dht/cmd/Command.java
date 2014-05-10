@@ -37,7 +37,7 @@ public interface Command extends Describable {
      *
      * @param arguments must not be {@code null}
      */
-    void setArguments(List<Token<?>> arguments);
+    void setArguments(List<Token> arguments);
 
     /**
      * Injection point for invoking application.

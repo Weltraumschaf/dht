@@ -30,7 +30,7 @@ abstract class BaseCommand implements Command {
     /**
      * Arguments for the command.
      */
-    private List<Token<?>> arguments;
+    private List<Token> arguments;
 
     /**
      * Invoking application.
@@ -57,7 +57,7 @@ abstract class BaseCommand implements Command {
      *
      * @return parsed shell arguments, may return empty list
      */
-    List<Token<?>> getArguments() {
+    List<Token> getArguments() {
         return arguments;
     }
 
@@ -66,7 +66,7 @@ abstract class BaseCommand implements Command {
     }
 
     @Override
-    public void setArguments(final List<Token<?>> arguments) {
+    public void setArguments(final List<Token> arguments) {
         this.arguments = Collections.unmodifiableList(Validate.notNull(arguments, "Parameter >arguments< must not be null!"));
     }
 

@@ -130,16 +130,14 @@ final class Inbox extends BaseCommand {
     }
 
     private void answerMessage() {
-        @SuppressWarnings("unchecked")
-        final Token<Integer> idToken = (Token<Integer>) getArguments().get(0);
+        final Token idToken = getArguments().get(0);
         final int id = validateId(idToken);
         final Message message = getInbox().get(id);
-        @SuppressWarnings("unchecked")
-        final Token<String> messageBodyToken = (Token<String>) getArguments().get(1);
+        final Token messageBodyToken = getArguments().get(1);
         final Message answer = Messaging.newTextMessage(
                 newLocalAddress(),
                 message.getFrom(),
-                messageBodyToken.getValue());
+                messageBodyToken.asString());
 
         try {
             Messaging.newSender().send(answer);
@@ -152,8 +150,7 @@ final class Inbox extends BaseCommand {
     }
 
     private void removeMessage() {
-        @SuppressWarnings("unchecked")
-        final Token<Integer> idToken = (Token<Integer>) getArguments().get(0);
+        final Token idToken = getArguments().get(0);
         final int id = validateId(idToken);
         getInbox().remove(id);
         println(String.format("Message with id %d removed.", id));
@@ -161,8 +158,7 @@ final class Inbox extends BaseCommand {
     }
 
     private void showMessage() {
-        @SuppressWarnings("unchecked")
-        final Token<Integer> idToken = (Token<Integer>) getArguments().get(0);
+        final Token idToken = getArguments().get(0);
         final int id = validateId(idToken);
         final Message message = getInbox().get(id);
         println(String.format("Id: %d", id));
@@ -176,12 +172,12 @@ final class Inbox extends BaseCommand {
         return getApplicationContext().getInbox();
     }
 
-    private int validateId(final Token<Integer> idToken) {
+    private int validateId(final Token idToken) {
         if (idToken.getType() != TokenType.INTEGER) {
             throw new CommandArgumentExcpetion("Id must be a number!");
         }
 
-        final Integer id = idToken.getValue();
+        final Integer id = idToken.asInteger();
 
         if (id < 0) {
             throw new CommandArgumentExcpetion("Id must not be negative!");

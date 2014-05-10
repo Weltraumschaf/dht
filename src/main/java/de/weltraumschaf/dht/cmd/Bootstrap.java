@@ -82,43 +82,38 @@ public class Bootstrap extends BaseCommand {
     }
 
     private Arguments validateArguments() throws CommandArgumentExcpetion {
-        final List<Token<?>> args = getArguments();
-
-        @SuppressWarnings("unchecked")
-        final Token<String> nodeIdToken = (Token<String>) args.get(0);
+        final List<Token> args = getArguments();
+        final Token nodeIdToken =  args.get(0);
 
         if (nodeIdToken.getType() != TokenType.LITERAL && nodeIdToken.getType() != TokenType.STRING) {
             throw new CommandArgumentExcpetion("NodeId must be a literal or string!");
         }
 
-        final NodeId nodeId = NodeId.valueOf(nodeIdToken.getValue());
-
-        @SuppressWarnings("unchecked")
-        final Token<String> hostToken = (Token<String>) args.get(1);
+        final NodeId nodeId = NodeId.valueOf(nodeIdToken.asString());
+        final Token hostToken =  args.get(1);
 
         if (hostToken.getType() != TokenType.LITERAL) {
             throw new CommandArgumentExcpetion("Host must be a literal!");
         }
 
         if (args.size() == 1) {
-            return new Arguments(nodeId, hostToken.getValue(), CliOptions.DEFAULT_PORT);
+            return new Arguments(nodeId, hostToken.asString(), CliOptions.DEFAULT_PORT);
         }
 
-        @SuppressWarnings("unchecked")
-        final Token<Integer> portToken = (Token<Integer>) args.get(2);
+        final Token portToken = args.get(2);
 
         if (portToken.getType() != TokenType.INTEGER) {
             throw new CommandArgumentExcpetion("Port must be a number!");
         }
 
-        final Integer port = portToken.getValue();
+        final Integer port = portToken.asInteger();
 
         if (!PortValidator.isValid(port)) {
             throw new CommandArgumentExcpetion(
                     String.format("Parameter >port< must be in range %s!", PortValidator.range()));
         }
 
-        return new Arguments(nodeId, hostToken.getValue(), port);
+        return new Arguments(nodeId, hostToken.asString(), port);
     }
 
     private void findNode(final Contact bootsrapNode, final Contact self) throws IOException {
